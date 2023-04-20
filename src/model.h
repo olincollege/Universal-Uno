@@ -1,45 +1,65 @@
 #pragma once
 
+#include<stdio.h>
 
 // Define useful constants needed in the program.
 enum {
-  /** Number of errors allowed.*/
+  /** Number of cards for UNO.*/
   UNO = 1,
-  /** Maximum size of input.*/
+  /** Maximum numbers of players*/
   PLAYERS = 5,
-  /** Number of cards in the deck.*/
-  DECK= 112,
+  /** Number of cards in a deck without blank cards.*/
+  DECK= 108,
 
 };
 
-// Define game state structs.
-// The player's card represented color of the card and value.
+// A represented color of the card and value.
 //Special moves are higher numbers 
+// r, b g, y, a
+// 10 = reverse turn 
+// 11 = skip 
+// 12 = draw 2 
+// 13 = draw 4
+// 14 = pick color 
+// 15 = pick color + draw 4
 typedef struct {
   char color;
-  int value;
-  char num;
+  size_t value;
+  size_t special; 
 } card;
-//POSSIBLE STRUCT FOR PILE OF CARDS OR FOR PLAYER VS VAR
-// The parts of the UNO game that changes, including 
-//the main card each player status, turn, draw pile, discard pile, and end
+
+// deck of cards represented by a doubly linked list
+typedef struct {
+  card* head;
+  card* prev;
+  card* next; 
+  size_t size;
+} deck;
+
+//Struct representing a player 
+typedef struct {
+  size_t number;
+  deck hand;
+  int sock_num; 
+} player;
+
+//Struct representing player turns
+typedef struct {
+  player* loop;
+  player* prev;
+  player* next;
+} turn;
+
+//Struct representing game struct
 typedef struct {
   card main;
-  int turn;
-  card draw[DECK]; //Maybe need Malloc for dynamic draw
-  int draw_size;
-  card discard[DECK]; //maybe mallco too
-  int players[PLAYERS];
-  int end;
+  int turn; // player number 
+  deck draw; 
+  deck discard; 
+  player* players[PLAYERS];
+  size_t end;
+} game_state;
 
-} var_game_state;
-
-// The parts of the Uno that do not change, including the initial board,
-// the solution board, and the level.
-typedef struct {
-  card deck[DECK];
-  // Possible player info because are only set once at start of game
-} const_game_state;
 
 /**
  * Update the UNO board with the player's latest move.
@@ -49,14 +69,14 @@ typedef struct {
  * @param var A pointer to the variable game state containing the player board
  * and the player's move.
  */
-void update_moves(var_game_state *var);
+void update_moves(game_state *var);
 
 /**
  * Shuffle Discard pile, and move into draw pile 
  * @param var A pointer to the variable game state struct.
  * 
  */
-void refill_draw(var_game_state *var);
+void refill_draw(game_state *var);
 
 /**
  * Shuffle cards
@@ -70,7 +90,7 @@ void shuffle(card pile[DECK]);
  * @param var A pointer to the variable game state struct.
  * 
  */
-void update_turn(var_game_state *var);
+void update_turn(game_state *var);
 
 
 /**
@@ -78,13 +98,16 @@ void update_turn(var_game_state *var);
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_uno(var_game_state *var);
+int check_uno(game_state *var);
 
 /**
  * check end
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_end(var_game_state *var);
+int check_end(game_state *var);
 
+
+void Add 4 
+Add 2 
 
