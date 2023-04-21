@@ -3,6 +3,8 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
+#include "model.h"
+
 enum { BACKLOG_SIZE = 10 };
 
 // Group the data needed for a server to run.
@@ -68,21 +70,23 @@ void listen_for_connections(uno_server* server);
  * @param server The server to accept the connection on.
  * @return 0 for the parent process and -1 for the child (echo) process.
  */
-int accept_client(uno_server* server);
-
-/**
- * Keeps conversation between clients.
- * 
- * Also waits for the proper amount of clients to join before starting the game
- * 
- * Enter amount of people you want to join.
- * 
- * @param server The server to maintain communication.
-*/
-
-void multi_client_communication(uno_server* server, var_game_state game_state);
+int accept_client(uno_server* server, game_state game_state);
 
 /**
  * Recieves input from client and updates the state of the game.
-*/
-void uno(uno_server server, var_game_state game_state);
+ *
+ * @param game_state the current state of the game.
+ * @param socket_descriptor the socket descriptor of the client who's turn it
+ * is.
+ */
+void uno(game_state game_state, int socket_descriptor);
+
+/**
+ * Waits until the appropriate amount of people join the server before starting.
+ * @param game_state the current state of the game.
+ * @param server The server to start listening on.
+ * @param socket_descriptor the socket descriptor of the client who's turn it
+ * is.
+ */
+void start_game(game_state game_state, uno_server* server,
+                int socket_descriptor);
