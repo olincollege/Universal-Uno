@@ -25,15 +25,12 @@ enum {
 typedef struct {
   char color;
   size_t value;
-  size_t special; 
   card* next; 
-  card* prev; 
 } card;
 
-// deck of cards represented by a doubly linked list
+// deck of cards represented by a linked list
 typedef struct {
-  card* head;
-  card* tail;  
+  card* head;  
   size_t size;
 } deck;
 
@@ -46,23 +43,62 @@ typedef struct {
   player* prev; 
 } player;
 
-//Struct representing player turns
+//Struct representing player turns (possible global)
 typedef struct {
   player* head; 
-  player* turn; 
+  player* cur; 
   size_t direction; 
 } turn;
 
 //Struct representing game struct
 typedef struct {
   card main;
-  int turn; // player number 
+  turn current; 
   deck draw; 
   deck discard; 
   player* players[PLAYERS];
   size_t end;
 } game_state;
 
+
+/*
+Make a new card 
+*/
+card* make_card(char color, size_t value, size_t special); 
+
+/*
+move card 
+*/
+int move_card(card* card, deck* old_deck, deck* new_deck);
+
+/*
+Delete card 
+*/
+
+void delete_card(card* card);
+
+/*
+Delete deck();
+*/
+void delete_deck(deck* card);
+
+/*
+Make new player
+*/
+player* make_player(void);
+
+/*
+Delete Player 
+*/
+int delete_player(player* user);
+
+/*
+* Make a new deck.
+* @param var A pointer to a new deck 
+*/
+deck* make_deck(void);
+
+deck* make_UNO_deck(void);
 
 /**
  * Update the UNO board with the player's latest move.
@@ -110,7 +146,6 @@ int check_uno(game_state *var);
  */
 int check_end(game_state *var);
 
+void update_player_turn(game_state *var);
 
-void Add 4 
-Add 2 
-
+void update_player_turn(game_state *var);
