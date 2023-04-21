@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  * If a player calls uno, make sure that it's valid. If it's their uno, do nothing. 
  * If it's someone else's uno, make that player draw 4 cards from the deck.
@@ -15,7 +17,7 @@ void call_uno(player* player_);
  * 
  * @return card*: The card that has been drawn
  */
-card* draw_card(player* player_, deck* deck_);
+card* draw_card(player* player_, deck* draw_deck_);
 
 /*
  * Choose a card from a hand
@@ -37,4 +39,4 @@ card* choose_card(player* player_);
  * 
  * @return bool: returns true if the move is valid
  */
-bool is_valid(card* card_, deck* played_deck);
+int is_valid(player* player_, card* card_, deck* played_deck);
