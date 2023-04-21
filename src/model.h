@@ -26,13 +26,14 @@ typedef struct {
   char color;
   size_t value;
   size_t special; 
+  card* next; 
+  card* prev; 
 } card;
 
 // deck of cards represented by a doubly linked list
 typedef struct {
   card* head;
-  card* prev;
-  card* next; 
+  card* tail;  
   size_t size;
 } deck;
 
@@ -41,13 +42,15 @@ typedef struct {
   size_t number;
   deck hand;
   int sock_num; 
+  player* next; 
+  player* prev; 
 } player;
 
 //Struct representing player turns
 typedef struct {
-  player* loop;
-  player* prev;
-  player* next;
+  player* head; 
+  player* turn; 
+  size_t direction; 
 } turn;
 
 //Struct representing game struct
