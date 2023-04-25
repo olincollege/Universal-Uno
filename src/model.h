@@ -7,7 +7,7 @@ enum {
   /** Number of cards for UNO.*/
   UNO = 1,
   /** Maximum numbers of players*/
-  PLAYERS = 5,
+  MAX_PLAYERS = 5,
   /** Number of cards in a deck without blank cards.*/
   DECK= 108,
 
@@ -47,15 +47,17 @@ typedef struct {
   player* head; 
   player* cur; 
   size_t direction; 
-} doubly_linked_lists;
+} order;
 
 //Struct representing game struct
 typedef struct {
+  size_t start; 
   card main;
-  doubly_linked_lists current; 
+  size_t number_players;
+  player turn; 
   deck draw; 
   deck discard; 
-  player* players[PLAYERS];
+  order player_list;
   size_t end;
 } game_state;
 
