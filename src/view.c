@@ -30,12 +30,13 @@ void print_error(){
     printf("Error invalid move. Try again.\n");
 }
 
-int main(void){
-    int test[] = {13, 5, 9};
-    char hand[] = "R2, G5, W+4";
-    print_game("R2", test, 3, 1);
-    print_hand(hand, 1, 2);
-}
+
+// int main(void){
+//     int test[] = {3};
+//     char hand[] = "";
+//     print_game("G3", test, 1, 1);
+//     print_hand(hand, 1, 2);
+// }
 
 
 

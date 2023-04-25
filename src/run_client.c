@@ -40,3 +40,13 @@ int main(void) {
   close_tcp_socket(socket_descriptor);
   return 0;
 }
+
+//Maya's Notes
+//void main or something
+//local variables
+    //array hand = []
+    //players hand size = []
+    //deck_top_card = string
+    //whose_turn = string
+
+    //open the sockets
