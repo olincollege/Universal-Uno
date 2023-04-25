@@ -25,7 +25,7 @@ void append_card(deck* deck_, char col, size_t val) {
   deck_->size++;
 }
 
-move_card(card* card_, deck* old_deck, deck* new_deck) {
+void move_card(card* card_, deck* old_deck, deck* new_deck) {
   //Find card in old deck
   card* prev = old_deck->head;
   //If card is head 
@@ -112,4 +112,70 @@ deck* make_UNO_deck(void){
        append_card(UNO_deck, 'A',14);
     }
   return UNO_deck; 
+}
+
+void shuffle(deck* deck_){
+  for(size_t i = 0; i < 54; i++){
+  size_t index = (size_t)(rand() % (UNO_DECK-1)); 
+  card* swap = get_card_index(deck_, index);
+  // Move card from current place to end of list
+  move_card(swap, deck_, deck_);
+  }
+}
+
+card* get_card_index(deck* deck_, size_t index){
+  card* current = deck_->head;
+  for (size_t i = 0; i < index; i++) {
+    current = current->next;
+  }
+  return current;
+}
+card* find_card(deck* deck_, char col, size_t val){
+  card* current = deck_->head;
+  for (size_t i = 0; i < deck_->size; i++) {
+    if(current->color == col && current->value == val){
+      return current;
+    }
+    current = current->next;
+  }
+  return NULL;
+}
+
+
+
+int check_draw(game_state* state){
+  if(state->discard.size == 0){
+    return 1;
+  }
+  return 0;
+}
+
+void append_deck(deck* original, deck* new){
+  card* head = original->head; 
+  if (new->head == NULL) {
+    new->head = head;
+  } else {
+    card* current = new->head;
+    while (current->next != NULL) {
+      current = current->next;
+    }
+    current->next = head;
+  }
+  new->size = new->size + original->size; 
+  original->head = NULL; 
+  original->size = 0; 
+}
+
+void refill_draw(game_state* state){
+  shuffle(&(state->discard));
+  append_deck(&(state->discard), &(state->draw));
+}
+
+
+void switch_main_card(game_state* state, char col, size_t val){
+  // Find card 
+  card* swap = find_card(&(state->turn.hand), col, val); 
+  move_card(&(state->main.head), &(state->main), &(state->discard));
+  move_card(swap,&(state->turn.hand), &(state->main));
+
 }
