@@ -91,6 +91,7 @@ void uno(game_state game_state, int socket_descriptor) {
       // each client know what their cards are.
     }
   }
+  
   FILE* input_file = fdopen(socket_descriptor, "r+");
   char* buf = NULL;
   size_t buf_size = 0;
