@@ -13,9 +13,8 @@ enum {
 
 };
 
-// A represented color of the card and value.
+// A card represented by the color of the card and value.
 //Special moves are higher numbers 
-// r, b g, y, a
 // 10 = reverse turn 
 // 11 = skip 
 // 12 = draw 2 
@@ -48,12 +47,12 @@ typedef struct {
   player* head; 
   player* cur; 
   size_t direction; 
-} turn;
+} doubly_linked_lists;
 
 //Struct representing game struct
 typedef struct {
   card main;
-  turn current; 
+  doubly_linked_lists current; 
   deck draw; 
   deck discard; 
   player* players[PLAYERS];
@@ -62,25 +61,57 @@ typedef struct {
 
 
 /*
-Make a new card 
+* Make a new card given the color and value of the card
+*
+* Given an char value to for color and size_t value for the card, create a new card on the heap holding
+* that value and return a pointer to that node. The caller of this function is considered
+* the owner of the new node and is responsible for cleaning it up when done with it.
+*
+* @param color The color for the new card.
+* @param value The value for the new card.
+* @return A pointer to the newly created card.
 */
-card* make_card(char color, size_t value, size_t special); 
+
+card* make_card(char color, size_t value); 
 
 /*
 move card 
 */
 int move_card(card* card, deck* old_deck, deck* new_deck);
 
-/*
-Delete card 
-*/
 
-void delete_card(card* card);
+/**
+ * Free a cards's memory.
+ *
+ * Given a pointer to the card that was allocated on the heap, free the memory
+ * taken up by that node. Generally, this function should only be called in
+ * functions that originally allocated the card with make_card, or as part of
+ * another free_* function whose corresponding make_* function and/or other
+ * functions allocate nodes.
+ *
+ * If a card not allocated on the heap is attempted to be freed, the result is
+ * undefined. Attempting to free a non-node, attempting to free a node that has
+ * already been freed, and accessing a node after freeing will all result in
+ * undefined behavior.
+ *
+ * @param card_ A pointer to the card to free.
+ */
 
-/*
-Delete deck();
-*/
-void delete_deck(deck* card);
+void free_card(card* card_);
+
+/**
+ * Free a decks's memory.
+ *
+ * Given a pointer to a deck that was allocated on the heap, free the memory
+ * taken up by that deck. Any cards contained in the deck will be freed, as will
+ * the deck itself. Undefined behavior results if the passed pointer does not
+ * point to a list allocated on the heap or has already been freed. Attempting
+ * to access the list after it has been freed also results in undefined
+ * behavior.
+ *
+ * @param deck_ A pointer to the deck to free.
+ */
+void free_deck(deck* deck_);
 
 /*
 Make new player
@@ -93,9 +124,13 @@ Delete Player
 int delete_player(player* user);
 
 /*
-* Make a new deck.
-* @param var A pointer to a new deck 
-*/
+ * Create a new empty deck.
+ *
+ * Create a new deck that is empty (that is, it contains no cards and has a
+ * size of zero). The memory for the new list is allocated on the heap.
+ *
+ * @return A pointer to the newly created deck.
+ */
 deck* make_deck(void);
 
 deck* make_UNO_deck(void);
