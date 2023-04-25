@@ -46,11 +46,12 @@ int accept_client(uno_server* server, game_state game_state) {
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
-  for (int i = 0; i < sizeof(game_state.players) / sizeof(player)) {
-    if (game_state.players[i].sock_num != NULL) {
+  player* current = game_state.order.head;
+  for (int i = 0; i < game_state.number_players) {
+    if (current.sock_num != NULL) {
       continue;
     }
-    game_state.players[i].sock_num = connected_d;
+    current.sock_num = connected_d;
     break;
   }
 
@@ -59,7 +60,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.players[game_state.number_players - 1].sock_num == NULL) {
+    while (game_state.order.head.prev.sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
@@ -69,7 +70,7 @@ int accept_client(uno_server* server, game_state game_state) {
     // it is we switch the clients view to a screen where cards get passed out.
     if (game_state.start != 1) {
       game_state.start = 1;
-      game_state.turn = 0;
+      game_state.player_list.cur = game_state.player_list.head;
     }
     uno(game_state, connected_d);
     return -1;
@@ -79,30 +80,41 @@ int accept_client(uno_server* server, game_state game_state) {
 }
 
 void uno(game_state game_state, int socket_descriptor) {
-  
+  if (game_state.player_list.head->prev.hand.size < 7) {
+    player* current = game_state.player_list.head;
+    for (size_t i = 0; i < game_state.number_players; i++) {
+      for (size_t i = 0; i < 7; i++) {
+        move_card(game_state.draw.head, game_state.draw, current->hand);
+        current = current->next;
+      }
+      // After giving all the players the cards, we will send a message letting,
+      // each client know what their cards are.
+    }
+  }
   FILE* input_file = fdopen(socket_descriptor, "r+");
   char* buf = NULL;
   size_t buf_size = 0;
   getline(&buf, &buf_size, input_file);
   switch (buf[2]) {
     case '0':
-      //reverse
+      switch_direction(game_state);
       break;
     case '1':
-      //skip
+      skip(game_state);
       break;
     case '2':
-      //draw 2
+      draw_two(game_state);
       break;
     case '3':
-    //wild card
+      // wild card
       break;
     case '4':
-    //draw 4
+      draw_4(game_state);
       break;
 
     default:
-    //regular card
+      move_card(current_card, game_state.player_list.cur->hand,
+                game_state.main);
       break;
   }
 }
