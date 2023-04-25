@@ -38,3 +38,32 @@ int send_input(FILE* socket_file) {
   free(send_line);
   
 }
+
+
+// int send_move(FILE* socket_file){
+//     //send a card name or draw
+// }
+
+// int send_uno(FILE* socket_file){
+//     //send a card name or draw
+// }
+
+// int receive_hand(FILE* socket_file){
+//     //send a card name or draw
+// }
+
+// int receive_hand_sizes(FILE* socket_file){
+//     //get opponents hand size
+// }
+
+// int receive_top_card(FILE* socket_file){
+//     //find out the top of the deck
+// }
+
+// int receive_game_state(FILE* socket_file){
+//     //find out whose turn it is or if the game is over
+// }
+
+// int receive_errors(FILE* socket_file){
+//     //get notified of incorrect moves
+// }
