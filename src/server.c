@@ -59,7 +59,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.players[game_state.num_players - 1].sock_num == NULL) {
+    while (game_state.players[game_state.number_players - 1].sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.

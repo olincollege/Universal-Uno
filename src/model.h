@@ -59,6 +59,7 @@ typedef struct {
   deck discard; 
   order player_list;
   size_t end;
+  
 } game_state;
 
 
