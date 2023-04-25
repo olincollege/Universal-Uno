@@ -8,7 +8,7 @@ enum {
   UNO = 1,
   /** Maximum numbers of players*/
   MAX_PLAYERS = 5,
-  /** Number of cards in a deck without blank cards.*/
+  /** Number of cards in a deck*/
   DECK= 108,
 
 };
@@ -18,22 +18,21 @@ enum {
 // 10 = reverse turn 
 // 11 = skip 
 // 12 = draw 2 
-// 13 = draw 4
-// 14 = pick color 
-// 15 = pick color + draw 4
+// 13 = pick color 
+// 14 = pick color + draw 4
 typedef struct {
   char color;
   size_t value;
   card* next; 
 } card;
 
-// deck of cards represented by a linked list
+//A struct representing a deck of cards with a linked list
 typedef struct {
   card* head;  
   size_t size;
 } deck;
 
-//Struct representing a player 
+//A struct representing a player
 typedef struct {
   size_t number;
   deck hand;
@@ -42,7 +41,7 @@ typedef struct {
   player* prev; 
 } player;
 
-//Struct representing player turns (possible global)
+//A struct representing the order of players with doubly linked list ddd
 typedef struct {
   player* head; 
   player* cur; 
@@ -52,7 +51,7 @@ typedef struct {
 //Struct representing game struct
 typedef struct {
   size_t start; 
-  card main;
+  deck main;
   size_t number_players;
   player turn; 
   deck draw; 
@@ -76,10 +75,33 @@ typedef struct {
 
 card* make_card(char color, size_t value); 
 
-/*
-move card 
+/**
+ * Append a card to a deck.
+ *
+ * Given a deck and a card color and value, add that card to the end of the deck. This
+ * function modified the deck in place (i.e., it does not create a new copy of
+ * the list to append to).
+ *
+ * @param deck_ A pointer to the deck to append to.
+ * @param col The color of the card to append
+ * @param val The value of the card to append.
+ */
+void append_card(deck* deck_, char col, size_t val);
+
+/**
+* Move a card from one deck to another deck. 
+*
+* Given a card move it from an old deck to a new deck. This function modified each deck in place and updates the size of each.
+* moves the card.
+*
+* If a card is not in the old deck or either deck does not exist, the result is
+* undefined.
+*
+* @param card A pointer to the card to move 
+* @param old_deck A pointer to the deck the card was originally in.
+* @param new_deck A pointer to the deck the card was moved to.
 */
-int move_card(card* card, deck* old_deck, deck* new_deck);
+void move_card(card* card, deck* old_deck, deck* new_deck);
 
 
 /**
@@ -115,6 +137,18 @@ void free_card(card* card_);
  */
 void free_deck(deck* deck_);
 
+/**
+ * Switch the main card with the new card chosen by player
+ *
+ * Given a pointer to the game state, update the main card based on the card the player played. 
+ * The function will update the player's hand to include one less card as well as move the main card
+ * to the discard pile. 
+ *
+ * @param state A pointer to current game state. 
+ * @param new A pointer to the card the player played . 
+ */
+void switch_main_card(game_state* state, card* new);
+
 /*
 Make new player
 */
@@ -129,12 +163,20 @@ int delete_player(player* user);
  * Create a new empty deck.
  *
  * Create a new deck that is empty (that is, it contains no cards and has a
- * size of zero). The memory for the new list is allocated on the heap.
+ * size of zero). The memory for the new deck is allocated on the heap.
  *
  * @return A pointer to the newly created deck.
  */
 deck* make_deck(void);
 
+/*
+ * Create complete UNO deck excluding the blank cards.
+ *
+ * Create a new deck that contains the 108 UNO cards with the correct color and value ratios. 
+ * the memory for the new deck is allocated on the heap.
+ *
+ * @return A pointer to the newly created deck.
+ */
 deck* make_UNO_deck(void);
 
 /**
