@@ -57,6 +57,7 @@ typedef struct {
   deck discard; 
   player* players[PLAYERS];
   size_t end;
+  
 } game_state;
 
 
