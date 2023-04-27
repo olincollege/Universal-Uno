@@ -179,3 +179,64 @@ void switch_main_card(game_state* state, char col, size_t val){
   move_card(swap,&(state->turn.hand), &(state->main));
 
 }
+
+player* make_player(int number) {
+  player* player_ = malloc(sizeof(player));
+  player_->hand = NULL;
+  player_->next = NULL;
+  player_->prev = NULL;
+  player_->sock_num = NULL;
+  player_->number = number;
+  return player_
+}
+
+order* make_order(int num_players) {
+  order* new_order = malloc(sizeof(order));
+  player* head = make_player(0);
+  new_order->head = head;
+  new_order->cur = NULL;
+  new_order->direction = 0;
+
+  for (size_t i = 1; i< num_players; i++){
+    head->next = make_player(i);
+  }
+  return new_order;
+}
+
+void free_order(order* order_) {
+  player* current = order_->head;
+  player* next = NULL;
+  while (current != NULL) {
+    next = current->next;
+    free_card(current);
+    current = next;
+  }
+  free(order_);
+}
+
+void append_order(order* order_, player* player_) {
+  if (order_->head == NULL) {
+    order_->head = player_;
+  } else {
+    player* current = order_->head;
+    while (current->next != order_.head) {
+      current = current->next;
+    }
+    current->next = player_;
+    player_->next = order_->head;
+    player_->prev = current;
+  }
+}
+
+void send_hand(game_state game_state){
+    
+    
+}
+
+void send_game(game_state game_state){
+    
+}
+
+void send_initial(game_state game_state){
+
+}
