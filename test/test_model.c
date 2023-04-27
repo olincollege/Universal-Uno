@@ -38,5 +38,77 @@ Test(make_deck, zero_len) {
   cr_assert(zero(sz, deck_->size));
   free_deck(deck_);
 }
+// Tests that if the card is the head it properly moves.
+Test(move_card, card_head) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+  append_card(deck_1, 'Y', 7);
+  append_card(deck_1, 'G', 7);
 
+  deck* deck_2 = make_deck();
+  append_card(deck_2, 'R', 7);
+  move_card(deck_1->head, deck_1, deck_2);
+  cr_assert(eq(size_t, deck_1, 2));
+  cr_assert(eq(char, deck_1->head->color, "Y"));
+  free_deck(deck_1);
+  free_deck(deck_2);
+}
+
+// Tests that if the card is the head and its next is null it properly moves.
+Test(move_card, card_head) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+
+  deck* deck_2 = make_deck();
+  append_card(deck_2, 'R', 7);
+  move_card(deck_1->head, deck_1, deck_2);
+  move_card(deck_1->head, deck_1, deck_2);
+  move_card(deck_1->head, deck_1, deck_2);
+  cr_assert(zero(sz, deck_1->size));
+  cr_assert(eq(char, deck_1->head->color, "Y"));
+  free_deck(deck_1);
+  free_deck(deck_2);
+}
+// Tests that if the card is in the middle of the list it properly moves.
+Test(move_card, card_head) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+  append_card(deck_1, 'Y', 7);
+  append_card(deck_1, 'G', 7);
+
+  deck* deck_2 = make_deck();
+  append_card(deck_2, 'R', 7);
+  move_card(deck_1->head->next, deck_1, deck_2);
+  cr_assert(eq(size_t, deck_1, 2));
+  cr_assert(eq(char, deck_1->head->color, "B"));
+  free_deck(deck_1);
+  free_deck(deck_2);
+}
+// Tests that if the second list is empty it properly moves.
+Test(move_card, card_head) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+  append_card(deck_1, 'Y', 7);
+  append_card(deck_1, 'G', 7);
+
+  deck* deck_2 = make_deck();
+  move_card(deck_1->head, deck_1, deck_2);
+  cr_assert(eq(size_t, deck_1, 2));
+  cr_assert(eq(char, deck_1->head->color, "Y"));
+  free_deck(deck_1);
+  free_deck(deck_2);
+}
+// Tests that if the first list is one and the second list is empty it moves
+// correctly.
+Test(move_card, card_head) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+
+  deck* deck_2 = make_deck();
+  move_card(deck_1->head, deck_1, deck_2);
+  cr_assert(zero(sz, deck_1->size));
+  cr_assert(eq(char, deck_2->head->color, "B"));
+  free_deck(deck_1);
+  free_deck(deck_2);
+}
 // NOLINTEND(*-magic-numbers)
