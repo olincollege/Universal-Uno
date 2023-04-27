@@ -1,15 +1,16 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+
+
 // Define useful constants needed in the program.
 enum {
   /** Number of cards for UNO.*/
   UNO = 1,
   /** Maximum numbers of players*/
   MAX_PLAYERS = 5,
-  /** Number of cards in a deck without blank cards.*/
-  DECK = 108,
+  /** Number of cards in a deck*/
+  UNO_DECK= 108,
 
 };
 
@@ -115,6 +116,18 @@ void free_card(card* card_);
  */
 void free_deck(deck* deck_);
 
+/**
+ * Switch the main card with the new card chosen by player
+ *
+ * Given a pointer to the game state, update the main card based on the card the player played. 
+ * The function will update the player's hand to include one less card as well as move the main card
+ * to the discard pile. 
+ *
+ * @param state A pointer to current game state. 
+ * @param new A pointer to the card the player played . 
+ */
+void switch_main_card(game_state* state, char col, size_t val);
+
 /*
 Make new player
 */
@@ -148,18 +161,23 @@ deck* make_UNO_deck(void);
 void update_moves(game_state* var);
 
 /**
- * Shuffle Discard pile, and move into draw pile
+ * Refill the draw pile with a shuffled discard pile. 
+ * 
  * @param var A pointer to the variable game state struct.
  *
  */
 void refill_draw(game_state* var);
 
 /**
- * Shuffle cards
+ * Shuffle cards in a deck in place. 
  *
- * @param pile a pile of cards .
+ * The deck of cards will be shuffled in place by moving an randomly selected node to the end of list 
+ * 40 times. 
+ * 
+ * @param deck_ a deck of cards to by randomly shuffled. 
  */
-void shuffle(card pile[DECK]);
+void random_cards(deck* deck_);
+
 
 /**
  * Update turn based on move
@@ -180,8 +198,6 @@ int check_uno(game_state* var);
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_end(game_state* var);
-
-void update_player_turn(game_state* var);
+int check_win(game_state *var);
 
 void update_player_turn(game_state* var);
