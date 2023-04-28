@@ -2,11 +2,11 @@
 
 card* make_card(char col, size_t val) {
   card* new_card = malloc(sizeof(card));
-  // printf("color %c value %i\n", col, val);
-  sprintf(&new_card->color, "%s", &col);
-  // printf("%c\n", new_card->color);
+  //printf("color %c value %zu\n", col, val);
+  strncpy (&new_card->color, &col, sizeof(col) );
+  //printf("%c\n", new_card->color);
   new_card->value = val;
-  // printf("%zu\n", new_card->value);
+  //printf("%zu\n", new_card->value);
   new_card->next = NULL;
   return new_card;
 }
