@@ -61,7 +61,7 @@ typedef struct {
   player turn;
   deck draw;
   deck discard;
-  order player_list;
+  order* player_list;
   size_t end;
 
 } game_state;
@@ -208,3 +208,12 @@ card* get_card_index(deck* deck_, size_t index);
 
 void append_card(deck* deck_, char col, size_t val);
 
+player* make_player(int number);
+
+void free_player(player* player_);
+
+order* make_order(int num_players);
+
+void free_order(order* order_);
+
+void append_order(order* order_, player* player_);
