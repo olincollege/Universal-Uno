@@ -16,6 +16,7 @@ list(APPEND CMAKE_CTEST_ARGUMENTS --verbose)
 #     COMMAND test_foo ${CRITERION_FLAGS}
 # )
 
+
 add_executable(test_view test_view.c)
 target_link_libraries(test_view
     PRIVATE view
@@ -53,4 +54,5 @@ add_test(
 #    NAME test_server
 #    COMMAND test_server ${CRITERION_FLAGS}
 # )
+
 

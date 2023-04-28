@@ -7,6 +7,7 @@ project(SoftSysA02
 
 set(CMAKE_C_STANDARD 17)
 
+
 set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -Wshadow -Wconversion -Wunreachable-code -g" )
 
 set(CMAKE_C_CLANG_TIDY
@@ -14,6 +15,7 @@ set(CMAKE_C_CLANG_TIDY
   -header-filter=.;
   -checks=*,-bugprone-easily-swappable-parameters,-llvmlibc-restrict-system-libc-headers,-llvm-header-guard,-altera*;
 )
+
 
 add_subdirectory(src)
 
