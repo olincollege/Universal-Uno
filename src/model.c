@@ -80,7 +80,7 @@ deck* make_UNO_deck(void){
   //Red Colors 
   append_card(UNO_deck, 'R',0); 
   for(size_t i = 0; i<2; i++){
-    for(size_t j = 1; i < 13; j++){
+    for(size_t j = 1; i < SPECIAL_13; j++){
       append_card(UNO_deck, 'r',j);
     }
   }
@@ -88,28 +88,28 @@ deck* make_UNO_deck(void){
   //Blue Colors
   append_card(UNO_deck, 'B',0); 
   for(size_t i = 0; i<2; i++){
-    for(size_t j = 1; i < 13; j++){
+    for(size_t j = 1; i < SPECIAL_13; j++){
       append_card(UNO_deck, 'r',j);
     }
   }
   //Yellow Colors 
   append_card(UNO_deck, 'Y',0); 
   for(size_t i = 0; i<2; i++){
-    for(size_t j = 1; i < 13; j++){
+    for(size_t j = 1; i < SPECIAL_13; j++){
       append_card(UNO_deck, 'r',j);
     }
   }
   //Green Colors
   append_card(UNO_deck, 'G',0); 
   for(size_t i = 0; i<2; i++){
-    for(size_t j = 1; i < 13; j++){
+    for(size_t j = 1; i < SPECIAL_13; j++){
       append_card(UNO_deck, 'r',j);
     }
   }
   //Wild Cards
   for(size_t i = 0; i<4; i++){
-      append_card(UNO_deck, 'A',13);
-       append_card(UNO_deck, 'A',14);
+      append_card(UNO_deck, 'A',SPECIAL_13);
+       append_card(UNO_deck, 'A',SPECIAL_14);
     }
   return UNO_deck; 
 }
@@ -175,20 +175,22 @@ void refill_draw(game_state* state){
 void switch_main_card(game_state* state, char col, size_t val){
   // Find card 
   card* swap = find_card(&(state->turn.hand), col, val); 
-  move_card(&(state->main.head), &(state->main), &(state->discard));
-  move_card(swap,&(state->turn.hand), &(state->main));
+  move_card((state->main.head), &(state->main), &(state->discard));
+  move_card(swap, &(state->turn.hand), &(state->main));
 
 }
 
 player* make_player(int number) {
   player* player_ = malloc(sizeof(player));
-  player_->hand = NULL;
+  player_->hand = *(make_deck());
   player_->next = NULL;
   player_->prev = NULL;
-  player_->sock_num = NULL;
+  player_->sock_num = 0;
   player_->number = number;
-  return player_
+  return player_;
 }
+
+void free_player(player* player_) { free(player_); }
 
 order* make_order(int num_players) {
   order* new_order = malloc(sizeof(order));
@@ -208,7 +210,7 @@ void free_order(order* order_) {
   player* next = NULL;
   while (current != NULL) {
     next = current->next;
-    free_card(current);
+    free_player(current);
     current = next;
   }
   free(order_);
@@ -219,7 +221,7 @@ void append_order(order* order_, player* player_) {
     order_->head = player_;
   } else {
     player* current = order_->head;
-    while (current->next != order_.head) {
+    while (current->next != order_->head) {
       current = current->next;
     }
     current->next = player_;

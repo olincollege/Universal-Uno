@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 
 #include "model.h"
-#include "model2.h"
 
 enum { BACKLOG_SIZE = 10 };
 

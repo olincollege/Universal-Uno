@@ -9,8 +9,8 @@
 // When making a card, the color and value should be set correctly.
 Test(make_card, value_set_correctly) {
   card* card_ = make_card('r', 1);
-  cr_assert(eq(char, card_->ch, 'r'));
-  cr_assert(eq(size_t, card_->val, 1));
+  cr_assert(eq(str, card_->color, 'r'));
+  cr_assert(eq(sz, card_->value, 1));
   // free_node(node_);
 }
 
@@ -29,7 +29,7 @@ Test(make_card, next_is_null) {
 Test(make_deck, null_head) {
   deck* deck_ = make_deck();
   cr_assert(zero(ptr, deck_->head));
-  free_list(deck_);
+  free_deck(deck_);
 }
 
 // Making a new deck should create an empty deck, so the size should be 0.
@@ -48,8 +48,8 @@ Test(move_card, card_head) {
   deck* deck_2 = make_deck();
   append_card(deck_2, 'R', 7);
   move_card(deck_1->head, deck_1, deck_2);
-  cr_assert(eq(size_t, deck_1, 2));
-  cr_assert(eq(char, deck_1->head->color, "Y"));
+  cr_assert(eq(sz, deck_1, 2));
+  cr_assert(eq(str, deck_1->head->color, "Y"));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -65,7 +65,7 @@ Test(move_card, card_head) {
   move_card(deck_1->head, deck_1, deck_2);
   move_card(deck_1->head, deck_1, deck_2);
   cr_assert(zero(sz, deck_1->size));
-  cr_assert(eq(char, deck_1->head->color, "Y"));
+  cr_assert(eq(str, deck_1->head->color, "Y"));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -79,8 +79,8 @@ Test(move_card, card_head) {
   deck* deck_2 = make_deck();
   append_card(deck_2, 'R', 7);
   move_card(deck_1->head->next, deck_1, deck_2);
-  cr_assert(eq(size_t, deck_1, 2));
-  cr_assert(eq(char, deck_1->head->color, "B"));
+  cr_assert(eq(sz, deck_1, 2));
+  cr_assert(eq(str, deck_1->head->color, "B"));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -93,8 +93,8 @@ Test(move_card, card_head) {
 
   deck* deck_2 = make_deck();
   move_card(deck_1->head, deck_1, deck_2);
-  cr_assert(eq(size_t, deck_1, 2));
-  cr_assert(eq(char, deck_1->head->color, "Y"));
+  cr_assert(eq(sz, deck_1, 2));
+  cr_assert(eq(str, deck_1->head->color, "Y"));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -107,7 +107,7 @@ Test(move_card, card_head) {
   deck* deck_2 = make_deck();
   move_card(deck_1->head, deck_1, deck_2);
   cr_assert(zero(sz, deck_1->size));
-  cr_assert(eq(char, deck_2->head->color, "B"));
+  cr_assert(eq(str, deck_2->head->color, "B"));
   free_deck(deck_1);
   free_deck(deck_2);
 }

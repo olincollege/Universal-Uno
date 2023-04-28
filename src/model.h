@@ -1,7 +1,7 @@
 #pragma once
 
 #include<stdio.h>
-
+#include <stdlib.h>
 
 // Define useful constants needed in the program.
 enum {
@@ -11,6 +11,10 @@ enum {
   MAX_PLAYERS = 5,
   /** Number of cards in a deck*/
   UNO_DECK= 108,
+  /** Special Number for Draw 4*/
+  SPECIAL_13 = 13, 
+  /** Special Number for pick color + draw 4*/
+  SPECIAL_14 = 14
 
 };
 
@@ -19,13 +23,12 @@ enum {
 // 10 = reverse turn
 // 11 = skip
 // 12 = draw 2
-// 13 = draw 4
-// 14 = pick color
-// 15 = pick color + draw 4
-typedef struct {
+// 13 = pick color
+// 14 = pick color + draw 4
+typedef struct card{
   char color;
   size_t value;
-  card* next;
+  struct card* next;
 } card;
 
 // deck of cards represented by a linked list
@@ -35,12 +38,12 @@ typedef struct {
 } deck;
 
 // Struct representing a player
-typedef struct {
+typedef struct player{
   size_t number;
   deck hand;
   int sock_num;
-  player* next;
-  player* prev;
+  struct player* next;
+  struct player* prev;
 } player;
 
 // Struct representing player turns (possible global)
@@ -53,7 +56,7 @@ typedef struct {
 // Struct representing game struct
 typedef struct {
   size_t start;
-  card main;
+  deck main;
   size_t number_players;
   player turn;
   deck draw;
@@ -81,7 +84,7 @@ card* make_card(char color, size_t value);
 /*
 move card
 */
-int move_card(card* card, deck* old_deck, deck* new_deck);
+void move_card(card* card, deck* old_deck, deck* new_deck);
 
 /**
  * Free a cards's memory.
@@ -131,12 +134,11 @@ void switch_main_card(game_state* state, char col, size_t val);
 /*
 Make new player
 */
-player* make_player(void);
-
+player* make_player(int number);
 /*
 Delete Player
 */
-int delete_player(player* user);
+void delete_player(player* user);
 
 /*
  * Create a new empty deck.
@@ -201,3 +203,8 @@ int check_uno(game_state* var);
 int check_win(game_state *var);
 
 void update_player_turn(game_state* var);
+
+card* get_card_index(deck* deck_, size_t index);
+
+void append_card(deck* deck_, char col, size_t val);
+
