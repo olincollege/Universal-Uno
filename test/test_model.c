@@ -9,10 +9,9 @@
 // When making a card, the color and value should be set correctly.
 Test(make_card, color_set_correctly) {
   card* card_ = make_card('R', 1);
-  cr_expect(card_->color == 'R');
-  // cr_expect(eq(str, card_->color, "R"), "Wrong color! Expected %c, got %c", 'R',
-  //           card_->color);
-   free_card(card_);
+  cr_expect(eq(chr, card_->color, 'R'), "Wrong color! Expected %c, got %c", 'R',
+              card_->color);
+  free_card(card_);
 }
 
 Test(make_card, value_set_correctly) {
@@ -25,9 +24,7 @@ Test(make_card, values_set_correctly) {
   card* card_ = make_card('W', 14);
    cr_expect(eq(sz, card_->value, 14), "Wrong value! Expected %zu, got %zu", 14,
             card_->value);
-  cr_expect(card_->color == 'W');
-  // cr_expect(eq(str, card_->color, W), "Wrong color! Expected %c, got %c", W,
-  //            card_->color);
+  cr_expect(eq(chr, card_->color, 'W'));
    free_card(card_);
 }
 // Making a new card should set the next card to the null pointer by default.
@@ -68,12 +65,10 @@ Test(append_card, increment_length) {
 Test(append_card, append_empty) {
   deck* deck_ = make_deck();
   append_card(deck_, 'R', 1);
-  //cr_assert(eq(sz, deck_->size, 1));
-  //cr_assert(eq(str, deck_->head->color, 'R'));
    card* head = deck_->head;
    cr_expect(eq(sz, deck_->head->value, 1), "Wrong value! Expected %zu, got %zu", 1,
           deck_->head->value);
-   cr_expect(deck_->head->color == 'R');
+   cr_expect(eq(chr, deck_->head->color, 'R'));
    cr_expect(eq(ptr, deck_->head->next, NULL));
   free_deck(deck_);
 }
@@ -84,8 +79,9 @@ Test(append_card, append_two_elements) {
   append_card(deck_, 'R', 1);
   append_card(deck_,'R', 2);
   cr_expect(eq(sz, deck_->size, 2));
+  cr_expect(eq(chr, deck_->head->color, 'R'));
   cr_expect (deck_->head->next->color == 'R');
-   cr_expect(eq(sz, deck_->head->next->value, 2));
+  cr_expect(eq(sz, deck_->head->next->value, 2));
   cr_expect(eq(ptr, deck_->head->next->next, NULL));
   free_deck(deck_);
 }
@@ -97,11 +93,11 @@ Test(append_card, correct_value_added) {
   append_card(setup_deck,'W', 2);
   append_card(setup_deck,'G', 3);
   append_card(setup_deck,'B', 4);
-  card* prev = get_card_index(setup_deck, 2); //Should we make test cases for get_card index?
+  card* prev = get_card_index(setup_deck, 2); //Should we make test cases for get_card_index?
   card* final = get_card_index(setup_deck, 3);
   cr_expect(eq(ptr, prev->next, final));
   cr_expect(eq(sz, final->value, 4));
-  cr_expect(final->color == 'B');
+  cr_expect(eq(chr, final->color, 'B'));
   cr_expect(eq(ptr, final->next, NULL));
   free_deck(setup_deck);
 }
@@ -130,13 +126,12 @@ Test(move_card, card_head) {
   append_card(deck_1, 'B', 1);
   append_card(deck_1, 'Y', 2);
   append_card(deck_1, 'G', 3);
-
   deck* deck_2 = make_deck();
   append_card(deck_2, 'R', 7);
   move_card(deck_1->head, deck_1, deck_2);
-  cr_expect(deck_1->head->color == 'Y');
-  cr_expect(deck_2->head->color == 'R');
-  cr_expect(deck_2->head->next->color == 'B');
+  cr_expect(eq(chr, deck_1->head->color, 'Y'));
+  cr_expect(eq(chr, deck_2->head->color, 'R'));
+  cr_expect(eq(chr, deck_2->head->next->color, 'B'));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -152,7 +147,7 @@ Test(move_card, card_null) {
   cr_expect(zero(sz, deck_1->size));
   cr_expect(eq(ptr, deck_1->head, NULL));
   cr_expect(eq(sz, deck_2->size, 2));
-  cr_expect(deck_2->head->next->color =='B');
+  cr_expect(eq(chr, deck_2->head->next->color, 'B'));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -168,9 +163,9 @@ Test(move_card, card_middle) {
   move_card(deck_1->head->next, deck_1, deck_2);
   cr_assert(eq(sz, deck_1->size, 2));
   cr_assert(eq(sz, deck_2->size, 2));
-  cr_assert(deck_1->head->color == 'B');
-  cr_assert(deck_1->head->next->color == 'G');
-  cr_assert(deck_2->head->next->color == 'Y');
+  cr_expect(eq(chr, deck_1->head->color, 'B'));
+  cr_expect(eq(chr, deck_1->head->next->color, 'G'));
+  cr_expect(eq(chr, deck_2->head->next->color, 'Y'));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -185,8 +180,8 @@ Test(move_card, empty_list) {
   move_card(deck_1->head, deck_1, deck_2);
   cr_assert(eq(sz, deck_1->size, 2));
   cr_assert(eq(sz, deck_2->size, 1));
-  cr_assert(deck_1->head->color == 'Y');
-  cr_assert(deck_2->head->color == 'B');
+  cr_expect(eq(chr, deck_1->head->color, 'Y'));
+  cr_expect(eq(chr, deck_2->head->color, 'B'));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -195,12 +190,11 @@ Test(move_card, empty_list) {
 Test(move_card, empty_second) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
-
   deck* deck_2 = make_deck();
   move_card(deck_1->head, deck_1, deck_2);
   cr_assert(zero(sz, deck_1->size));
   cr_assert(eq(sz, deck_2->size, 1));
-  cr_assert(deck_2->head->color == 'B');
+  cr_expect(eq(chr, deck_2->head->color, 'B'));
   free_deck(deck_1);
   free_deck(deck_2);
 }
@@ -209,11 +203,80 @@ Test(move_card, empty_second) {
 Test(make_UNO_deck, check_size ) {
   deck* uno = make_UNO_deck();
   cr_assert(eq(sz, uno->size, 108));
+  free_deck(uno);
 }
 
-// Test(make_UNO_deck, check_color ) {
-//   deck* uno = make_UNO_deck();
-//   cr_assert(uno->head->color == 'R');
+Test(make_UNO_deck, check_color ) {
+  deck* uno = make_UNO_deck();
+  cr_expect(eq(chr, uno->head->color, 'R'));
+  free_deck(uno);
+}
+
+Test(make_UNO_deck, check_ratio) {
+  deck* uno = make_UNO_deck();
+  size_t red = 0;
+  size_t blue = 0;
+  size_t yellow = 0; 
+  size_t green = 0;
+  size_t wild = 0;
+  card* current = uno->head; 
+  while(current != NULL){
+    if(current->color == 'R'){
+      red++;
+    }
+    else if(current->color == 'B'){
+      blue++;
+    }
+    else if(current->color == 'Y'){
+      yellow++;
+    }
+    else if(current->color == 'G'){
+      green++;
+    }
+    else if(current->color == 'W'){
+      wild++;
+    }
+    current = current->next;
+  }
+  cr_assert(eq(sz, red, 25));
+  cr_assert(eq(sz, blue, 25));
+  cr_assert(eq(sz, yellow, 25));
+  cr_assert(eq(sz, green, 25));
+  cr_assert(eq(sz, wild, 8));
+  free_deck(uno);
+}
+
+Test(shuffle, check_size) {
+  deck* deck_1 = make_deck();
+  append_card(deck_1, 'B', 7);
+  append_card(deck_1, 'Y', 7);
+  append_card(deck_1, 'G', 7);
+  shuffle(deck_1);
+  cr_assert(eq(sz, deck_1->size, 3));
+}
+
+// Test(shuffle, check_traverse) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+//   append_card(deck_1, 'Y', 7);
+//   append_card(deck_1, 'G', 7);
+//   shuffle(deck_1);
+//   card* current = deck_1->head;
+//   while (current->next != NULL) {
+//     current = current->next;
+//   }
+//   cr_expect(eq(ptr, current->next, NULL));
+// }
+
+// Test(shuffle, check_shuffle) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+//   append_card(deck_1, 'Y', 7);
+//   append_card(deck_1, 'G', 7);
+//   shuffle(deck_1);
+//   cr_assert(deck_1->head->color != 'B');
+//   cr_assert(deck_1->head->next->color != 'Y');
+//   cr_assert(deck_1->head->next->next->color != 'G');
 // }
 
 

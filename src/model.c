@@ -79,39 +79,23 @@ void free_deck(deck* deck_) {
 
 deck* make_UNO_deck(void) {
   deck* UNO_deck = make_deck();
-  // Red Colors
+  // zero colors 
   append_card(UNO_deck, 'R', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-
-  // Blue Colors
   append_card(UNO_deck, 'B', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-  // Yellow Colors
   append_card(UNO_deck, 'Y', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-  // Green Colors
   append_card(UNO_deck, 'G', 0);
   for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
+    for (size_t j = 1; j < SPECIAL_13; j++) {
+      append_card(UNO_deck, 'R', j);
+      append_card(UNO_deck, 'G', j);
+      append_card(UNO_deck, 'B', j);
+      append_card(UNO_deck, 'Y', j);
     }
   }
   // Wild Cards
   for (size_t i = 0; i < 4; i++) {
-    append_card(UNO_deck, 'A', SPECIAL_13);
-    append_card(UNO_deck, 'A', SPECIAL_14);
+    append_card(UNO_deck, 'W', SPECIAL_13);
+    append_card(UNO_deck, 'W', SPECIAL_14);
   }
   return UNO_deck;
 }

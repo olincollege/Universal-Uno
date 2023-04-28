@@ -179,7 +179,7 @@ void refill_draw(game_state* var);
  * 
  * @param deck_ a deck of cards to by randomly shuffled. 
  */
-void random_cards(deck* deck_);
+void shuffle(deck* deck_);
 
 
 /**
