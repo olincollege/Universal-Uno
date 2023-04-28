@@ -83,6 +83,65 @@ int accept_client(uno_server* server, game_state game_state) {
   return 0;
 }
 
+int is_valid(char* card[], game_state* game_state_) {
+    // turn string into card object
+    card curr_card;
+    curr_card.color = card[0];
+    int num = atoi(card[1]);
+    curr_card.value = (size_t) num;
+    int in_hand = 0;
+
+    // check if card is in hand
+    card* curr_hand_card = game_state_->turn->hand->head;
+    while(curr_hand_card != NULL) {
+        if(curr_hand_card->color == curr_card.color) {
+            if(curr_hand_card->value == curr_card.value) {
+                in_hand = 1;
+                break;
+            }
+        }
+        curr_hand_card = curr_hand_card->next;
+    }
+
+    if(in_hand == 1) {
+
+        if(curr_hand_card->color == game_state_->main.color) {
+            // move the card from your hand to the played deck
+            move_card(curr_hand_card, &(game_state_->turn->hand), &(game_state_->discard));
+            return 1;
+        }
+        if(curr_hand_card->value == game_state_->main.value) {
+            if(curr_hand_card->value == 10) {
+              // switch directions, return 1
+
+            } else if(curr_hand_card->value == 11) {
+              // skip, return 2
+            } else if(curr_hand_card->value == 12) {
+              // draw 2, return 3
+            } else if(curr_hand_card->value == 14) {
+              // wild card, ask for color
+            } else if(curr_hand_card->value == 15) {
+              //pick color + draw 4
+            }
+            return 1;
+        }
+        if(curr_hand_card->value == 14) {
+          // send instructions to pick a color
+          return 2;
+
+        }
+        if(curr_hand_card->value == 15) {
+            // add four cards to next player
+            // return 2 -- means that more information is needed 
+            
+            return 2;
+        }
+    } else {
+        // return 0 -- means move was invalid
+        return 0;
+    }
+}
+
 void uno(game_state game_state, int socket_descriptor) {
   if (game_state.player_list.head->prev.hand.size < 7) {
     player* current = game_state.player_list.head;
