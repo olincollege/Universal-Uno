@@ -206,5 +206,65 @@ Test(move_card, empty_second) {
 }
 
 
+Test(make_UNO_deck, check_size ) {
+  deck* uno = make_UNO_deck();
+  cr_assert(eq(sz, uno->size, 108));
+}
+
+// Test(make_UNO_deck, check_color ) {
+//   deck* uno = make_UNO_deck();
+//   cr_assert(uno->head->color == 'R');
+// }
+
+
+// Test(move_card, empty_second) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+
+//   deck* deck_2 = make_deck();
+//   move_card(deck_1->head, deck_1, deck_2);
+//   cr_assert(zero(sz, deck_1->size));
+//   cr_assert(eq(sz, deck_2->size, 1));
+//   cr_assert(deck_2->head->color == 'B');
+//   free_deck(deck_1);
+//   free_deck(deck_2);
+// }
+// Test(move_card, empty_second) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+
+//   deck* deck_2 = make_deck();
+//   move_card(deck_1->head, deck_1, deck_2);
+//   cr_assert(zero(sz, deck_1->size));
+//   cr_assert(eq(sz, deck_2->size, 1));
+//   cr_assert(deck_2->head->color == 'B');
+//   free_deck(deck_1);
+//   free_deck(deck_2);
+// }
+// Test(move_card, empty_second) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+
+//   deck* deck_2 = make_deck();
+//   move_card(deck_1->head, deck_1, deck_2);
+//   cr_assert(zero(sz, deck_1->size));
+//   cr_assert(eq(sz, deck_2->size, 1));
+//   cr_assert(deck_2->head->color == 'B');
+//   free_deck(deck_1);
+//   free_deck(deck_2);
+// }
+// Test(move_card, empty_second) {
+//   deck* deck_1 = make_deck();
+//   append_card(deck_1, 'B', 7);
+
+//   deck* deck_2 = make_deck();
+//   move_card(deck_1->head, deck_1, deck_2);
+//   cr_assert(zero(sz, deck_1->size));
+//   cr_assert(eq(sz, deck_2->size, 1));
+//   cr_assert(deck_2->head->color == 'B');
+//   free_deck(deck_1);
+//   free_deck(deck_2);
+// }
+
 
 // // NOLINTEND(*-magic-numbers)
