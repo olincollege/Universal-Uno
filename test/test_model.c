@@ -11,7 +11,7 @@ Test(make_card, value_set_correctly) {
   card* card_ = make_card('r', 1);
   cr_assert(eq(str, card_->color, 'r'));
   cr_assert(eq(sz, card_->value, 1));
-  // free_node(node_);
+  free_node(node_);
 }
 
 // Making a new card should set the next card to the null pointer by default.
@@ -55,7 +55,7 @@ Test(move_card, card_head) {
 }
 
 // Tests that if the card is the head and its next is null it properly moves.
-Test(move_card, card_head) {
+Test(move_card, card_null) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
 
@@ -70,7 +70,7 @@ Test(move_card, card_head) {
   free_deck(deck_2);
 }
 // Tests that if the card is in the middle of the list it properly moves.
-Test(move_card, card_head) {
+Test(move_card, card_middle) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
   append_card(deck_1, 'Y', 7);
@@ -85,7 +85,7 @@ Test(move_card, card_head) {
   free_deck(deck_2);
 }
 // Tests that if the second list is empty it properly moves.
-Test(move_card, card_head) {
+Test(move_card, empty_list) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
   append_card(deck_1, 'Y', 7);
@@ -100,7 +100,7 @@ Test(move_card, card_head) {
 }
 // Tests that if the first list is one and the second list is empty it moves
 // correctly.
-Test(move_card, card_head) {
+Test(move_card, empty_second) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
 
