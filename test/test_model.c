@@ -11,7 +11,7 @@ Test(make_card, value_set_correctly) {
   card* card_ = make_card('r', 1);
   cr_assert(eq(str, card_->color, 'r'));
   cr_assert(eq(sz, card_->value, 1));
-  free_node(node_);
+  // free_node(node_);
 }
 
 // Making a new card should set the next card to the null pointer by default.
@@ -111,4 +111,39 @@ Test(move_card, empty_second) {
   free_deck(deck_1);
   free_deck(deck_2);
 }
+
+// Appending to a list should increase the length by one.
+Test(append_card, increment_length) {
+  deck* deck_ = make_deck();
+  cr_assert(zero(sz, deck_->size));
+  append_card(deck_, 1, 'R');
+  cr_assert(eq(sz, deck_->size, 1));
+  free_deck(deck_);
+}
+
+// Appending to a list should increase the length by one.
+Test(append_card, append_empty) {
+  deck* deck_ = make_deck();
+  append_card(deck_, 1, 'R');
+  // cr_assert(eq(sz, deck_->size, 1));
+  cr_assert(eq(str, deck_->head->color, 'R'));
+  // cr_assert(eq(ptr, final->next, NULL));
+  free_deck(deck_);
+}
+
+// Appending to a deck should add the correct value at the correct index.
+Test(append_card, correct_value_added) {
+  deck* setup_deck = make_deck();
+  append_card(setup_deck, 1, 'R');
+  append_card(setup_deck, 2, 'W');
+  append_card(setup_deck, 3, 'B');
+  append_card(setup_deck, 4, 'B');
+  card* final = get_card_index(setup_deck, 3);
+  cr_assert(eq(sz, final->value, 4));
+  cr_assert(eq(str, final->color, 'B'));
+  cr_assert(eq(ptr, final->next, NULL));
+  free_deck(setup_deck);
+}
+
+
 // NOLINTEND(*-magic-numbers)

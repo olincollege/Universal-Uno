@@ -44,12 +44,14 @@ add_test(
    COMMAND test_utils ${CRITERION_FLAGS}
 )
 
-# add_executable(test_server test_server.c)
-# target_link_libraries(test_server
-#    PRIVATE server
-#    PUBLIC ${CRITERION}
-# )
-# add_test(
-#    NAME test_server
-#    COMMAND test_server ${CRITERION_FLAGS}
-# )
+add_executable(test_server test_server.c)
+target_link_libraries(test_server
+   PRIVATE server
+   PRIVATE utils
+   PRIVATE model
+   PUBLIC ${CRITERION}
+)
+add_test(
+   NAME test_server
+   COMMAND test_server ${CRITERION_FLAGS}
+)

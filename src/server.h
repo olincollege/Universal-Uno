@@ -91,7 +91,7 @@ void uno(game_state game_state, int socket_descriptor);
 void start_game(game_state game_state, uno_server* server,
                 int socket_descriptor);
 
-void send_hand(game_state game_state)
+void send_hand(game_state game_state);
 
 void send_game(game_state game_state);
 
