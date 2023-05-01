@@ -50,13 +50,13 @@ typedef struct player{
 // Struct representing player turns (possible global)
 typedef struct {
   player* head;
-  player* cur;
   size_t direction;
 } order;
 
 // Struct representing game struct
 typedef struct {
   size_t start;
+  size_t current_players; 
   deck main;
   size_t number_players;
   player turn;
@@ -135,7 +135,7 @@ void switch_main_card(game_state* state, char col, size_t val);
 /*
 Make new player
 */
-player* make_player(int number);
+player* make_player(size_t number);
 /*
 Delete Player
 */
@@ -161,7 +161,7 @@ deck* make_UNO_deck(void);
  * @param var A pointer to the variable game state containing the player board
  * and the player's move.
  */
-void update_moves(game_state* var);
+void update_moves(game_state* state);
 
 /**
  * Refill the draw pile with a shuffled discard pile. 
@@ -169,7 +169,7 @@ void update_moves(game_state* var);
  * @param var A pointer to the variable game state struct.
  *
  */
-void refill_draw(game_state* var);
+void refill_draw(game_state* state);
 
 /**
  * Shuffle cards in a deck in place. 
@@ -187,34 +187,48 @@ void shuffle(deck* deck_);
  * @param var A pointer to the variable game state struct.
  *
  */
-void update_turn(game_state* var);
+void update_turn(game_state* state);
 
 /**
  * check UNO
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_uno(game_state* var);
+int check_uno(game_state* state);
 
 /**
  * check end
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_win(game_state *var);
+int check_win(game_state* state);
 
-void update_player_turn(game_state* var);
+void update_player_turn(game_state* state);
 
 card* get_card_index(deck* deck_, size_t index);
 
 void append_card(deck* deck_, char col, size_t val);
 
-player* make_player(int number);
-
 void free_player(player* player_);
 
-order* make_order(int num_players);
+order* make_order(size_t num_players);
 
 void free_order(order* order_);
 
 void append_order(order* order_, player* player_);
+
+
+/**
+ * Check whether the contents of two decks are equal.
+ *
+ * Given two decks, check whether they are equal (i.e., their lengths are the
+ * same and they contain the same cards in the same order). The lists can point
+ * to the same location, in which case they will be equal by definition, but
+ * only the values (not the memory locations of the lists/nodes) are compared. This 
+ * function is a helper function for testing random.
+ *
+ * @param lhs A pointer to one of the lists to compare.
+ * @param rhs A pointer to the other list to compare.
+ * @return 1 if the lists are equal in value and 0 otherwise.
+ */
+int equal( deck* deck_1, deck* deck_2);
