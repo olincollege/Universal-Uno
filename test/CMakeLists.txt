@@ -15,15 +15,15 @@ list(APPEND CMAKE_CTEST_ARGUMENTS --verbose)
 # NAME test_foo
 # COMMAND test_foo ${CRITERION_FLAGS}
 # )
-add_executable(test_view test_view.c)
-target_link_libraries(test_view
-    PRIVATE view
-    PUBLIC ${CRITERION}
-)
-add_test(
-    NAME test_view
-    COMMAND test_view ${CRITERION_FLAGS}
-)
+# add_executable(test_view test_view.c)
+# target_link_libraries(test_view
+# PRIVATE view
+# PUBLIC ${CRITERION}
+# )
+# add_test(
+# NAME test_view
+# COMMAND test_view ${CRITERION_FLAGS}
+# )
 
 # add_executable(test_model test_model.c)
 # target_link_libraries(test_model
@@ -53,3 +53,12 @@ add_test(
 # NAME test_server
 # COMMAND test_server ${CRITERION_FLAGS}
 # )
+add_executable(test_controller test_controller.c)
+target_link_libraries(test_controller
+    PRIVATE controller
+    PUBLIC ${CRITERION})
+
+add_test(
+    NAME test_controller
+    COMMAND test_controller ${CRITERION_FLAGS}
+)

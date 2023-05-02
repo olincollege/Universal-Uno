@@ -1,7 +1,8 @@
 #include "../src/controller.h"
-#include <string.h>
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
+#include <string.h>
+
 #include <stdlib.h>
 
 // NOLINTBEGIN(*-magic-numbers)
@@ -111,7 +112,7 @@ Test(in_hand, all_wrong) {
 }
 
 Test(is_valid, not_in_hand) {
-    // check that a card that is not in the hand returns -1
+    // check that a card that is not in the hand returns 0
     char card_str[5];
     strcpy(card_str, "B4");
     deck* hand_ = make_deck();
@@ -122,12 +123,12 @@ Test(is_valid, not_in_hand) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), -1));
+    cr_assert(zero(int, is_valid(card_str, &game_state_)));
     free_deck(hand_);
 }
 
 Test(is_valid, in_hand_right_color) {
-    // check that a non special card that's the right color and in the hand returns 0
+    // check that a non special card that's the right color and in the hand returns 1
     char card_str[5];
     strcpy(card_str, "B4");
     deck* hand_ = make_deck();
@@ -138,7 +139,7 @@ Test(is_valid, in_hand_right_color) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(zero(int, is_valid(card_str, &game_state_)));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
@@ -159,7 +160,7 @@ Test(is_valid, right_col_rev) {
 }
 
 Test(is_valid, right_col_skip) {
-    // check that a skip card that's the right color and in the hand returns 2
+    // check that a skip card that's the right color and in the hand returns 1
     char card_str[5];
     strcpy(card_str, "B11");
     deck* hand_ = make_deck();
@@ -170,12 +171,12 @@ Test(is_valid, right_col_skip) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 2));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, right_col_draw) {
-    // check that a draw 2 card that's the right color and in the hand returns 3
+    // check that a draw 2 card that's the right color and in the hand returns 1
     char card_str[5];
     strcpy(card_str, "B12");
     deck* hand_ = make_deck();
@@ -186,12 +187,12 @@ Test(is_valid, right_col_draw) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 3));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, right_val_wrong_col) {
-    // check that a nonspecial card with the same value as the top card but a diff color returns 0
+    // check that a nonspecial card with the same value as the top card but a diff color returns 1
     char card_str[5];
     strcpy(card_str, "B3");
     deck* hand_ = make_deck();
@@ -202,7 +203,7 @@ Test(is_valid, right_val_wrong_col) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('R', 3);
-    cr_assert(zero(int, is_valid(card_str, &game_state_)));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
@@ -223,7 +224,7 @@ Test(is_valid, right_val_rev) {
 }
 
 Test(is_valid, right_val_skip) {
-    // check that a skip card on top of a skip card returns 2
+    // check that a skip card on top of a skip card returns 1
     char card_str[5];
     strcpy(card_str, "B11");
     deck* hand_ = make_deck();
@@ -234,12 +235,12 @@ Test(is_valid, right_val_skip) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 2));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, right_val_draw) {
-    // check that a draw 2 card on top of another draw 2 card returns 3
+    // check that a draw 2 card on top of another draw 2 card returns 1
     char card_str[5];
     strcpy(card_str, "B12");
     deck* hand_ = make_deck();
@@ -250,12 +251,12 @@ Test(is_valid, right_val_draw) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('R', 12);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 3));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, draw_four) {
-    // check that a draw four card returns 4
+    // check that a draw four card returns 1
     char card_str[5];
     strcpy(card_str, "B13");
     deck* hand_ = make_deck();
@@ -266,12 +267,12 @@ Test(is_valid, draw_four) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 4));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, wildcard) {
-    // check that a wildcard returns 5
+    // check that a wildcard returns 1
     char card_str[5];
     strcpy(card_str, "B14");
     deck* hand_ = make_deck();
@@ -282,12 +283,12 @@ Test(is_valid, wildcard) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('B', 8);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), 5));
+    cr_assert(eq(int, is_valid(card_str, &game_state_), 1));
     free_deck(hand_);
 }
 
 Test(is_valid, in_hand_no_match) {
-    // check that a card that's in a player's hand but isn't the same color or value as the top card returns -1
+    // check that a card that's in a player's hand but isn't the same color or value as the top card returns 0
     char card_str[5];
     strcpy(card_str, "B8");
     deck* hand_ = make_deck();
@@ -298,6 +299,7 @@ Test(is_valid, in_hand_no_match) {
     game_state_.turn = *make_player(1);
     game_state_.turn.hand = *hand_;
     game_state_.main.head = make_card('Y', 7);
-    cr_assert(eq(int, is_valid(card_str, &game_state_), -1));
+    cr_assert(zero(int, is_valid(card_str, &game_state_)));
     free_deck(hand_);
 }
+// NOLINTEND(*-magic-numbers)

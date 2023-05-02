@@ -10,7 +10,7 @@
 # signatures/types (INTERFACE), or both (PUBLIC).
 
 # add_library(utils utils.c utils.h)
-# add_library(model model.c model.h)
+add_library(model model.c model.h)
 add_library(view view.c view.h)
 
 # add_library(util utils.c utils.h)
@@ -26,3 +26,5 @@ add_library(view view.c view.h)
 
 # add_executable(run_server run_server.c)
 # target_link_libraries(run_server PRIVATE server util model)
+add_library(controller controller.c controller.h)
+target_link_libraries(controller PRIVATE model)

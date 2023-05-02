@@ -44,42 +44,46 @@ int is_valid(char* card_, game_state* game_state_) {
     int is_in_hand = in_hand(curr_card, &(game_state_->turn.hand));
     
     if(is_in_hand == 1) {
-      if(curr_card->value == 13) {
-        return 4;
+      if(curr_card->value == DRAW_4) {
+        return 1;
       }
-      if(curr_card->value == 14) {
-        return 5;
+      if(curr_card->value == WILD) {
+        return 1;
       }
       if(curr_card->color == game_state_->main.head->color) {
-        if(curr_card->value == 10) {
+        if(curr_card->value == REVERSE) {
             // switch directions, return 1
             return 1;
-          } else if(curr_card->value == 11) {
-            // skip, return 2
-            return 2;
-          } else if(curr_card->value == 12) {
-            // draw 2, return 3
-            return 3;
+          } 
+          if(curr_card->value == SKIP) {
+            // skip, return 1
+            return 1;
+          } 
+          if(curr_card->value == DRAW_2) {
+            // draw 2, return 1
+            return 1;
           }
-        return 0;
+        return 1;
       } 
       
       if(curr_card->value == game_state_->main.head->value){
-          if(curr_card->value == 10) {
+          if(curr_card->value == REVERSE) {
               // switch directions, return 1
               return 1;
-            } else if(curr_card->value == 11) {
-              // skip, return 2
-              return 2;
-            } else if(curr_card->value == 12) {
-              // draw 2, return 3
-              return 3;
+            } 
+            if(curr_card->value == SKIP) {
+              // skip, return 1
+              return 1;
+            } 
+            if(curr_card->value == DRAW_2) {
+              // draw 2, return 1
+              return 1;
             }
-          return 0;
+          return 1;
       }
       
     }
-    return -1; 
+    return 0; 
 }
 
 
