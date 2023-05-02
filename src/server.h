@@ -72,6 +72,7 @@ void listen_for_connections(uno_server* server);
  */
 int accept_client(uno_server* server, game_state game_state);
 
+
 /**
  * Recieves input from client and updates the state of the game.
  *
