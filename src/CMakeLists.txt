@@ -28,5 +28,6 @@ target_link_libraries(run_client PRIVATE client util view)
 # target_link_libraries(run_server PRIVATE server util model)
 add_library(controller controller.c controller.h)
 target_link_libraries(controller PRIVATE model)
-add_executable(run_controller run_controller.c)
-target_link_libraries(run_controller PRIVATE controller model)
+
+# add_executable(run_controller run_controller.c)
+# target_link_libraries(run_controller PRIVATE controller model)

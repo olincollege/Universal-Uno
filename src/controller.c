@@ -63,18 +63,12 @@ int is_valid(char* card_, game_state* game_state_) {
 }
 
 void change_turn(game_state* game_state_){
-  printf("%i\n", game_state_->turn.number);
+  // printf("%i\n", game_state_->turn.number);
   if(game_state_->player_list->direction == 0) {
-    // 0 is next instead of prev
-    printf("%i\n", game_state_->turn.number);
-    
+    // 0 is next instead of prev    
     game_state_->turn = *(game_state_->turn.next);
-
   } else {
     // 1 is prev
-    player* previous_player = game_state_->turn.prev;
-    printf("%i\n", previous_player->number);
-    game_state_->turn = *previous_player;
-    printf("%i\n", game_state_->turn.number);
+    game_state_->turn = *(game_state_->turn.prev);
   }
 }

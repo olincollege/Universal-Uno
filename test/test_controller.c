@@ -303,13 +303,25 @@ Test(is_valid, in_hand_no_match) {
     free_deck(hand_);
 }
 
-// Test(change_turn, moving_next) {
-//     // check that if the direction is zero, then the new player after changing directions is the next player
-//     game_state game_state_;
-//     game_state_.player_list = make_order(3);
-//     game_state_.player_list->direction = 0;
-//     change_turn(&game_state_);
-//     cr_assert(eq(int, (int) game_state_.player_list->head->number, 1));
+Test(change_turn, moving_next) {
+    // check that if the direction is zero, then the new player after changing directions is the next player
+    game_state game_state_;
+    game_state_.player_list = make_order(3);
+    game_state_.turn = *game_state_.player_list->head;
+    change_turn(&game_state_);
+    cr_assert(eq(int, (int) game_state_.turn.number, 1));
     
-// }
+}
+
+Test(change_turn, moving_prev) {
+    // check that if the direction is zero, then the new player after changing directions is the previous player
+    game_state game_state_;
+    game_state_.player_list = make_order(3);
+    game_state_.player_list->direction = 1;
+    game_state_.turn = *game_state_.player_list->head;
+    change_turn(&game_state_);
+    // printf("%i\n", game_state_.turn.number);
+    cr_assert(eq(int, (int) game_state_.turn.number, 2));
+    
+}
 // NOLINTEND(*-magic-numbers)
