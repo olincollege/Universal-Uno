@@ -68,9 +68,9 @@ typedef struct {
   deck main;
   size_t number_players;
   player* turn;
-  deck* draw;
-  deck* discard;
-  order* player_list;
+  deck draw;
+  deck discard;
+  order player_list;
   size_t end;
 
 } game_state;
