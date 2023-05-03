@@ -52,9 +52,9 @@ int accept_client(uno_server* server, game_state game_state) {
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
-  player* current = game_state.player_list->head;
-  for (int i = 0; i < game_state.number_players; i++) {
-    if (current->sock_num != NULL) {
+  player* current = game_state->order->head;
+  for (int i = 0; i < game_state.number_players) {
+    if (current.sock_num != NULL) {
       continue;
     }
     current->sock_num = connected_d;
@@ -67,7 +67,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.player_list->head->prev->sock_num == NULL) {
+    while (game_state.order.head.prev.sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
