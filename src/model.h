@@ -1,6 +1,6 @@
 #pragma once
 
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,9 +11,9 @@ enum {
   /** Maximum numbers of players*/
   MAX_PLAYERS = 5,
   /** Number of cards in a deck*/
-  UNO_DECK= 108,
+  UNO_DECK = 108,
   /** Special Number for Draw 4*/
-  SPECIAL_13 = 13, 
+  SPECIAL_13 = 13,
   /** Special Number for pick color + draw 4*/
   SPECIAL_14 = 14
 
@@ -26,7 +26,7 @@ enum {
 // 12 = draw 2
 // 13 = pick color
 // 14 = pick color + draw 4
-typedef struct card{
+typedef struct card {
   char color;
   size_t value;
   struct card* next;
@@ -39,7 +39,7 @@ typedef struct {
 } deck;
 
 // Struct representing a player
-typedef struct player{
+typedef struct player {
   size_t number;
   deck hand;
   int sock_num;
@@ -57,11 +57,11 @@ typedef struct {
 // Struct representing game struct
 typedef struct {
   size_t start;
-  deck main;
+  deck* main;
   size_t number_players;
-  player turn;
-  deck draw;
-  deck discard;
+  player* turn;
+  deck* draw;
+  deck* discard;
   order* player_list;
   size_t end;
 
@@ -86,6 +86,8 @@ card* make_card(char color, size_t value);
 move card
 */
 void move_card(card* card, deck* old_deck, deck* new_deck);
+
+void shuffle(deck* deck_);
 
 /**
  * Free a cards's memory.
@@ -123,12 +125,12 @@ void free_deck(deck* deck_);
 /**
  * Switch the main card with the new card chosen by player
  *
- * Given a pointer to the game state, update the main card based on the card the player played. 
- * The function will update the player's hand to include one less card as well as move the main card
- * to the discard pile. 
+ * Given a pointer to the game state, update the main card based on the card the
+ * player played. The function will update the player's hand to include one less
+ * card as well as move the main card to the discard pile.
  *
- * @param state A pointer to current game state. 
- * @param new A pointer to the card the player played . 
+ * @param state A pointer to current game state.
+ * @param new A pointer to the card the player played .
  */
 void switch_main_card(game_state* state, char col, size_t val);
 
@@ -164,23 +166,22 @@ deck* make_UNO_deck(void);
 void update_moves(game_state* var);
 
 /**
- * Refill the draw pile with a shuffled discard pile. 
- * 
+ * Refill the draw pile with a shuffled discard pile.
+ *
  * @param var A pointer to the variable game state struct.
  *
  */
 void refill_draw(game_state* var);
 
 /**
- * Shuffle cards in a deck in place. 
+ * Shuffle cards in a deck in place.
  *
- * The deck of cards will be shuffled in place by moving an randomly selected node to the end of list 
- * 40 times. 
- * 
- * @param deck_ a deck of cards to by randomly shuffled. 
+ * The deck of cards will be shuffled in place by moving an randomly selected
+ * node to the end of list 40 times.
+ *
+ * @param deck_ a deck of cards to by randomly shuffled.
  */
 void random_cards(deck* deck_);
-
 
 /**
  * Update turn based on move
@@ -201,7 +202,7 @@ int check_uno(game_state* var);
  *
  * @param var A pointer to the variable game state struct.
  */
-int check_win(game_state *var);
+int check_win(game_state* var);
 
 void update_player_turn(game_state* var);
 
@@ -218,3 +219,91 @@ order* make_order(int num_players);
 void free_order(order* order_);
 
 void append_order(order* order_, player* player_);
+
+/**
+ * A function that returns a players initial hand.
+ *
+ * In the beginnign of a game, this function will take 7 cards from the draw
+ * deck and place them into the hand of the player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void make_hand(game_state* game_state, player* player);
+
+/**
+ * Based on the game_state and a given input, this function alters the state of
+ * the game
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void play_uno(game_state* game_state, char* input);
+
+/**
+ * In the event that a player puts down a reverse, this card reverses the order
+ * of the game.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void switch_direction(game_state* game_state);
+
+/**
+ * In the event that someone plays a skip, this will skip the next player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void skip(game_state* game_state);
+
+/**
+ * Draws a card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw(game_state* game_state, player* player);
+
+/**
+ * Draws two card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw2(game_state* game_state, player* player);
+
+/**
+ * Draws four card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw4(game_state* game_state, player* player);
+
+/**
+ * Once a card is used, it is then placed on the top of the deck.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param current the current card that has been played.
+ */
+void place_card(game_state* game_state, card* current);
+
+/**
+ * Sets the next player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void next_player(game_state* game_state);
+
+/**
+ * Makes an empty instance of a game state.
+ * 
+ * @return An empty game state.
+*/
+game_state* make_game_state(void);

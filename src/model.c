@@ -2,11 +2,11 @@
 
 card* make_card(char col, size_t val) {
   card* new_card = malloc(sizeof(card));
-  //printf("color %c value %zu\n", col, val);
-  strncpy (&new_card->color, &col, sizeof(col) );
-  //printf("%c\n", new_card->color);
+  // printf("color %c value %zu\n", col, val);
+  strncpy(&new_card->color, &col, sizeof(col));
+  // printf("%c\n", new_card->color);
   new_card->value = val;
-  //printf("%zu\n", new_card->value);
+  // printf("%zu\n", new_card->value);
   new_card->next = NULL;
   return new_card;
 }
@@ -81,43 +81,27 @@ deck* make_UNO_deck(void) {
   deck* UNO_deck = make_deck();
   // Red Colors
   append_card(UNO_deck, 'R', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-
-  // Blue Colors
   append_card(UNO_deck, 'B', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-  // Yellow Colors
   append_card(UNO_deck, 'Y', 0);
-  for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
-    }
-  }
-  // Green Colors
   append_card(UNO_deck, 'G', 0);
   for (size_t i = 0; i < 2; i++) {
-    for (size_t j = 1; i < SPECIAL_13; j++) {
-      append_card(UNO_deck, 'r', j);
+    for (size_t j = 1; j < SPECIAL_13; j++) {
+      append_card(UNO_deck, 'R ', j);
+      append_card(UNO_deck, 'G', j);
+      append_card(UNO_deck, 'B', j);
+      append_card(UNO_deck, 'Y', j);
     }
   }
   // Wild Cards
   for (size_t i = 0; i < 4; i++) {
-    append_card(UNO_deck, 'A', SPECIAL_13);
-    append_card(UNO_deck, 'A', SPECIAL_14);
+    append_card(UNO_deck, 'W', SPECIAL_13);
+    append_card(UNO_deck, 'W', SPECIAL_14);
   }
   return UNO_deck;
 }
 
 void shuffle(deck* deck_) {
-  for (size_t i = 0; i < 54; i++) {
+  for (size_t i = 0; i < deck_->size; i++) {
     size_t index = (size_t)(rand() % (UNO_DECK - 1));
     card* swap = get_card_index(deck_, index);
     // Move card from current place to end of list
@@ -144,7 +128,7 @@ card* find_card(deck* deck_, char col, size_t val) {
 }
 
 int check_draw(game_state* state) {
-  if (state->discard.size == 0) {
+  if (state->discard->size == 0) {
     return 1;
   }
   return 0;
@@ -173,9 +157,9 @@ void refill_draw(game_state* state) {
 
 void switch_main_card(game_state* state, char col, size_t val) {
   // Find card
-  card* swap = find_card(&(state->turn.hand), col, val);
-  move_card((state->main.head), &(state->main), &(state->discard));
-  move_card(swap, &(state->turn.hand), &(state->main));
+  card* swap = find_card(&(state->turn->hand), col, val);
+  move_card((state->main->head), &(state->main), &(state->discard));
+  move_card(swap, &(state->turn->hand), &(state->main));
 }
 
 player* make_player(int number) {
@@ -183,7 +167,7 @@ player* make_player(int number) {
   player_->hand = *(make_deck());
   player_->next = NULL;
   player_->prev = NULL;
-  player_->sock_num = 0;
+  player_->sock_num = -1;
   player_->number = number;
   return player_;
 }
@@ -199,7 +183,19 @@ order* make_order(int num_players) {
 
   for (size_t i = 1; i < num_players; i++) {
     head->next = make_player(i);
+    player* temp = head;
+    head = head->next;
+    head->prev = temp;
+    printf("%d Number\n", head->number);
+    printf("%d Next\n", temp->next->number);
+    printf("%d Prev", head->prev->number);
   }
+  new_order->head->prev = head;
+  
+  for (size_t j = 0; j < num_players; j++){
+
+  }
+
   return new_order;
 }
 
@@ -214,16 +210,100 @@ void free_order(order* order_) {
   free(order_);
 }
 
-void append_order(order* order_, player* player_) {
-  if (order_->head == NULL) {
-    order_->head = player_;
-  } else {
-    player* current = order_->head;
-    while (current->next != order_->head) {
-      current = current->next;
-    }
-    current->next = player_;
-    player_->next = order_->head;
-    player_->prev = current;
+void make_hand(game_state* game_state, player* player) {
+  for (size_t i = 0; i < 7; i++) {
+    draw(game_state, player);
   }
+}
+
+void switch_direction(game_state* game_state) {
+  if (game_state->player_list->direction == 0) {
+    game_state->player_list->direction = 1;
+
+  } else {
+    game_state->player_list->direction = 0;
+  }
+}
+
+void skip(game_state* game_state) {
+  game_state->turn = game_state->turn->next->next;
+}
+
+void draw(game_state* game_state, player* player) {
+  move_card(game_state->draw->head, game_state->draw, &player->hand);
+}
+
+void draw2(game_state* game_state, player* player) {
+  for (size_t i = 0; i < 2; i++) {
+    draw(game_state, player);
+  }
+}
+
+void draw4(game_state* game_state, player* player) {
+  for (size_t i = 0; i < 2; i++) {
+    draw2(game_state, player);
+  }
+}
+
+void place_card(game_state* game_state, card* current) {
+  game_state->main->head = current;
+}
+
+void next_player(game_state* game_state) {
+  if (game_state->player_list->direction == 1) {
+    game_state->turn = game_state->turn->prev;
+  } else {
+    game_state->turn = game_state->turn->next;
+  }
+}
+
+void play_uno(game_state* game_state, char* input) {
+  char number = input[1];
+  if (input[2]) {
+    strcat(number, input[2]);
+  }
+  size_t i;
+  sscanf(number, "%zu", &i);
+  card* played = make_card(input[0], i);
+
+  switch (number) {
+    case '0':
+      switch_direction(game_state);
+      place_card(game_state, played);
+      next_player(game_state);
+      break;
+    case '1':
+      skip(game_state);
+      place_card(game_state, played);
+      break;
+    case '2':
+      draw2(game_state, game_state->turn->next);
+      skip(game_state);
+      place_card(game_state, played);
+      break;
+    case '4':
+      draw4(game_state, game_state->turn->next);
+      skip(game_state);
+      place_card(game_state, played);
+      break;
+
+    default:
+      place_card(game_state, played);
+      next_player(game_state);
+      break;
+  }
+}
+
+game_state* make_game_state(void) {
+  game_state* state = malloc(sizeof(game_state));
+  state->discard = make_deck();
+  state->draw = make_UNO_deck();
+  shuffle(state->draw);
+  state->end = 0;
+  state->main = make_deck();
+  state->number_players = 0;
+  state->start = 0;
+  state->turn = NULL;
+  state->player_list = NULL;
+  return state;
 }
