@@ -67,9 +67,9 @@ typedef struct {
   size_t current_players;
   deck main;
   size_t number_players;
-  player turn;
-  deck draw;
-  deck discard;
+  player* turn;
+  deck* draw;
+  deck* discard;
   order* player_list;
   size_t end;
 
@@ -89,6 +89,8 @@ typedef struct {
  */
 card* make_card(char color, size_t value);
 
+
+void shuffle(deck* deck_);
 
 /**
  * Free a cards's memory.
@@ -343,6 +345,95 @@ order* make_order(size_t num_players);
  */
 void free_order(order* order_);
 
+void append_order(order* order_, player* player_);
+
+/**
+ * A function that returns a players initial hand.
+ *
+ * In the beginnign of a game, this function will take 7 cards from the draw
+ * deck and place them into the hand of the player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void make_hand(game_state* game_state, player* player);
+
+/**
+ * Based on the game_state and a given input, this function alters the state of
+ * the game
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void play_uno(game_state* game_state, char* input);
+
+/**
+ * In the event that a player puts down a reverse, this card reverses the order
+ * of the game.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void switch_direction(game_state* game_state);
+
+/**
+ * In the event that someone plays a skip, this will skip the next player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void skip(game_state* game_state);
+
+/**
+ * Draws a card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw(game_state* game_state, player* player);
+
+/**
+ * Draws two card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw2(game_state* game_state, player* player);
+
+/**
+ * Draws four card from the draw stack
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param player the player that needs to draw.
+ */
+void draw4(game_state* game_state, player* player);
+
+/**
+ * Once a card is used, it is then placed on the top of the deck.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param current the current card that has been played.
+ */
+void place_card(game_state* game_state, card* current);
+
+/**
+ * Sets the next player.
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ */
+void next_player(game_state* game_state);
+
+/**
+ * Makes an empty instance of a game state.
+ * 
+ * @return An empty game state.
+*/
+game_state* make_game_state(void);
 /**
  * Check if the current player has uno
  * 

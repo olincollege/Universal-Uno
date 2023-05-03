@@ -45,8 +45,10 @@ int accept_client(uno_server* server, game_state game_state) {
   if (connected_d == -1) {
     error_and_exit("Connection to server failed");
   }
-  if (game_state.order == NULL) {
-    game_state.order = make_order();
+  if (game_state.player_list->head == NULL) {
+    // controller call hereeee
+    game_state.player_list = make_order(game_state.number_players);
+    game_state.current_player++;
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
@@ -55,7 +57,8 @@ int accept_client(uno_server* server, game_state game_state) {
     if (current.sock_num != NULL) {
       continue;
     }
-    current.sock_num = connected_d;
+    current->sock_num = connected_d;
+    game_state.current_player++;
     break;
   }
 
@@ -74,116 +77,107 @@ int accept_client(uno_server* server, game_state game_state) {
     // it is we switch the clients view to a screen where cards get passed out.
     if (game_state.start != 1) {
       game_state.start = 1;
-      game_state.player_list.cur = game_state.player_list.head;
+      game_state.player_list->cur = game_state.player_list->head;
+      start_game(game_state);
     }
-    uno(game_state, connected_d);
+    play_uno(game_state);
+    send_message(game_state);
     return -1;
   }
 
   return 0;
 }
 
-
-void uno(game_state game_state, int socket_descriptor) {
-  if (game_state.player_list.head->prev.hand.size < 7) {
-    player* current = game_state.player_list.head;
-    for (size_t i = 0; i < game_state.number_players; i++) {
-      for (size_t i = 0; i < 7; i++) {
-        move_card(game_state.draw.head, game_state.draw, current->hand);
-      }
-      current = current->next;
-      // After giving all the players the cards, we will send a message letting,
-      // each client know what their cards are.
-    }
-  }
-
-  FILE* input_file = fdopen(socket_descriptor, "r+");
-  char* buf = NULL;
-  size_t buf_size = 0;
-  getline(&buf, &buf_size, input_file);
-  char color = buf[0];
-  char* number = buf[1];
-  strcat(number, buf[2]);
-
-  switch (number[1]) {
-    case '0':
-      switch_direction(game_state);
-      break;
-    case '1':
-      skip(game_state);
-      break;
-    case '2':
-      draw_two(game_state);
-      break;
-    case '3':
-      // wild card
-      break;
-    case '4':
-      draw_4(game_state);
-      break;
-
-    default:
-      move_card(current_card, game_state.player_list.cur->hand,
-                game_state.main);
-      break;
-  }
-}
-
-void start_game(game_state game_state, uno_server* server,
-                int socket_descriptor) {
-  player* current = game_state->order.head;
+void start_game(game_state game_state) {
+  player* current = game_state.player_list->head;
   for (size_t i = 0; i < game_state.number_players; i++) {
-    current->hand = make_hand();
+    make_hand(game_state.draw.head, current);
     current = current->next;
   }
   game_state.start = 1;
 }
 
-void send_hand(game_state game_state) {
-  char* hands[1000];
-  player* current_player = game_state->order.head;
+// void send_hand(game_state game_state) {
+//   char* hands[1000];
+//   player* current_player = game_state.player_list->head;
+//   for (size_t i = 0; i < game_state.number_players; i++) {
+//     FILE* input_file = fdopen(current_player->sock_num, "r+");
+//     card* current_card = current_player->hand.head;
+//     strcat(hands, "{");
+//     for (size_t i = 0; i < current_player->hand.size; i++) {
+//       char* color = current_card->color;
+//       char* card[10];
+//       sprintf(card, "[%s%d],", color, current_card->value);
+//       strcat(hands, card);
+//     }
+//     strcat(hands, "}");
+//     fputs(hands, input_file);
+//   }
+// }
+
+// void send_game(game_state game_state) {
+//   player* current_player = game_state.player_list->head;
+//   char* data[1000];
+//   char* size[50];
+//   for (size_t i = 0; i < game_state.number_players; i++) {
+//     char* size_value[5];
+//     sprintf(size_value, "%d,", current_player->hand.size);
+//     strcat(size, size_value);
+//     current_player = current_player->next;
+//   }
+//   char* top[5];
+//   sprintf(top, "%s%i", game_state.main.head->color,
+//           game_state.main.head->color);
+//   sprintf(data, "Sizes:%s Top:%s Turn:%i", size, top, game_state.turn);
+//   for (size_t i = 0; i < game_state.number_players; i++) {
+//     FILE* input_file = fdopen(current_player->sock_num, "r+");
+//     fputs(data, input_file);
+//     current_player = current_player->next;
+//   }
+// }
+
+// void send_initial(game_state game_state) {
+//   player* current_player = game_state.player_list->head;
+//   for (size_t i = 0; i < game_state.number_players; i++) {
+//     FILE* input_file = fdopen(current_player->sock_num, "r+");
+//     char* id[5];
+//     sprintf(id, "%i", current_player->number);
+//     fputs(id, input_file);
+//     current_player = current_player->next;
+//   }
+// }
+
+void send_message(game_state game_state) {
+  // if error 1:
+  // broadcast message.
+  // else
+  player* current_player = game_state.player_list->head;
   for (size_t i = 0; i < game_state.number_players; i++) {
     FILE* input_file = fdopen(current_player->sock_num, "r+");
+    putw(0, input_file);
+    putw(current_player->number, input_file);
+    putw(game_state.turn.number, input_file);
+
+    get_hand_size(current_player, input_file);
     card* current_card = current_player->hand.head;
-    strcat(hands, "{");
-    for (size_t i = 0; i < current_player->hand.size; i++) {
-      char* color = current_card->color;
-      char* card[10];
-      sprintf(card, "[%s%d],", color, current_card.value);
-      strcat(hands, card);
+    while (current_card->next != NULL) {
+      fputs(current_card->color, input_file);
+      putw(current_card->value, input_file);
     }
-    strcat(hands, "}");
-    fputs(hands, input_file);
+    putw(game_state.number_players, input_file);
+    player* temp = game_state.player_list->head;
+    while (temp->next != game_state.player_list->head) {
+      get_hand_size(temp, input_file);
+      temp = temp->next;
+    }
   }
 }
 
-void send_game(game_state game_state) {
-  player* current_player = game_state->order.head;
-  char* data[1000];
-  char* size[50];
-  for (size_t i = 0; i < game_state.number_players; i++) {
-    char* size_value[5];
-    sprintf(size_value, "%d,", current_player.hand.size);
-    strcat(size, size_value);
-    current_player = current_player->next;
-  }
-  char* top[5];
-  sprintf(top, "%s%i", game_state.main.color, game_state.main.value);
-  sprintf(data, "Sizes:%s Top:%s Turn:%i", size, top, game_state.turn);
-  for (size_t i = 0; i < game_state.number_players; i++) {
-    FILE* input_file = fdopen(current_player->sock_num, "r+");
-    fputs(data, input_file);
-    current_player = current_player->next;
-  }
-}
-
-void send_initial(game_state game_state) {
-  player* current_player = game_state->order.head;
-  for (size_t i = 0; i < game_state.number_players; i++) {
-    FILE* input_file = fdopen(current_player->sock_num, "r+");
-    char* id[5];
-    sprintf(id, "%i", current_player.number);
-    fputs(id, input_file);
-    current_player = current_player->next;
+void get_hand_size(player* player, FILE* file) {
+  if (player->hand.size < 10) {
+    putw(0, file);
+    putw(player->hand.size, file);
+  } else {
+    putw(player->hand.size, file);
   }
 }
