@@ -56,3 +56,11 @@ int in_hand(card* played_card, deck* hand);
  * 
  */
 int is_valid(char* card, game_state* game_state_);
+/**
+ * Changes the current player depending on the game direction. 
+ * If the game direction is 0, move to the next player in the lineup
+ * If the game direction is 1, move to the previous player in the lineup
+ * 
+ * @param game_state_: a pointer to a game_state object holding the current game state
+ */
+void change_turn(game_state* game_state_);

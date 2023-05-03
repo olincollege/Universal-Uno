@@ -302,4 +302,14 @@ Test(is_valid, in_hand_no_match) {
     cr_assert(zero(int, is_valid(card_str, &game_state_)));
     free_deck(hand_);
 }
+
+// Test(change_turn, moving_next) {
+//     // check that if the direction is zero, then the new player after changing directions is the next player
+//     game_state game_state_;
+//     game_state_.player_list = make_order(3);
+//     game_state_.player_list->direction = 0;
+//     change_turn(&game_state_);
+//     cr_assert(eq(int, (int) game_state_.player_list->head->number, 1));
+    
+// }
 // NOLINTEND(*-magic-numbers)

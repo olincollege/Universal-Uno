@@ -51,34 +51,10 @@ int is_valid(char* card_, game_state* game_state_) {
         return 1;
       }
       if(curr_card->color == game_state_->main.head->color) {
-        if(curr_card->value == REVERSE) {
-            // switch directions, return 1
-            return 1;
-          } 
-          if(curr_card->value == SKIP) {
-            // skip, return 1
-            return 1;
-          } 
-          if(curr_card->value == DRAW_2) {
-            // draw 2, return 1
-            return 1;
-          }
         return 1;
       } 
       
       if(curr_card->value == game_state_->main.head->value){
-          if(curr_card->value == REVERSE) {
-              // switch directions, return 1
-              return 1;
-            } 
-            if(curr_card->value == SKIP) {
-              // skip, return 1
-              return 1;
-            } 
-            if(curr_card->value == DRAW_2) {
-              // draw 2, return 1
-              return 1;
-            }
           return 1;
       }
       
@@ -86,4 +62,19 @@ int is_valid(char* card_, game_state* game_state_) {
     return 0; 
 }
 
+void change_turn(game_state* game_state_){
+  printf("%i\n", game_state_->turn.number);
+  if(game_state_->player_list->direction == 0) {
+    // 0 is next instead of prev
+    printf("%i\n", game_state_->turn.number);
+    
+    game_state_->turn = *(game_state_->turn.next);
 
+  } else {
+    // 1 is prev
+    player* previous_player = game_state_->turn.prev;
+    printf("%i\n", previous_player->number);
+    game_state_->turn = *previous_player;
+    printf("%i\n", game_state_->turn.number);
+  }
+}

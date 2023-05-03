@@ -183,12 +183,19 @@ void free_player(player* player_) {
 
 order* make_order(size_t num_players) {
   order* new_order = malloc(sizeof(order));
-  player* head = make_player(0);
-  new_order->head = head;
+  player* head_ = make_player(0);
+  new_order->head = head_;
   new_order->direction = 0;
+  // printf("%i\n", new_order->head->number);
   for (size_t i = 1; i < num_players; i++) {
-    head->next = make_player(i);
+    head_->next = make_player(i);
+    head_->next->prev = head_;
+    head_ = head_->next;
+    // printf("%i\n", head_->number);
   }
+  
+  new_order->head->prev = head_;
+  new_order->head->prev->next = new_order->head;
   return new_order;
 }
 
