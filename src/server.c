@@ -48,17 +48,17 @@ int accept_client(uno_server* server, game_state game_state) {
   if (game_state.player_list->head == NULL) {
     // controller call hereeee
     game_state.player_list = make_order(game_state.number_players);
-    game_state.current_player++;
+    game_state.current_players++;
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
-  player* current = game_state->order->head;
-  for (int i = 0; i < game_state.number_players) {
-    if (current.sock_num != NULL) {
+  player* current = game_state.player_list->head;
+  for (int i = 0; i < game_state.number_players; i++) {
+    if (current->sock_num != NULL) {
       continue;
     }
     current->sock_num = connected_d;
-    game_state.current_player++;
+    game_state.current_players++;
     break;
   }
 
@@ -67,7 +67,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.order.head.prev.sock_num == NULL) {
+    while (game_state.player_list->head->prev->sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
@@ -77,7 +77,7 @@ int accept_client(uno_server* server, game_state game_state) {
     // it is we switch the clients view to a screen where cards get passed out.
     if (game_state.start != 1) {
       game_state.start = 1;
-      game_state.player_list->cur = game_state.player_list->head;
+      game_state.turn = game_state.player_list->head;
       start_game(game_state);
     }
     play_uno(game_state);
@@ -91,7 +91,7 @@ int accept_client(uno_server* server, game_state game_state) {
 void start_game(game_state game_state) {
   player* current = game_state.player_list->head;
   for (size_t i = 0; i < game_state.number_players; i++) {
-    make_hand(game_state.draw.head, current);
+    make_hand(game_state.draw->head, current);
     current = current->next;
   }
   game_state.start = 1;
@@ -156,7 +156,7 @@ void send_message(game_state game_state) {
     FILE* input_file = fdopen(current_player->sock_num, "r+");
     putw(0, input_file);
     putw(current_player->number, input_file);
-    putw(game_state.turn.number, input_file);
+    putw(game_state.turn->number, input_file);
 
     get_hand_size(current_player, input_file);
     card* current_card = current_player->hand.head;

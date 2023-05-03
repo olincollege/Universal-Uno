@@ -1,7 +1,7 @@
 #include "controller.h"
 void process_input(char* buf, char* processed_input) {
   // char* processed_input[strlen(buf)];
-
+  // check to make sure it's an actual card
   if(buf[1] == 'r') {
     processed_input[0] = buf[0];
     strcat(processed_input, "10");
@@ -22,53 +22,3 @@ void process_input(char* buf, char* processed_input) {
   }
 }
 
-int in_hand(card* played_card, deck* hand) {
-  card* curr_hand_card = hand->head;
-
-  while(curr_hand_card != NULL) {
-    if(curr_hand_card->color == played_card->color) {
-      if(curr_hand_card->value == played_card->value) {
-        return 1;
-      }
-    }
-    curr_hand_card = curr_hand_card->next;
-  }
-  return 0;
-}
-
-int is_valid(char* card_, game_state* game_state_) {
-    // turn string into card object
-    char* num_str = &card_[1];  
-    int num = atoi(num_str);
-    card* curr_card = make_card(card_[0], (size_t) num);
-    int is_in_hand = in_hand(curr_card, &(game_state_->turn.hand));
-    
-    if(is_in_hand == 1) {
-      if(curr_card->value == DRAW_4) {
-        return 1;
-      }
-      if(curr_card->value == WILD) {
-        return 1;
-      }
-      if(curr_card->color == game_state_->main.head->color) {
-        return 1;
-      } 
-      
-      if(curr_card->value == game_state_->main.head->value){
-          return 1;
-      }
-      
-    }
-    return 0; 
-}
-
-void change_turn(game_state* game_state_){
-  // printf("%i\n", game_state_->turn.number);
-  if(game_state_->player_list->direction == 0) {
-    // 0 is next instead of prev    
-    game_state_->turn = *(game_state_->turn.next);
-  } else {
-    // 1 is prev
-    game_state_->turn = *(game_state_->turn.prev);
-  }
-}

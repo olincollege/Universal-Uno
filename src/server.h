@@ -89,11 +89,12 @@ void uno(game_state game_state, int socket_descriptor);
  * @param socket_descriptor the socket descriptor of the client who's turn it
  * is.
  */
-void start_game(game_state game_state, uno_server* server,
-                int socket_descriptor);
-
+void start_game(game_state game_state);
+void send_message(game_state game_state);
+void get_hand_size(player* player, FILE* file);
 void send_hand(game_state game_state);
 
 void send_game(game_state game_state);
 
 void send_initial(game_state game_state);
+

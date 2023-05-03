@@ -12,12 +12,18 @@ enum {
   MAX_PLAYERS = 5,
   /** Number of cards in a UNO deck*/
   UNO_DECK = 108,
-  /** Special Number for Draw 4*/
-  SPECIAL_13 = 13,
-  /** Special Number for Wild Draw 4*/
-  SPECIAL_14 = 14
-
+  /** Reverse Card Value */
+  REVERSE = 10,
+  /** Skip Card Value*/
+  SKIP = 11,
+  /** Draw 2 Card Value*/
+  DRAW_2 = 12,
+  /** Draw 4 WildCard Value*/
+  DRAW_4 = 13,
+  /** WildCard Value*/
+  WILD = 14
 };
+
 
 // Define game state structs.
 
@@ -26,8 +32,8 @@ enum {
 // 10 = Reverse
 // 11 = Skip
 // 12 = Draw 2
-// 13 = Wild card
-// 14 = Wild Draw 4
+// 13 = Wild Draw 4
+// 14 = Wild
 typedef struct card {
   char color;
   size_t value;
@@ -455,7 +461,36 @@ int check_uno(game_state* state);
  */
 int check_win(game_state* state);
 
-
+/**
+ * Checks if a card is in a player's hand 
+ * 
+ * @param played_card: a card object representing the card played
+ * @param hand: a deck object representing the player's hand
+ * 
+ * @return int: returns 1 if the card is in the hand, returns 0 otherwise
+ */
+int in_hand(card* played_card, deck* hand);
+/**
+ * Checks that a move is valid. By the rules of UNO, a move is only valid if:
+ *   * It is the same color as the top card on the played deck, or
+ *   * It is the same number as the top card on the played deck, or
+ *   * It is a wild card
+ * 
+ * @param card[]: a string representation of the played card
+ * @param state: the current game state
+ * 
+ * @return int: returns 0 if the card is not valid. If it's valid, return 1
+ * 
+ */
+int is_valid(char* card, game_state* state);
+/**
+ * Changes the current player depending on the game direction. 
+ * If the game direction is 0, move to the next player in the lineup
+ * If the game direction is 1, move to the previous player in the lineup
+ * 
+ * @param state: a pointer to a game_state object holding the current game state
+ */
+void change_turn(game_state* state);
 
 
 
