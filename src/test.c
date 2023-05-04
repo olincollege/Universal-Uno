@@ -22,9 +22,9 @@ int deserialize(char* recv_line, game_view* game_v){
     //char str[2] = "\0"; /* gives {\0, \0} */
     //str[0] = fgetc(recv_line);
 
-    char recv_line1[] = "1/1/1/G4/5/G3,W1,R2/5/3,45,32,5";
+    char recv_line1[] = "0/1/1/G4/5/G3,W1,R2/5/3,45,32,5";
 
-    char *token = strtok(recv_line, "/");                       
+    char *token = strtok(recv_line1, "/");                       
     game_v-> message = strtol(token, &eptr, 10);
     token = strtok(NULL, "/");                           
     game_v-> player_id = strtol(token, &eptr, 10);

@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "utils.h"
+#include "model.h"
 
 uno_server* make_uno_server(struct sockaddr_in ip_addr, int max_backlog) {
   uno_server* server = malloc(sizeof(uno_server));
@@ -49,7 +50,7 @@ int accept_client(uno_server* server, game_state* game_state) {
   }
   if (game_state->current_players == 0) {
     printf("in if state\n");
-    game_state->number_players = 2;
+    game_state->number_players = 3;
     game_state->player_list = *make_order(game_state->number_players);
     game_state->player_list.head->sock_num = connected_d;
     printf("player %zu connected!", game_state->player_list.head->number);
