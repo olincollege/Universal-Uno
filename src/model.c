@@ -109,13 +109,15 @@ card* get_card_index(deck* deck_, size_t index) {
 }
 
 void shuffle(deck* deck_) {
+  srand((unsigned int)time(0)); // NOLINT(cert-msc32-c,cert-msc51-cpp)
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
-  for (size_t i = 0; i < deck_->size; i++) {
+  for (size_t i = 0; i < 2*(deck_->size); i++) {
     size_t index =
         ((size_t) rand() %
           (deck_->size - UNO));  // NOLINT(cert-msc30-c, cert-msc50-cpp,concurrency-mt-unsafe)
+    // printf("%zu\n", index);
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
   }

@@ -113,12 +113,22 @@ int accept_client(uno_server* server, game_state* game_state) {
 }
 
 void start_game(game_state game_state) {
+  printf("in start game\n");
   player* current = game_state.player_list.head;
   for (size_t i = 0; i < game_state.number_players; i++) {
     make_hand(game_state.draw.head, current);
+    
+    card* card_ = current->hand.head;
+    printf("Player %i hand\n", current->number);
+    while(card_ != NULL){
+      printf("Color: %c ", card_->color);
+      printf("Number: %i\n", card_->value);
+      card_ = card_->next;
+    }
     current = current->next;
   }
   game_state.start = 1;
+  printf("Sending message\n");
   send_message(game_state);
 }
 
@@ -129,7 +139,7 @@ void play_game(game_state* state) {
     ssize_t val = read((int) state->turn->sock_num, buf, 1000);
     printf("%s\n", buf);
     if(val < 0) {
-      printf("Failed to read from Player %i", (int) state->turn->number);
+      printf("Failed to read from Player %i\n", (int) state->turn->number);
       exit;
     }
     if(val == 0) {
@@ -144,23 +154,23 @@ void play_game(game_state* state) {
       } 
     } else if(strstr(buf, "draw") != NULL) {
         printf("Card requested\n");
-        card* card_ = state->turn->hand.head;
-        while(card_ != NULL){
-          printf("Color: %c ", card_->color);
-          printf("Number: %i\n", card_->value);
-          card_ = card_->next;
-        }
+        // card* card_ = state->turn->hand.head;
+        // while(card_ != NULL){
+        //   printf("Color: %c ", card_->color);
+        //   printf("Number: %i\n", card_->value);
+        //   card_ = card_->next;
+        // }
         if(check_draw(state) == 1) {
           refill_draw(state);
         }
         draw_card(state);
         
         printf("\n");
-        while(card_ != NULL){
-          printf("Color: %c ", card_->color);
-          printf("Number: %i\n", card_->value);
-          card_ = card_->next;
-        }
+        // while(card_ != NULL){
+        //   printf("Color: %c ", card_->color);
+        //   printf("Number: %i\n", card_->value);
+        //   card_ = card_->next;
+        // }
         
         send_message(*state);
       } else {
@@ -229,7 +239,7 @@ void send_message(game_state game_state) {
   // broadcast message.
   // else
   player* current_player = game_state.player_list.head;
-
+  
   for (size_t i = 0; i < game_state.number_players; i++) {
     char* sendlin[1000];
     sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
@@ -242,7 +252,7 @@ void send_message(game_state game_state) {
     char* num_cards[8];
     sprintf(num_cards, "%d/", game_state.number_players);
     strcat(sendlin, num_cards);
-    while (current_card->next != NULL) {
+    while (current_card != NULL) {
       // printf("in loop 1\n");
       char* card[7];
       sprintf(card, " %c%d,", current_card->color, current_card->value);
@@ -268,6 +278,7 @@ void send_message(game_state game_state) {
     // fputs(sendlin, input_file);
     write(current_player->sock_num, sendlin, 1000);
     // printf("fputs after\n");
+    current_player = current_player->next;
   }
 }
 
