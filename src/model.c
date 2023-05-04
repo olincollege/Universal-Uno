@@ -112,10 +112,10 @@ void shuffle(deck* deck_) {
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
-  for (size_t i = 0; i < 2*(deck_->size); i++) {
+  for (size_t i = 0; i < deck_->size; i++) {
     size_t index =
-        ((size_t) rand() %
-                 (deck_->size - UNO));  // NOLINT(cert-msc30-c,
+        (size_t)(rand() %
+                 (deck_->size));  // NOLINT(cert-msc30-c,
                                   // cert-msc50-cpp,concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
