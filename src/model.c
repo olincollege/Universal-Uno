@@ -182,7 +182,7 @@ void draw_card(game_state* state) {
   move_card(state->draw.head, &(state->draw), &(state->turn->hand));
 }
 
-void switch_main_card(game_state* state, char col, size_t val) {
+void place_card(game_state* state, char col, size_t val) {
   // Find card
   card* swap = find_card(&(state->turn->hand), col, val);
   move_card((state->main.head), &(state->main), &(state->discard));
@@ -267,6 +267,7 @@ void skip(game_state* game_state) {
 
 void draw(game_state* game_state, player* player) {
   move_card(game_state->draw.head, &(game_state->draw), &player->hand);
+  puts("hiiii");
 }
 
 void draw2(game_state* game_state, player* player) {
@@ -279,10 +280,6 @@ void draw4(game_state* game_state, player* player) {
   for (size_t i = 0; i < 2; i++) {
     draw2(game_state, player);
   }
-}
-
-void place_card(game_state* game_state, card* current) {
-  game_state->main.head = current;
 }
 
 void next_player(game_state* game_state) {
