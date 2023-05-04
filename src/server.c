@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "utils.h"
+#include "model.h"
 
 uno_server* make_uno_server(struct sockaddr_in ip_addr, int max_backlog) {
   uno_server* server = malloc(sizeof(uno_server));
