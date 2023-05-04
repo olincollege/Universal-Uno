@@ -38,24 +38,23 @@ void listen_for_connections(uno_server* server) {
 }
 
 int accept_client(uno_server* server, game_state* game_state) {
-  printf("helo\n");
+  printf("at top of accept_client\n");
   struct sockaddr_storage client_addr;
   unsigned int address_size = sizeof(client_addr);
   int connected_d =
       accept(server->listener, (struct sockaddr*)&client_addr, &address_size);
-  printf("connect_d: %i\n", connected_d);
+  // printf("connect_d: %i\n", connected_d);
   if (connected_d == -1) {
     error_and_exit("Connection to server failed");
   }
   if (game_state->current_players == 0) {
-    printf("in if state\n");
-    game_state->number_players = 2;
+    printf("Player 0 connecting...\n");
+    game_state->number_players = 3;
     game_state->player_list = *make_order(game_state->number_players);
     game_state->player_list.head->sock_num = connected_d;
-    printf("player %zu connected!", game_state->player_list.head->number);
+    printf("player %zu connected!\n", game_state->player_list.head->number);
     game_state->current_players++;
   } else {
-    printf("in else\n");
     // Maybe when making players initialize # to the number in the array it is,
     // Deck to NULL and sock_num to NULL
 
@@ -69,25 +68,26 @@ int accept_client(uno_server* server, game_state* game_state) {
         current = current->next;
         // continue;
       } else {
+        printf("Player %i connecting...\n", current->number);
         current->sock_num = connected_d;
       
         game_state->current_players = game_state->current_players + 1;
-        printf("player %zu connected!", current->number);
+        printf("Player %zu connected! \n", current->number);
         // current = current->next;
         break;
       }
       
     }
   }
-  printf("forking\n");
-  printf("num players: %zu \n", game_state->current_players);
+  // printf("forking\n");
+  // printf("num players: %zu \n", game_state->current_players);
   pid_t pid = fork();
   if (pid == -1) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
     while (game_state->current_players != game_state->number_players) {
-      printf("stuck here\n");
+      printf("Not enough players yet!\n");
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
@@ -291,7 +291,7 @@ void send_message_check(game_state game_state) {
     get_hand_size(current_player, input_file);
     card* current_card = current_player->hand.head;
     while (current_card->next != NULL) {
-      fputs(current_card->color, input_file);
+      fputs(current_card->color, input_file); // note is invalid, color is character not string
       putw(current_card->value, input_file);
     }
     // putw(game_state.number_players, input_file);

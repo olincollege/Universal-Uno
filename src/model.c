@@ -292,7 +292,8 @@ void next_player(game_state* state) {
 void play_uno(game_state* state, char* input) {
   char number = input[1];
   char switch_num = input[2];
-  int num = atoi(number);
+  strcat(number, switch_num);
+  int num = atoi(&number);
   char col = input[0];
 
   if(is_valid(input, state) == 1) {
