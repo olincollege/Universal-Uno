@@ -183,12 +183,12 @@ void send_message(game_state game_state) {
   // if error 1:
   // broadcast message.
   // else
-  player* current_player = game_state.player_list->head;
+  player* current_player = game_state.player_list.head;
 
   for (size_t i = 0; i < game_state.number_players; i++) {
     char* sendlin[150];
     sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
-            game_state.turn.number);
+            game_state.turn->number);
     FILE* input_file = fdopen(current_player->sock_num, "r+");
     card* current_card = current_player->hand.head;
     char* main[7];
@@ -205,8 +205,8 @@ void send_message(game_state game_state) {
     char* num_players[5];
     sprintf(num_players, "/%d/", game_state.number_players);
     strcat(sendlin, num_players);
-    player* temp = game_state.player_list->head;
-    while (temp->next != game_state.player_list->head) {
+    player* temp = game_state.player_list.head;
+    while (temp->next != game_state.player_list.head) {
       char* hand_size[7];
       sprintf(hand_size, "%d,", temp->hand.size);
       strcat(sendlin, hand_size);
@@ -225,7 +225,7 @@ void get_hand_size(player* player, FILE* file) {
   }
 }
 void send_message_check(game_state game_state) {
-  player* current_player = game_state.player_list->head;
+  player* current_player = game_state.player_list.head;
   FILE* input_file;
   for (size_t i = 0; i < game_state.number_players; i++) {
     putw(0, input_file);
@@ -239,8 +239,8 @@ void send_message_check(game_state game_state) {
       putw(current_card->value, input_file);
     }
     // putw(game_state.number_players, input_file);
-    player* temp = game_state.player_list->head;
-    while (temp->next != game_state.player_list->head) {
+    player* temp = game_state.player_list.head;
+    while (temp->next != game_state.player_list.head) {
       get_hand_size(temp, input_file);
       temp = temp->next;
     }
@@ -248,7 +248,7 @@ void send_message_check(game_state game_state) {
   char* recv_line = NULL;
   size_t recv_line_size = 0;
   if (getline(&recv_line, &recv_line_size, input_file) == -1) {
-    return -1;
+    // return -1;
   }
   puts(recv_line);
 }
