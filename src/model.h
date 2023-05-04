@@ -21,7 +21,14 @@ enum {
   /** Draw 4 WildCard Value*/
   DRAW_4 = 13,
   /** WildCard Value*/
-  WILD = 14
+  WILD = 14,
+  /** Seven*/
+  SEVEN = 7,
+  /** TWO*/
+  TWO = 2,
+
+
+
 };
 
 // Define game state structs.
@@ -93,8 +100,6 @@ typedef struct {
  * @return A pointer to the newly created card.
  */
 card* make_card(char color, size_t value);
-
-void shuffle(deck* deck_);
 
 /**
  * Free a cards's memory.
