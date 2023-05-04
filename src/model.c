@@ -233,9 +233,9 @@ void free_order(order* order_) {
   free(order_);
 }
 
-void make_hand(game_state* game_state, player* player) {
+void make_hand(game_state* state, player* player) {
   for (size_t i = 0; i < 7; i++) {
-    draw(game_state, player);
+    draw(state, player);
   }
 }
 int check_uno(game_state* state) {
@@ -245,79 +245,80 @@ int check_uno(game_state* state) {
   return 0;
 }
 
-void switch_direction(game_state* game_state) {
-  if (game_state->player_list.direction == 0) {
-    game_state->player_list.direction = 1;
+void switch_direction(game_state* state) {
+  if (state->player_list.direction == 0) {
+    state->player_list.direction = 1;
 
   } else {
-    game_state->player_list.direction = 0;
+    state->player_list.direction = 0;
   }
 }
 
-void skip(game_state* game_state) {
-  game_state->turn = game_state->turn->next->next;
+void skip(game_state* state) {
+  state->turn = state->turn->next->next;
 }
 
-void draw(game_state* game_state, player* player) {
-  move_card(game_state->draw.head, &(game_state->draw), &player->hand);
+void draw(game_state* state, player* player) {
+  move_card(state->draw.head, &(state->draw), &player->hand);
 }
 
-void draw2(game_state* game_state, player* player) {
+void draw2(game_state* state, player* player) {
   for (size_t i = 0; i < 2; i++) {
-    draw(game_state, player);
+    draw(state, player);
   }
 }
 
-void draw4(game_state* game_state, player* player) {
+void draw4(game_state* state, player* player) {
   for (size_t i = 0; i < 2; i++) {
-    draw2(game_state, player);
+    draw2(state, player);
   }
 }
 
-void place_card(game_state* game_state, card* current) {
-  game_state->main.head = current;
+void place_card(game_state* state, card* current) {
+  state->main.head = current;
 }
 
-void next_player(game_state* game_state) {
-  if (game_state->player_list.direction == 1) {
-    game_state->turn = game_state->turn->prev;
+void next_player(game_state* state) {
+  if (state->player_list.direction == 1) {
+    state->turn = state->turn->prev;
   } else {
-    game_state->turn = game_state->turn->next;
+    state->turn = state->turn->next;
   }
 }
 
-void play_uno(game_state* game_state, char* input) {
+void play_uno(game_state* state, char* input) {
   char number = input[1];
-  size_t num;
-  sscanf(number, "%zu", &num);
-  card* played = make_card(input[0], num);
+  char switch_num = input[2];
+  int num = atoi(number);
+  char col = input[0];
 
-  switch (number) {
-    case '0':
-      switch_direction(game_state);
-      place_card(game_state, played);
-      next_player(game_state);
-      break;
+  if(is_valid(input, state) == 1) {
+    switch (switch_num) {
     case '1':
-      skip(game_state);
-      place_card(game_state, played);
+      switch_direction(state);
+      switch_main_card(state, col, num);
+      break;
+    case '0':
+      skip(state);
+      switch_main_card(state, col, num);
       break;
     case '2':
-      draw2(game_state, game_state->turn->next);
-      skip(game_state);
-      place_card(game_state, played);
+      draw2(state, state->turn->next);
+      switch_main_card(state, col, num);
       break;
-    case '4':
-      draw4(game_state, game_state->turn->next);
-      skip(game_state);
-      place_card(game_state, played);
+    case '3':
+      draw4(state, state->turn->next);
+      switch_main_card(state, col, num);
       break;
 
     default:
-      place_card(game_state, played);
-      next_player(game_state);
+      switch_main_card(state, col, num);
+      next_player(state);
       break;
+    }
   }
+
+  
   // return 0; 
 }
 
@@ -362,7 +363,13 @@ int is_valid(char* card_, game_state* state) {
     int num = atoi(num_str);
     card* curr_card = make_card(card_[0], (size_t) num);
     int is_in_hand = in_hand(curr_card, &(state->turn->hand));
-    
+    // make sure card is valid uno card
+    if(num > 14) {
+      return 0;
+    }
+    if(card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' && card_[0] != 'G') {
+      return 0;
+    }
     if(is_in_hand == 1) {
       if(curr_card->value == DRAW_4) {
         return 1;

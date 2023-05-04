@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 
 #include "model.h"
+#include "controller.h"
 
 enum { BACKLOG_SIZE = 10 };
 
@@ -70,7 +71,7 @@ void listen_for_connections(uno_server* server);
  * @param server The server to accept the connection on.
  * @return 0 for the parent process and -1 for the child (echo) process.
  */
-int accept_client(uno_server* server, game_state game_state);
+int accept_client(uno_server* server, game_state* game_state);
 
 
 /**
@@ -90,6 +91,7 @@ void uno(game_state game_state, int socket_descriptor);
  * is.
  */
 void start_game(game_state game_state);
+void play_game(game_state* state);
 void send_message(game_state game_state);
 void get_hand_size(player* player, FILE* file);
 void send_hand(game_state game_state);

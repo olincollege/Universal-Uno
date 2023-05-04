@@ -37,7 +37,7 @@ void listen_for_connections(uno_server* server) {
   };
 }
 
-int accept_client(uno_server* server, game_state game_state) {
+int accept_client(uno_server* server, game_state* game_state) {
   struct sockaddr_storage client_addr;
   unsigned int address_size = sizeof(client_addr);
   int connected_d =
@@ -45,20 +45,20 @@ int accept_client(uno_server* server, game_state game_state) {
   if (connected_d == -1) {
     error_and_exit("Connection to server failed");
   }
-  if (game_state.player_list.head == NULL) {
-    // controller call hereeee
-    game_state.player_list = *make_order(game_state.number_players);
-    game_state.current_players++;
+  if (game_state->player_list.head == NULL) {
+    game_state->number_players = 3;
+    game_state->player_list = *make_order(game_state->number_players);
+    game_state->current_players++;
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
-  player* current = game_state.player_list.head;
-  for (int i = 0; i < game_state.number_players; i++) {
+  player* current = game_state->player_list.head;
+  for (int i = 0; i < game_state->number_players; i++) {
     if (current->sock_num != NULL) {
       continue;
     }
     current->sock_num = connected_d;
-    game_state.current_players++;
+    game_state->current_players++;
     break;
   }
 
@@ -67,7 +67,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.player_list.head->prev->sock_num == NULL) {
+    while (game_state->player_list.head->prev->sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
@@ -75,13 +75,14 @@ int accept_client(uno_server* server, game_state game_state) {
     }
     // In the view maybe a while loop that checks if start is != 1 so then when
     // it is we switch the clients view to a screen where cards get passed out.
-    if (game_state.start != 1) {
-      game_state.start = 1;
-      game_state.turn = game_state.player_list.head;
-      start_game(game_state);
+    if (game_state->start != 1) {
+      game_state->start = 1;
+      game_state->turn = game_state->player_list.head;
+      start_game(*game_state);
     }
     // play_uno(game_state);
     // send_message(game_state);
+    play_game(game_state);
 
     return -1;
   }
@@ -98,9 +99,36 @@ void start_game(game_state game_state) {
   game_state.start = 1;
 }
 
-// void play_game(game_state* state) {
-
-// }
+void play_game(game_state* state) {
+  printf("game starting\n");
+  char buf[1000];
+  while(1) {
+    ssize_t val = read((int) state->turn->sock_num, buf, 1000);
+    if(val < 0) {
+      printf("Failed to read from Player %i", (int) state->turn->number);
+      exit;
+    }
+    if(val == 0) {
+      close_tcp_socket((int) state->turn->sock_num);
+      break;
+    }
+    if(strcmp(buf, "u")) {
+      if(check_uno(state) == 1){
+       //broadcast that uno has been called
+      } else if(strcmp(buf, "draw")) {
+        if(state->draw.size == 1) {
+          refill_draw(state);
+        }
+        draw_card(state);
+        send_message(*state);
+      }
+    }
+    char card_str[5];
+    process_input(buf, card_str);
+    play_uno(state, card_str);
+    change_turn(state);
+  }
+}
 // void send_hand(game_state game_state) {
 //   char* hands[1000];
 //   player* current_player = game_state.player_list->head;
