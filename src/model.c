@@ -182,7 +182,7 @@ void draw_card(game_state* state) {
   move_card(state->draw.head, &(state->draw), &(state->turn->hand));
 }
 
-void switch_main_card(game_state* state, char col, size_t val) {
+void place_card(game_state* state, char col, size_t val) {
   // Find card
   card* swap = find_card(&(state->turn->hand), col, val);
   move_card((state->main.head), &(state->main), &(state->discard));
@@ -281,13 +281,9 @@ void draw4(game_state* state, player* player) {
   }
 }
 
-void place_card(game_state* state, card* current) {
-  state->main.head = current;
-}
-
-void next_player(game_state* state) {
-  if (state->player_list.direction == 1) {
-    state->turn = state->turn->prev;
+void next_player(game_state* game_state) {
+  if (game_state->player_list.direction == 1) {
+    game_state->turn = game_state->turn->prev;
   } else {
     state->turn = state->turn->next;
   }
