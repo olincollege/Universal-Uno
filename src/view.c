@@ -5,7 +5,7 @@
 #include "view.h"
 
 void print_game(char top_card[], int hand_sizes[], size_t players, int player_turn) {
-    printf("Key: B = Blue, R = Red, Y = Yellow, G = Green, W = Wild, +2 = Draw two, W+4 = Wild draw four, r = reverse, S = skip\n");
+    printf("Key: B = Blue, R = Red, Y = Yellow, G = Green, WW = Wild, 2 = Draw two, W4 = Wild draw four, r = reverse, S = skip\n");
     printf("Press 'u' to call Uno!\n");
     for (int i = 0; i < (int) players; ++i){
         if (i+1 == player_turn){
@@ -32,10 +32,10 @@ void print_error(){
 
 
 // int main(void){
-//     int test[] = {3};
-//     char hand[] = "";
-//     print_game("G3", test, 1, 1);
-//     print_hand(hand, 1, 2);
+//      int hand_size[] = {3, 7, 1};
+//      char hand[] = "R2";
+//      print_game("R2", hand_size, 3, 3);
+//      print_hand(hand, 1, 2);
 // }
 
 

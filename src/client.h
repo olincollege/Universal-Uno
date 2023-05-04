@@ -2,6 +2,7 @@
 
 #include <netinet/in.h>  // sockaddr_in
 #include <stdio.h>       // FILE
+#include "view.h"
 
 /**
  * Attempt to connect to a server on a given socket.
@@ -38,3 +39,18 @@ FILE* get_socket_file(int client_socket);
 */
 int send_input(FILE* socket_file);
 
+/**
+ * Do later
+ * 
+ * @param socket_file a socket file for a given client.
+ * @param game_v
+*/
+int receive_game(FILE* socket_file, game_view* game_v);
+
+/**
+ * Do later
+ * 
+ * @param recv_line
+ * @param game_v
+*/
+int deserialize(char* recv_line, game_view* game_v);
