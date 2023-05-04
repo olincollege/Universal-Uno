@@ -209,7 +209,11 @@ order* make_order(size_t num_players) {
   player* head = make_player(0);
   new_order->head = head;
   new_order->direction = 0;
-
+  if (num_players == 1) {
+    new_order->head->next = new_order->head;
+    new_order->head->prev = new_order->head;
+    return new_order;
+  }
   for (size_t i = 1; i < num_players; i++) {
     head->next = make_player(i);
     player* temp = head;
@@ -217,8 +221,11 @@ order* make_order(size_t num_players) {
     head->prev = temp;
   }
   new_order->head->prev = head;
-  new_order->head->prev->next = head;
-
+  head->next = new_order->head;
+  player* heads = new_order->head;
+  for (size_t j = 0; j < num_players; j++) {
+    heads = heads->next;
+  }
   return new_order;
 }
 
@@ -346,9 +353,9 @@ int check_win(game_state* state) {
 int in_hand(card* played_card, deck* hand) {
   card* curr_hand_card = hand->head;
 
-  while(curr_hand_card != NULL) {
-    if(curr_hand_card->color == played_card->color) {
-      if(curr_hand_card->value == played_card->value) {
+  while (curr_hand_card != NULL) {
+    if (curr_hand_card->color == played_card->color) {
+      if (curr_hand_card->value == played_card->value) {
         return 1;
       }
     }
@@ -389,14 +396,13 @@ int is_valid(char* card_, game_state* state) {
     return 0; 
 }
 
-void change_turn(game_state* state){
+void change_turn(game_state* state) {
   // printf("%i\n", state->turn.number);
-  if(state->player_list.direction == 0) {
-    // 0 is next instead of prev    
+  if (state->player_list.direction == 0) {
+    // 0 is next instead of prev
     state->turn = (state->turn->next);
   } else {
     // 1 is prev
     state->turn = (state->turn->prev);
   }
 }
-

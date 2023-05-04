@@ -10,7 +10,7 @@
 Test(make_card, color_set_correctly) {
   card* card_ = make_card('R', 1);
   cr_expect(eq(chr, card_->color, 'R'), "Wrong color! Expected %c, got %c", 'R',
-              card_->color);
+            card_->color);
   free_card(card_);
 }
 
@@ -25,7 +25,7 @@ Test(make_card, values_set_correctly) {
   cr_expect(eq(sz, card_->value, 14), "Wrong value! Expected %zu, got %zu", 14,
             card_->value);
   cr_expect(eq(chr, card_->color, 'W'));
-   free_card(card_);
+  free_card(card_);
 }
 // Making a new card should set the next card to the null pointer by default.
 Test(make_card, next_is_null) {
@@ -65,10 +65,10 @@ Test(append_card, increment_length) {
 Test(append_card, append_empty) {
   deck* deck_ = make_deck();
   append_card(deck_, 'R', 1);
-   cr_expect(eq(sz, deck_->head->value, 1), "Wrong value! Expected %zu, got %zu", 1,
-          deck_->head->value);
-   cr_expect(eq(chr, deck_->head->color, 'R'));
-   cr_expect(eq(ptr, deck_->head->next, NULL));
+  cr_expect(eq(sz, deck_->head->value, 1), "Wrong value! Expected %zu, got %zu",
+            1, deck_->head->value);
+  cr_expect(eq(chr, deck_->head->color, 'R'));
+  cr_expect(eq(ptr, deck_->head->next, NULL));
   free_deck(deck_);
 }
 
@@ -79,7 +79,7 @@ Test(append_card, append_two_elements) {
   append_card(deck_, 'R', 2);
   cr_expect(eq(sz, deck_->size, 2));
   cr_expect(eq(chr, deck_->head->color, 'R'));
-  cr_expect (deck_->head->next->color == 'R');
+  cr_expect(deck_->head->next->color == 'R');
   cr_expect(eq(sz, deck_->head->next->value, 2));
   cr_expect(eq(ptr, deck_->head->next->next, NULL));
   free_deck(deck_);
@@ -89,10 +89,11 @@ Test(append_card, append_two_elements) {
 Test(append_card, correct_value_added) {
   deck* setup_deck = make_deck();
   append_card(setup_deck, 'R', 1);
-  append_card(setup_deck,'W', 2);
-  append_card(setup_deck,'G', 3);
-  append_card(setup_deck,'B', 4);
-  card* prev = get_card_index(setup_deck, 2); //Should we make test cases for get_card_index?
+  append_card(setup_deck, 'W', 2);
+  append_card(setup_deck, 'G', 3);
+  append_card(setup_deck, 'B', 4);
+  card* prev = get_card_index(
+      setup_deck, 2);  // Should we make test cases for get_card_index?
   card* final = get_card_index(setup_deck, 3);
   cr_expect(eq(ptr, prev->next, final));
   cr_expect(eq(sz, final->value, 4));
@@ -213,24 +214,20 @@ Test(make_uno_deck, check_ratio) {
   deck* uno = make_uno_deck();
   size_t red = 0;
   size_t blue = 0;
-  size_t yellow = 0; 
+  size_t yellow = 0;
   size_t green = 0;
   size_t wild = 0;
-  card* current = uno->head; 
-  while(current != NULL){
-    if(current->color == 'R'){
+  card* current = uno->head;
+  while (current != NULL) {
+    if (current->color == 'R') {
       red++;
-    }
-    else if(current->color == 'B'){
+    } else if (current->color == 'B') {
       blue++;
-    }
-    else if(current->color == 'Y'){
+    } else if (current->color == 'Y') {
       yellow++;
-    }
-    else if(current->color == 'G'){
+    } else if (current->color == 'G') {
       green++;
-    }
-    else if(current->color == 'W'){
+    } else if (current->color == 'W') {
       wild++;
     }
     current = current->next;
@@ -255,7 +252,7 @@ Test(equal, empty_decks_equal) {
 // Any nonempty deck should be equal to itself.
 Test(equal, reflexive_deck) {
   deck* deck_ = make_deck();
-  append_card(deck_,'R', 1);
+  append_card(deck_, 'R', 1);
   cr_assert(eq(int, equal(deck_, deck_), 1));
   free_deck(deck_);
 }
@@ -284,13 +281,13 @@ Test(equal, different_elements) {
 // Two decks with the same elements in different orders should not be equal.
 Test(equal, different_element_order) {
   deck* lhs = make_deck();
-  append_card(lhs,'R', 1);
-  append_card(lhs,'R', 2);
-  append_card(lhs,'R', 3);
+  append_card(lhs, 'R', 1);
+  append_card(lhs, 'R', 2);
+  append_card(lhs, 'R', 3);
   deck* rhs = make_deck();
-  append_card(rhs,'R', 1);
-  append_card(rhs,'R', 3);
-  append_card(rhs,'R', 2);
+  append_card(rhs, 'R', 1);
+  append_card(rhs, 'R', 3);
+  append_card(rhs, 'R', 2);
   cr_assert(zero(int, equal(lhs, rhs)));
   free_deck(lhs);
   free_deck(rhs);
@@ -299,35 +296,35 @@ Test(equal, different_element_order) {
 // Two decks with the same elements in the same order should be equal.
 Test(equal, deck_copy) {
   deck* lhs = make_deck();
-  append_card(lhs,'R', 1);
-  append_card(lhs,'R', 2);
-  append_card(lhs,'R', 3);
+  append_card(lhs, 'R', 1);
+  append_card(lhs, 'R', 2);
+  append_card(lhs, 'R', 3);
   deck* rhs = make_deck();
-  append_card(rhs,'R', 1);
-  append_card(rhs,'R', 2);
-  append_card(rhs,'R', 3);
+  append_card(rhs, 'R', 1);
+  append_card(rhs, 'R', 2);
+  append_card(rhs, 'R', 3);
   cr_assert(eq(int, equal(lhs, rhs), 1));
   free_deck(lhs);
   free_deck(rhs);
 }
 
-// Two decks with the same values but different colors should not be  in the same order should be equal.
+// Two decks with the same values but different colors should not be  in the
+// same order should be equal.
 Test(equal, deck_color) {
   deck* lhs = make_deck();
-  append_card(lhs,'R', 1);
-  append_card(lhs,'R', 2);
-  append_card(lhs,'R', 3);
+  append_card(lhs, 'R', 1);
+  append_card(lhs, 'R', 2);
+  append_card(lhs, 'R', 3);
   deck* rhs = make_deck();
-  append_card(rhs,'R', 1);
-  append_card(rhs,'G', 2);
-  append_card(rhs,'R', 3);
+  append_card(rhs, 'R', 1);
+  append_card(rhs, 'G', 2);
+  append_card(rhs, 'R', 3);
   cr_assert(eq(int, equal(lhs, rhs), 0));
   free_deck(lhs);
   free_deck(rhs);
 }
 
-
-// A deck should be the same size after being shuffled. 
+// A deck should be the same size after being shuffled.
 Test(shuffle, check_size) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
@@ -363,7 +360,7 @@ Test(shuffle, check_uno) {
   cr_assert(eq(sz, uno_1->size, 108));
   cr_assert(eq(int, equal(uno_1, uno_2), 0));
 }
-// A small list shuffled should not be the same as the deck before. 
+// A small list shuffled should not be the same as the deck before.
 Test(shuffle, check_deck) {
   deck* deck_1 = make_deck();
   append_card(deck_1, 'B', 7);
@@ -400,10 +397,9 @@ Test(make_order, nullhead) {
   cr_assert(eq(sz, order->direction, 0));
   free_order(order);
 }
-//Get card index
+// Get card index
 
-//Find card
-
+// Find card
 
 // Test(shuffle, check_shuffle) {
 //   deck* deck_1 = make_deck();
