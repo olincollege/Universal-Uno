@@ -167,7 +167,7 @@ void append_deck(deck* original, deck* new) {
 }
 
 int check_draw(game_state* state) {
-  if (state->draw->size > 1) {
+  if (state->draw.size > 1) {
     return 1;
   }
   return 0;
@@ -179,7 +179,7 @@ void refill_draw(game_state* state) {
 }
 
 void draw_card(game_state* state) {
-  move_card(state->draw->head, &state->draw, &state->turn->hand);
+  move_card(state->draw.head, &(state->draw), &(state->turn->hand));
 }
 
 void switch_main_card(game_state* state, char col, size_t val) {
@@ -246,11 +246,11 @@ int check_uno(game_state* state) {
 }
 
 void switch_direction(game_state* game_state) {
-  if (game_state->player_list->direction == 0) {
-    game_state->player_list->direction = 1;
+  if (game_state->player_list.direction == 0) {
+    game_state->player_list.direction = 1;
 
   } else {
-    game_state->player_list->direction = 0;
+    game_state->player_list.direction = 0;
   }
 }
 
@@ -259,7 +259,7 @@ void skip(game_state* game_state) {
 }
 
 void draw(game_state* game_state, player* player) {
-  move_card(game_state->draw->head, game_state->draw, &player->hand);
+  move_card(game_state->draw.head, &(game_state->draw), &player->hand);
 }
 
 void draw2(game_state* game_state, player* player) {
@@ -279,7 +279,7 @@ void place_card(game_state* game_state, card* current) {
 }
 
 void next_player(game_state* game_state) {
-  if (game_state->player_list->direction == 1) {
+  if (game_state->player_list.direction == 1) {
     game_state->turn = game_state->turn->prev;
   } else {
     game_state->turn = game_state->turn->next;
@@ -288,12 +288,9 @@ void next_player(game_state* game_state) {
 
 void play_uno(game_state* game_state, char* input) {
   char number = input[1];
-  if (input[2]) {
-    strcat(number, input[2]);
-  }
-  size_t i;
-  sscanf(number, "%zu", &i);
-  card* played = make_card(input[0], i);
+  size_t num;
+  sscanf(number, "%zu", &num);
+  card* played = make_card(input[0], num);
 
   switch (number) {
     case '0':
@@ -326,15 +323,15 @@ void play_uno(game_state* game_state, char* input) {
 
 game_state* make_game_state(void) {
   game_state* state = malloc(sizeof(game_state));
-  state->discard = make_deck();
-  state->draw = make_uno_deck();
-  shuffle(state->draw);
+  state->discard = *make_deck();
+  state->draw = *make_uno_deck();
+  shuffle(&state->draw);
   state->end = 0;
   state->main = *make_deck();
   state->number_players = 0;
   state->start = 0;
   state->turn = NULL;
-  state->player_list = NULL;
+  // state->player_list = NULL;
   return state;
 }
 
@@ -387,7 +384,7 @@ int is_valid(char* card_, game_state* state) {
 
 void change_turn(game_state* state){
   // printf("%i\n", state->turn.number);
-  if(state->player_list->direction == 0) {
+  if(state->player_list.direction == 0) {
     // 0 is next instead of prev    
     state->turn = (state->turn->next);
   } else {

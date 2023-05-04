@@ -197,20 +197,20 @@ Test(move_card, empty_second) {
   free_deck(deck_2);
 }
 
-Test(make_UNO_deck, check_size) {
-  deck* uno = make_UNO_deck();
+Test(make_uno_deck, check_size) {
+  deck* uno = make_uno_deck();
   cr_assert(eq(sz, uno->size, 108));
   free_deck(uno);
 }
 
-Test(make_UNO_deck, check_color ) {
-  deck* uno = make_UNO_deck();
+Test(make_uno_deck, check_color ) {
+  deck* uno = make_uno_deck();
   cr_expect(eq(chr, uno->head->color, 'R'));
   free_deck(uno);
 }
 
-Test(make_UNO_deck, check_ratio) {
-  deck* uno = make_UNO_deck();
+Test(make_uno_deck, check_ratio) {
+  deck* uno = make_uno_deck();
   size_t red = 0;
   size_t blue = 0;
   size_t yellow = 0; 
@@ -357,8 +357,8 @@ Test(shuffle, check_one_card) {
 
 // UNO shuffled and UNO created should not be equal.
 Test(shuffle, check_uno) {
-  deck* uno_1 = make_UNO_deck();
-  deck* uno_2 = make_UNO_deck();
+  deck* uno_1 = make_uno_deck();
+  deck* uno_2 = make_uno_deck();
   shuffle(uno_1);
   cr_assert(eq(sz, uno_1->size, 108));
   cr_assert(eq(int, equal(uno_1, uno_2), 0));
@@ -394,7 +394,7 @@ Test(make_player, color_set_correctly) {
 
 // Making a new deck should create an empty deck, so the head should be the null
 // pointer.
-Test(make_order, nullhead) {`
+Test(make_order, nullhead) {
   order* order = make_order(1);
   cr_assert(eq(ptr, order->head->next, NULL));
   cr_assert(eq(sz, order->direction, 0));
@@ -419,11 +419,11 @@ Test(make_order, nullhead) {`
 // When making a card, the color and value should be set correctly.
 Test(make_hand, size) {
   game_state* state = make_game_state();
-  state->player_list = make_order(1);
-  make_hand(state, state->player_list->head);
+  state->player_list = *make_order(1);
+  make_hand(state, state->player_list.head);
 
-  cr_expect(eq(sz, state->player_list->head->hand.size, 7));
-  cr_expect(eq(sz, state->draw->size, 101));
+  cr_expect(eq(sz, state->player_list.head->hand.size, 7));
+  cr_expect(eq(sz, state->draw.size, 101));
   // cr_expect(eq(str, card_->color, "R"), "Wrong color! Expected %c, got %c",
   // 'R',
   //           card_->color);
@@ -431,17 +431,17 @@ Test(make_hand, size) {
 
 Test(switch_direction, check_direction) {
   game_state* state = make_game_state();
-  state->player_list = make_order(1);
+  state->player_list = *make_order(1);
   switch_direction(state);
-  cr_expect(eq(sz, state->player_list->direction, 1));
+  cr_expect(eq(sz, state->player_list.direction, 1));
   switch_direction(state);
-  cr_expect(eq(sz, state->player_list->direction, 0));
+  cr_expect(eq(sz, state->player_list.direction, 0));
 }
 
 Test(skip, check_turn) {
   game_state* state = make_game_state();
   puts("hi");
-  state->player_list = make_order(3);
+  state->player_list = *make_order(3);
   puts("yooo");
   // skip(state);
   // puts("fuck");
@@ -693,8 +693,8 @@ Test(is_valid, in_hand_no_match) {
 Test(change_turn, moving_next) {
     // check that if the direction is zero, then the new player after changing directions is the next player
     game_state game_state_;
-    game_state_.player_list = make_order(3);
-    game_state_.turn = game_state_.player_list->head;
+    game_state_.player_list = *make_order(3);
+    game_state_.turn = game_state_.player_list.head;
     change_turn(&game_state_);
     cr_assert(eq(int, (int) game_state_.turn->number, 1));
     
@@ -703,9 +703,9 @@ Test(change_turn, moving_next) {
 Test(change_turn, moving_prev) {
     // check that if the direction is zero, then the new player after changing directions is the previous player
     game_state game_state_;
-    game_state_.player_list = make_order(3);
-    game_state_.player_list->direction = 1;
-    game_state_.turn = game_state_.player_list->head;
+    game_state_.player_list = *make_order(3);
+    game_state_.player_list.direction = 1;
+    game_state_.turn = game_state_.player_list.head;
     change_turn(&game_state_);
     // printf("%i\n", game_state_.turn.number);
     cr_assert(eq(int, (int) game_state_.turn->number, 2));

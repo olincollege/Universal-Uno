@@ -45,14 +45,14 @@ int accept_client(uno_server* server, game_state game_state) {
   if (connected_d == -1) {
     error_and_exit("Connection to server failed");
   }
-  if (game_state.player_list->head == NULL) {
+  if (game_state.player_list.head == NULL) {
     // controller call hereeee
-    game_state.player_list = make_order(game_state.number_players);
+    game_state.player_list = *make_order(game_state.number_players);
     game_state.current_players++;
   }
   // Maybe when making players initialize # to the number in the array it is,
   // Deck to NULL and sock_num to NULL
-  player* current = game_state.player_list->head;
+  player* current = game_state.player_list.head;
   for (int i = 0; i < game_state.number_players; i++) {
     if (current->sock_num != NULL) {
       continue;
@@ -67,7 +67,7 @@ int accept_client(uno_server* server, game_state game_state) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
     // Maybe get input from the first player how many people to expect.
-    while (game_state.player_list->head->prev->sock_num == NULL) {
+    while (game_state.player_list.head->prev->sock_num == NULL) {
       // Maybe store the current number of players somewhere?
       // View could have a function in the waiting screen to show how many
       // players we are waiting for.
@@ -77,11 +77,12 @@ int accept_client(uno_server* server, game_state game_state) {
     // it is we switch the clients view to a screen where cards get passed out.
     if (game_state.start != 1) {
       game_state.start = 1;
-      game_state.turn = game_state.player_list->head;
+      game_state.turn = game_state.player_list.head;
       start_game(game_state);
     }
-    play_uno(game_state);
-    send_message(game_state);
+    // play_uno(game_state);
+    // send_message(game_state);
+
     return -1;
   }
 
@@ -89,14 +90,17 @@ int accept_client(uno_server* server, game_state game_state) {
 }
 
 void start_game(game_state game_state) {
-  player* current = game_state.player_list->head;
+  player* current = game_state.player_list.head;
   for (size_t i = 0; i < game_state.number_players; i++) {
-    make_hand(game_state.draw->head, current);
+    make_hand(game_state.draw.head, current);
     current = current->next;
   }
   game_state.start = 1;
 }
 
+// void play_game(game_state* state) {
+
+// }
 // void send_hand(game_state game_state) {
 //   char* hands[1000];
 //   player* current_player = game_state.player_list->head;
@@ -151,7 +155,7 @@ void send_message(game_state game_state) {
   // if error 1:
   // broadcast message.
   // else
-  player* current_player = game_state.player_list->head;
+  player* current_player = game_state.player_list.head;
   for (size_t i = 0; i < game_state.number_players; i++) {
     FILE* input_file = fdopen(current_player->sock_num, "r+");
     putw(0, input_file);
@@ -165,8 +169,8 @@ void send_message(game_state game_state) {
       putw(current_card->value, input_file);
     }
     putw(game_state.number_players, input_file);
-    player* temp = game_state.player_list->head;
-    while (temp->next != game_state.player_list->head) {
+    player* temp = game_state.player_list.head;
+    while (temp->next != game_state.player_list.head) {
       get_hand_size(temp, input_file);
       temp = temp->next;
     }

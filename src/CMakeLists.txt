@@ -22,7 +22,7 @@ add_executable(run_client run_client.c)
 target_link_libraries(run_client PRIVATE client util view)
 
 add_library(server server.c server.h)
-target_link_libraries(server PRIVATE util)
+target_link_libraries(server PRIVATE util model)
 
 add_executable(run_server run_server.c)
 target_link_libraries(run_server PRIVATE server util model)
