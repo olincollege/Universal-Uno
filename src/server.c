@@ -8,7 +8,7 @@
 #include "server.h"
 
 #include <netinet/in.h>
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -290,7 +290,7 @@ void send_message_check(game_state game_state) {
     get_hand_size(current_player, input_file);
     card* current_card = current_player->hand.head;
     while (current_card->next != NULL) {
-      fputs(current_card->color, input_file); // note is invalid, color is character not string
+      fputs(&current_card->color, input_file); // note is invalid, color is character not string
       putw(current_card->value, input_file);
     }
     // putw(game_state.number_players, input_file);
