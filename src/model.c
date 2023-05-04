@@ -113,10 +113,7 @@ void shuffle(deck* deck_) {
     return;
   }
   for (size_t i = 0; i < deck_->size; i++) {
-    size_t index =
-        (size_t)(rand() %
-                 (deck_->size));  // NOLINT(cert-msc30-c,
-                                  // cert-msc50-cpp,concurrency-mt-unsafe)
+    size_t index =((size_t)rand() % (deck_->size)); // NOLINT(cert-msc30-c,cert-msc50-cpp, concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
   }
@@ -150,20 +147,20 @@ card* find_card(deck* deck_, char col, size_t val) {
   return NULL;
 }
 
-void append_deck(deck* original, deck* new) {
-  card* head = original->head;
-  if (new->head == NULL) {
-    new->head = head;
+void append_deck(deck* deck_old, deck* deck_new) {
+  card* head = deck_old->head;
+  if (deck_new->head == NULL) {
+    deck_new->head = head;
   } else {
-    card* current = new->head;
+    card* current = deck_new->head;
     while (current->next != NULL) {
       current = current->next;
     }
     current->next = head;
   }
-  new->size = new->size + original->size;
-  original->head = NULL;
-  original->size = 0;
+  deck_new->size = deck_new->size + deck_old->size;
+  deck_old->head = NULL;
+  deck_old->size = 0;
 }
 
 int check_draw(game_state* state) {
@@ -241,7 +238,7 @@ void free_order(order* order_) {
 }
 
 void make_hand(game_state* state, player* player) {
-  for (size_t i = 0; i < 7; i++) {
+  for (size_t i = 0; i < SEVEN; i++) {
     draw(state, player);
   }
 }
@@ -270,13 +267,13 @@ void draw(game_state* state, player* player) {
 }
 
 void draw2(game_state* state, player* player) {
-  for (size_t i = 0; i < 2; i++) {
+  for (size_t i = 0; i < TWO; i++) {
     draw(state, player);
   }
 }
 
 void draw4(game_state* state, player* player) {
-  for (size_t i = 0; i < 2; i++) {
+  for (size_t i = 0; i < TWO; i++) {
     draw2(state, player);
   }
 }
@@ -363,18 +360,18 @@ int in_hand(card* played_card, deck* hand) {
 
 int is_valid(char* card_, game_state* state) {
     // turn string into card object
-    char* num_str = &card_[1];  
+    char* num_str = &card_[UNO];  
     int num = atoi(num_str);
     card* curr_card = make_card(card_[0], (size_t) num);
     int is_in_hand = in_hand(curr_card, &(state->turn->hand));
     // make sure card is valid uno card
-    if(num > 14) {
+    if(num > WILD) {
       return 0;
     }
     if(card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' && card_[0] != 'G') {
       return 0;
     }
-    if(is_in_hand == 1) {
+    if(is_in_hand == UNO) {
       if(curr_card->value == DRAW_4) {
         return 1;
       }
