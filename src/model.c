@@ -115,8 +115,7 @@ void shuffle(deck* deck_) {
   for (size_t i = 0; i < 2*(deck_->size); i++) {
     size_t index =
         ((size_t) rand() %
-                 (deck_->size - UNO));  // NOLINT(cert-msc30-c,
-                                  // cert-msc50-cpp,concurrency-mt-unsafe)
+          (deck_->size - UNO));  // NOLINT(cert-msc30-c, cert-msc50-cpp,concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
   }
@@ -291,7 +290,7 @@ void next_player(game_state* state) {
 
 void play_uno(game_state* state, char* input) {
   char number[2];
-  strcpy(number, input[1]);
+  strncpy(number, &input[1], 2);
   char switch_num = input[2];
   // strcat(number, switch_num);
   int num = atoi(&number);
