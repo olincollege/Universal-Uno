@@ -5,14 +5,15 @@
 
 
 typedef struct {
-  char player_id;
-  size_t player_turn;
-  char *top_card; 
-  char *hand_size;
-  char *hand;
-  size_t players_amount;
-  char *players_hand;
-} view;
+    int message;
+    int player_id;
+    int turn;
+    char *top_card;
+    int cards_in_hand;
+    char *hand;
+    int number_players;
+    char *hand_sizes;
+} game_view;
 
 /**
  * Print a text representation of the uno game.
