@@ -9,7 +9,7 @@
 # library is used only in function bodies (PRIVATE), only in function
 # signatures/types (INTERFACE), or both (PUBLIC).
 
-# add_library(utils utils.c utils.h)
+add_library(utils utils.c utils.h)
 add_library(model model.c model.h)
 add_library(view view.c view.h)
 
@@ -21,12 +21,13 @@ target_link_libraries(client PRIVATE util)
 add_executable(run_client run_client.c)
 target_link_libraries(run_client PRIVATE client util view)
 
-# add_library(server server.c server.h)
-# target_link_libraries(server PRIVATE util)
+add_library(server server.c server.h)
+target_link_libraries(server PRIVATE util model)
 
-# add_executable(run_server run_server.c)
-# target_link_libraries(run_server PRIVATE server util model)
+add_executable(run_server run_server.c)
+target_link_libraries(run_server PRIVATE server util model)
 add_library(controller controller.c controller.h)
 target_link_libraries(controller PRIVATE model)
-add_executable(run_controller run_controller.c)
-target_link_libraries(run_controller PRIVATE controller model)
+
+# add_executable(run_controller run_controller.c)
+# target_link_libraries(run_controller PRIVATE controller model)
