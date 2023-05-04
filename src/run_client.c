@@ -32,6 +32,7 @@ int main(void) {
   // Echo until either the client or the server closes its stream.
   int socket_file_status = 0;
    while (socket_file_status != -1) {
+    printf("entered while loop\n");
     socket_file_status = send_input(socket_file);
     socket_file_status = receive_game(socket_file, game_v);
   }

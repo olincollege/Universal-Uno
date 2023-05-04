@@ -112,10 +112,10 @@ void shuffle(deck* deck_) {
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
-  for (size_t i = 0; i < deck_->size; i++) {
+  for (size_t i = 0; i < 2*(deck_->size); i++) {
     size_t index =
-        (size_t)(rand() %
-                 (deck_->size));  // NOLINT(cert-msc30-c,
+        ((size_t) rand() %
+                 (deck_->size - UNO));  // NOLINT(cert-msc30-c,
                                   // cert-msc50-cpp,concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
@@ -290,9 +290,10 @@ void next_player(game_state* state) {
 }
 
 void play_uno(game_state* state, char* input) {
-  char number = input[1];
+  char number[2];
+  strcpy(number, input[1]);
   char switch_num = input[2];
-  strcat(number, switch_num);
+  // strcat(number, switch_num);
   int num = atoi(&number);
   char col = input[0];
 
@@ -330,7 +331,13 @@ game_state* make_game_state(void) {
   game_state* state = malloc(sizeof(game_state));
   state->discard = *make_deck();
   state->draw = *make_uno_deck();
-  shuffle(&state->draw);
+  shuffle(&(state->draw));
+  card* card_ = state->draw.head;
+  // for(int i = 0; i < 108; i++) {
+  //   printf("Color: %c ", card_->color);
+  //   printf("Number: %i\n", card_->value);
+  //   card_ = card_->next;
+  // }
   state->end = 0;
   state->main = *make_deck();
   state->number_players = 0;

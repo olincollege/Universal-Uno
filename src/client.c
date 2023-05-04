@@ -42,11 +42,15 @@ int send_input(FILE* socket_file){
 
 
 int receive_game(FILE* socket_file, game_view* game_v){
+  printf("game receiving \n");
   char* recv_line = NULL;
   size_t recv_line_size = 0;
+  printf("about to enter if\n");
   if (getline(&recv_line, &recv_line_size, socket_file) == -1) {
+    printf("in if\n");
     return -1;
   }
+  printf("deserializing\n");
   deserialize(recv_line, game_v);
   free(recv_line);
   return 0;
@@ -54,43 +58,43 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
-  /*
-  if (recv_line[0] == 48){
-    char *eptr;
-    char *token = strtok(recv_line, "/");                       
-    game_v-> message = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");                           
-    game_v-> player_id = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");  
-    game_v-> turn = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    strcpy(game_v->top_card, token);
-    token = strtok(NULL, "/");
-    game_v-> cards_in_hand = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    strcpy(game_v->hand, token);
-    token = strtok(NULL, "/");
-    game_v-> number_players = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    strcpy(game_v->hand_sizes, token);
+  
+  // if (recv_line[0] == 48){
+  //   char *eptr;
+  //   char *token = strtok(recv_line, "/");                       
+  //   game_v-> message = strtol(token, &eptr, 10);
+  //   token = strtok(NULL, "/");                           
+  //   game_v-> player_id = strtol(token, &eptr, 10);
+  //   token = strtok(NULL, "/");  
+  //   game_v-> turn = strtol(token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   strcpy(game_v->top_card, token);
+  //   token = strtok(NULL, "/");
+  //   game_v-> cards_in_hand = strtol(token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   strcpy(game_v->hand, token);
+  //   token = strtok(NULL, "/");
+  //   game_v-> number_players = strtol(token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   strcpy(game_v->hand_sizes, token);
 
-    printf("%d\n", game_v-> message);
-    printf("%d\n", game_v-> player_id);
-    printf("%d\n", game_v-> turn);
-    printf("%s\n", game_v-> top_card);
-    printf("%d\n", game_v-> cards_in_hand);
-    printf("%s\n", game_v-> hand);
-    printf("%d\n", game_v-> number_players);
-    printf("%s\n", game_v-> hand_sizes);
-  } else if (recv_line[0] == 49){
-    //broadcast
-    //[1][print until end of line]
-    //[print broadcast]
-    puts("broadcast");
-  } else {
-    //error
-    puts("Error doesn't follow format");
-  }
-  */
+  //   printf("%d\n", game_v-> message);
+  //   printf("%d\n", game_v-> player_id);
+  //   printf("%d\n", game_v-> turn);
+  //   printf("%s\n", game_v-> top_card);
+  //   printf("%d\n", game_v-> cards_in_hand);
+  //   printf("%s\n", game_v-> hand);
+  //   printf("%d\n", game_v-> number_players);
+  //   printf("%s\n", game_v-> hand_sizes);
+  // } else if (recv_line[0] == 49){
+  //   //broadcast
+  //   //[1][print until end of line]
+  //   //[print broadcast]
+  //   puts("broadcast");
+  // } else {
+  //   //error
+  //   puts("Error doesn't follow format");
+  // }
+  
   return 0;
 }

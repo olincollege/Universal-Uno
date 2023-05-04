@@ -377,6 +377,13 @@ Test(shuffle, check_deck) {
   append_card(deck_2, 'Y', 2);
   append_card(deck_2, 'G', 3);
   shuffle(deck_1);
+  printf("deck 1\n");
+  // card* card_ = deck_1->head;
+  // while(card_ != NULL){
+  //   printf("Color: %c ", card_->color);
+  //   printf("Number: %i\n", card_->value);
+  //   card_ = card_->next;
+  // }
   cr_assert(eq(int, equal(deck_1, deck_2), 0));
 }
 // When making a card, the color and value should be set correctly.
