@@ -398,10 +398,39 @@ Test(make_player, color_set_correctly) {
 
 // Making a new deck should create an empty deck, so the head should be the null
 // pointer.
-Test(make_order, nullhead) {
+Test(make_order, one_player) {
   order* order = make_order(1);
   cr_assert(eq(ptr, order->head->next, order->head));
   cr_assert(eq(sz, order->direction, 0));
+  // free_order(order);
+}
+
+Test(make_order, two_players) {
+  order* order = make_order(2);
+  player* one = order->head; 
+  player* two = one->next;
+
+  cr_assert(eq(ptr, order->head->next, order->head));
+  cr_assert(eq(sz, order->direction, 0));
+  // free_order(order);
+}
+// Test(make_order, three_players) {
+//   order* order = make_order(3);
+//   cr_assert(eq(ptr, order->head->next, order->head));
+//   cr_assert(eq(sz, order->direction, 0));
+//   // free_order(order);
+// }
+// Test(make_order, four_players) {
+//   order* order = make_order(4);
+//   cr_assert(eq(ptr, order->head->next, order->head));
+//   cr_assert(eq(sz, order->direction, 0));
+//   // free_order(order);
+// }
+
+// Test(make_order, four_players) {
+//   order* order = make_order(5);
+//   cr_assert(eq(ptr, order->head->next, order->head));
+//   cr_assert(eq(sz, order->direction, 0));
   // free_order(order);
 }
 // Get card index
