@@ -47,7 +47,7 @@ int receive_game(FILE* socket_file, game_view* game_v){
   if (getline(&recv_line, &recv_line_size, socket_file) == -1) {
     return -1;
   }
-  deserialize(recv_live, game_view);
+  deserialize(recv_line, game_v);
   free(recv_line);
   return 0;
 }
