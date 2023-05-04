@@ -3,10 +3,16 @@
 
 #include "client.h"
 #include "utils.h"
+#include "view.h"
 
 const socklen_t MAX_IP_ADDR_LEN = 16;
 
 int main(void) {
+  game_view* game_v = malloc(sizeof(game_view));
+  game_v->hand = malloc(200); // Space for 200 characters + '\0'
+  game_v->top_card = malloc(10); // Space for 10 characters + '\0'
+  game_v->hand_sizes = malloc(50); // Space for 50 characters + '\0'
+
   // Open a TCP socket to connect to the server.
   int socket_descriptor = open_tcp_socket();
   (void)fprintf(stderr, "Client socket descriptor: %d\n", socket_descriptor);
@@ -27,8 +33,8 @@ int main(void) {
   int socket_file_status = 0;
    while (socket_file_status != -1) {
     socket_file_status = send_input(socket_file);
+    socket_file_status = receive_game(socket_file, game_v);
   }
-
 
   // If we didn't hit the end of file for either stdin or the response from the
   // server, then something went wrong.
@@ -43,14 +49,13 @@ int main(void) {
 
 //Maya's Notes
 //void main or something
-//do initial printout
-
-//contstanly checking how many players
+//do inital printout
+//constantly checking how many players
 
 //while recieve start the game != true 
       //print waiting to start
 
-//local variables
+//local variables stored in struct
     //array hand = []
     //players hand size = []
     //deck_top_card = string
@@ -60,16 +65,7 @@ int main(void) {
     //connect to file
 
 //while loop
-    // if send uno
-    //print receive_hand_size
-    //print receive_turn 
-    //receive_top_card
-    //receive_broadcasts
-    //if receive_turn true
-      //send_move
-      //print receive_hand
-
-  
-
+    //send input (send stdin)
+    //receive output (process & print)
 //close socket
 

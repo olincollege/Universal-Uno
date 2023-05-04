@@ -6,6 +6,7 @@
 #include <sys/socket.h>  // connect, sockaddr
 
 #include "utils.h"
+#include "view.h"
 
 void try_connect(int client_socket, struct sockaddr_in server_addr) {
   int connected = connect(client_socket, (struct sockaddr*)&server_addr,
@@ -40,30 +41,56 @@ int send_input(FILE* socket_file){
 }
 
 
-int receive_hand(FILE* socket_file){
-    //send a card name or draw
+int receive_game(FILE* socket_file, game_view* game_v){
+  char* recv_line = NULL;
+  size_t recv_line_size = 0;
+  if (getline(&recv_line, &recv_line_size, socket_file) == -1) {
+    return -1;
+  }
+  deserialize(recv_line, game_v);
+  free(recv_line);
+  return 0;
 }
 
-int receive_hand_sizes(FILE* socket_file){
-    //get opponents hand size
-}
+int deserialize(char* recv_line, game_view* game_v){
+  printf("%s\n",recv_line);
+  /*
+  if (recv_line[0] == 48){
+    char *eptr;
+    char *token = strtok(recv_line, "/");                       
+    game_v-> message = strtol(token, &eptr, 10);
+    token = strtok(NULL, "/");                           
+    game_v-> player_id = strtol(token, &eptr, 10);
+    token = strtok(NULL, "/");  
+    game_v-> turn = strtol(token, &eptr, 10);
+    token = strtok(NULL, "/");
+    strcpy(game_v->top_card, token);
+    token = strtok(NULL, "/");
+    game_v-> cards_in_hand = strtol(token, &eptr, 10);
+    token = strtok(NULL, "/");
+    strcpy(game_v->hand, token);
+    token = strtok(NULL, "/");
+    game_v-> number_players = strtol(token, &eptr, 10);
+    token = strtok(NULL, "/");
+    strcpy(game_v->hand_sizes, token);
 
-int receive_top_card(FILE* socket_file){
-    //find out the top of the deck
-}
-
-int receive_game_state(FILE* socket_file){
-    //find out whose turn it is or if the game is over
-}
-
-int receive_broadcast(FILE* socket_file){
-  //find out which player called uno, on who, and what happens
-  //if play has been reversed
-  //if a wild card has been played
-  //if a draw card has been played
-  //if a skip has been played
-}
-
-int receive_errors(FILE* socket_file){
-    //get notified of incorrect moves
+    printf("%d\n", game_v-> message);
+    printf("%d\n", game_v-> player_id);
+    printf("%d\n", game_v-> turn);
+    printf("%s\n", game_v-> top_card);
+    printf("%d\n", game_v-> cards_in_hand);
+    printf("%s\n", game_v-> hand);
+    printf("%d\n", game_v-> number_players);
+    printf("%s\n", game_v-> hand_sizes);
+  } else if (recv_line[0] == 49){
+    //broadcast
+    //[1][print until end of line]
+    //[print broadcast]
+    puts("broadcast");
+  } else {
+    //error
+    puts("Error doesn't follow format");
+  }
+  */
+  return 0;
 }

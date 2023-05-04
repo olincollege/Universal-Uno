@@ -281,9 +281,9 @@ void draw4(game_state* state, player* player) {
   }
 }
 
-void next_player(game_state* game_state) {
-  if (game_state->player_list.direction == 1) {
-    game_state->turn = game_state->turn->prev;
+void next_player(game_state* state) {
+  if (state->player_list.direction == 1) {
+    state->turn = state->turn->prev;
   } else {
     state->turn = state->turn->next;
   }
@@ -299,24 +299,24 @@ void play_uno(game_state* state, char* input) {
     switch (switch_num) {
     case '1':
       switch_direction(state);
-      switch_main_card(state, col, num);
+      place_card(state, col, num);
       break;
     case '0':
       skip(state);
-      switch_main_card(state, col, num);
+      place_card(state, col, num);
       break;
     case '2':
       draw2(state, state->turn->next);
-      switch_main_card(state, col, num);
+      place_card(state, col, num);
       break;
     case '3':
       draw4(state, state->turn->next);
-      switch_main_card(state, col, num);
+      place_card(state, col, num);
       break;
 
     default:
-      switch_main_card(state, col, num);
-      next_player(state);
+      place_card(state, col, num);
+      // next_player(state);
       break;
     }
   }
@@ -335,6 +335,7 @@ game_state* make_game_state(void) {
   state->number_players = 0;
   state->start = 0;
   state->turn = NULL;
+  state->current_players = 0;
   // state->player_list = NULL;
   return state;
 }

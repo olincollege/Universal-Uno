@@ -1,6 +1,19 @@
 #pragma once
 
+#include<stdio.h>
 #include <stdlib.h>
+
+
+typedef struct {
+    int message;
+    int player_id;
+    int turn;
+    char *top_card;
+    int cards_in_hand;
+    char *hand;
+    int number_players;
+    char *hand_sizes;
+} game_view;
 
 /**
  * Print a text representation of the uno game.
