@@ -8,9 +8,11 @@ int main(void) {
   uno_server* server = make_uno_server(server_addr, BACKLOG_SIZE);
   listen_for_connections(server);
   int accept_status = 0;
+  game_state* state = make_game_state();
   while (accept_status != -1) {
-    accept_status = accept_client(server);
+    accept_status = accept_client(server, state);
   }
+  // printf("here\n");
   free_uno_server(server);
   return 0;
 }
