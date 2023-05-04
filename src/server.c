@@ -152,24 +152,35 @@ void send_message(game_state game_state) {
   // broadcast message.
   // else
   player* current_player = game_state.player_list->head;
-  for (size_t i = 0; i < game_state.number_players; i++) {
-    FILE* input_file = fdopen(current_player->sock_num, "r+");
-    putw(0, input_file);
-    putw(current_player->number, input_file);
-    putw(game_state.turn.number, input_file);
 
-    get_hand_size(current_player, input_file);
+  for (size_t i = 0; i < game_state.number_players; i++) {
+    char* sendlin[150];
+    sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
+            game_state.turn.number);
+    FILE* input_file = fdopen(current_player->sock_num, "r+");
     card* current_card = current_player->hand.head;
+    char* main[7];
+    sprintf(main, " %c%d/", current_card->color, current_card->value);
+    strcat(sendlin, main);
+    char* num_cards[8];
+    sprintf(num_cards, "%d/", game_state.number_players);
+    strcat(sendlin, num_cards);
     while (current_card->next != NULL) {
-      fputs(current_card->color, input_file);
-      putw(current_card->value, input_file);
+      char* card[7];
+      sprintf(card, " %c%d,", current_card->color, current_card->value);
+      strcat(sendlin, card);
     }
-    putw(game_state.number_players, input_file);
+    char* num_players[5];
+    sprintf(num_players, "/%d/", game_state.number_players);
+    strcat(sendlin, num_players);
     player* temp = game_state.player_list->head;
     while (temp->next != game_state.player_list->head) {
-      get_hand_size(temp, input_file);
+      char* hand_size[7];
+      sprintf(hand_size, "%d,", temp->hand.size);
+      strcat(sendlin, hand_size);
       temp = temp->next;
     }
+    fputs(sendlin, input_file);
   }
 }
 
@@ -180,4 +191,32 @@ void get_hand_size(player* player, FILE* file) {
   } else {
     putw(player->hand.size, file);
   }
+}
+void send_message_check(game_state game_state) {
+  player* current_player = game_state.player_list->head;
+  FILE* input_file;
+  for (size_t i = 0; i < game_state.number_players; i++) {
+    putw(0, input_file);
+    putw(current_player->number, input_file);
+    putw(game_state.turn->number, input_file);
+
+    get_hand_size(current_player, input_file);
+    card* current_card = current_player->hand.head;
+    while (current_card->next != NULL) {
+      fputs(current_card->color, input_file);
+      putw(current_card->value, input_file);
+    }
+    // putw(game_state.number_players, input_file);
+    player* temp = game_state.player_list->head;
+    while (temp->next != game_state.player_list->head) {
+      get_hand_size(temp, input_file);
+      temp = temp->next;
+    }
+  }
+  char* recv_line = NULL;
+  size_t recv_line_size = 0;
+  if (getline(&recv_line, &recv_line_size, input_file) == -1) {
+    return -1;
+  }
+  puts(recv_line);
 }

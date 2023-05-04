@@ -97,3 +97,5 @@ void send_hand(game_state game_state);
 void send_game(game_state game_state);
 
 void send_initial(game_state game_state);
+
+void send_message_check(game_state game_state);
