@@ -44,9 +44,10 @@ int send_input(FILE* socket_file){
 int receive_game(FILE* socket_file, game_view* game_v){
   printf("game receiving \n");
   char* recv_line = NULL;
-  size_t recv_line_size = 0;
+  // size_t recv_line_size = 0;
   printf("about to enter if\n");
-  if (getline(&recv_line, &recv_line_size, socket_file) == -1) {
+  size_t recv_line_size = 0;
+  if (getdelim(&recv_line, &recv_line_size, '\0', socket_file) == -1){
     printf("in if\n");
     return -1;
   }

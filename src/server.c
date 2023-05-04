@@ -231,7 +231,7 @@ void send_message(game_state game_state) {
   player* current_player = game_state.player_list.head;
 
   for (size_t i = 0; i < game_state.number_players; i++) {
-    char* sendlin[150];
+    char* sendlin[1000];
     sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
             game_state.turn->number);
     FILE* input_file = fdopen(current_player->sock_num, "r+");
@@ -260,11 +260,13 @@ void send_message(game_state game_state) {
       strcat(sendlin, hand_size);
       temp = temp->next;
     }
-    strcat(sendlin, "\n");
+    // strcpy(sendlin, "hello");
+    // strcat(sendlin, "\0");
     // printf("fputs before\n");
     printf("about to send input\n");
     printf("%s\n", sendlin);
-    fputs(sendlin, input_file);
+    // fputs(sendlin, input_file);
+    write(current_player->sock_num, sendlin, 1000);
     // printf("fputs after\n");
   }
 }
