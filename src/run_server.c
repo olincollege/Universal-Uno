@@ -10,8 +10,9 @@ int main(void) {
   int accept_status = 0;
   game_state* state = make_game_state();
   while (accept_status != -1) {
-    accept_status = accept_client(server, *state);
+    accept_status = accept_client(server, state);
   }
+  // printf("here\n");
   free_uno_server(server);
   return 0;
 }
