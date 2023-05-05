@@ -132,9 +132,11 @@ void play_game(game_state* state) {
   while (1) {
     printf("at top of while\n");
     // FILE* sock_file = get_socket_file(state->turn->sock_num);
-    char buf[1000];
-    ssize_t val = read(state->turn->sock_num, buf, 1000);
+    char buf[BUF_SIZE];
+    ssize_t val = read(state->turn->sock_num, buf, BUF_SIZE);
+
     // fflush()
+
     if(val < 0) {
       printf("error reading\n");
       errnum = errno;
@@ -142,7 +144,7 @@ void play_game(game_state* state) {
       break;
     } else if (val == 0) {
       printf("player disconnected\n");
-      exit;
+      return;
     }
 
     printf("read! %s", buf);
@@ -162,13 +164,14 @@ void play_game(game_state* state) {
       send_message(state, 0, NULL);
     } else {
       printf("playing card\n");
-      char card_str[5];
+      char card_str[FIVE];
       process_input(buf, card_str);
       play_uno(state, card_str);
       change_turn(state);
       send_message(state, 0, NULL);
       // free(buf);
     }
+    // (void)fflush(buf);
   }
 }
 

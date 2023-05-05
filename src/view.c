@@ -5,6 +5,7 @@
 #include "view.h"
 
 void print_game(game_view* game_v) {
+    //print information on how to play the game.
     printf("Key: B = Blue, R = Red, Y = Yellow, G = Green, W1 = Wild, 2 = Draw two, W4 = Wild draw four, r = reverse, S = skip\n");
     printf("Press 'u' to call Uno!\n");
     //Figure out how many players there are

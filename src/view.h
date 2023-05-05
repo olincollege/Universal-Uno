@@ -21,6 +21,11 @@ typedef struct {
 
 /**
  * Print a text representation of the uno game.
+ * 
+ * This includes the players hand. As well as the overall game state.
+ * The overall game state has the top card and the number of cards that the 
+ * other players have. It also prints information for the player on how to play 
+ * the game.
  *
  * @param game_v the game view struct
  */

@@ -342,7 +342,6 @@ Test(shuffle, check_one_card) {
 // UNO shuffled and UNO created should not be equal.
 Test(shuffle, check_uno) {
   deck uno_1 = make_uno_deck();
-  card* current = uno_1.head;
   deck uno_2 = make_uno_deck();
   shuffle(&uno_1);
   cr_assert(eq(sz, uno_1.size, 108));
