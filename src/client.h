@@ -4,6 +4,12 @@
 #include <stdio.h>       // FILE
 #include "view.h"
 
+
+enum{
+    /**Magic number error*/
+    five = 5
+}
+
 /**
  * Attempt to connect to a server on a given socket.
  *
@@ -33,24 +39,28 @@ FILE* get_socket_file(int client_socket);
 
 
 /**
- * Recieves an input from a client and stores it inside of a file.
+ * Sends an input from a client to server in file.
  * 
  * @param socket_file a socket file for a given client.
 */
 int send_input(FILE* socket_file);
 
 /**
- * Do later
+ * Receives a file with the game state to decode.
  * 
  * @param socket_file a socket file for a given client.
- * @param game_v
+ * @param game_v is the game state view struct
 */
 int receive_game(FILE* socket_file, game_view* game_v);
 
 /**
- * Do later
+ * Reads in a string, splits it into the view struct, and calls print.
  * 
- * @param recv_line
- * @param game_v
+ * If the first value is 0 then it is a game state. If the first value is 1 then
+ * it broadcasts message. [0 or 1]/[player_id]/[turn]/[top card]/[# of cards in 
+ * hand]/[hand]/[#of players]/[handsize] is the format of a game state.
+ * 
+ * @param recv_line is a string received from the server
+ * @param game_v is the game state view struct
 */
 int deserialize(char* recv_line, game_view* game_v);
