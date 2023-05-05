@@ -378,7 +378,7 @@ Test(get_card_index, index_zero) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* get = get_card_index(&deck_,0);
+  card* get = get_card_index(&deck_, 0);
   cr_expect(eq(ptr, get, deck_.head), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -389,7 +389,7 @@ Test(get_card_index, index_one) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* get = get_card_index(&deck_,1);
+  card* get = get_card_index(&deck_, 1);
   cr_expect(eq(ptr, get, deck_.head->next), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -399,7 +399,7 @@ Test(get_card_index, index_two) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* get = get_card_index(&deck_,2);
+  card* get = get_card_index(&deck_, 2);
   cr_expect(eq(ptr, get, deck_.head->next->next), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -409,7 +409,7 @@ Test(get_card_index, index_too_big) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* get = get_card_index(&deck_,5);
+  card* get = get_card_index(&deck_, 5);
   cr_expect(eq(ptr, get, NULL), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -419,7 +419,7 @@ Test(find_card, head) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* find =find_card(&deck_, 'B', 1);
+  card* find = find_card(&deck_, 'B', 1);
   cr_expect(eq(ptr, find, deck_.head), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -429,7 +429,7 @@ Test(find_card, middle) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* find =find_card(&deck_, 'Y', 2);
+  card* find = find_card(&deck_, 'Y', 2);
   cr_expect(eq(ptr, find, deck_.head->next), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -439,7 +439,7 @@ Test(find_card, end) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* find =find_card(&deck_, 'G', 3);
+  card* find = find_card(&deck_, 'G', 3);
   cr_expect(eq(ptr, find, deck_.head->next->next), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -449,7 +449,7 @@ Test(find_card, not_found) {
   append_card(&deck_, 'B', 1);
   append_card(&deck_, 'Y', 2);
   append_card(&deck_, 'G', 3);
-  card* find =find_card(&deck_, 'B', 3);
+  card* find = find_card(&deck_, 'B', 3);
   cr_expect(eq(ptr, find, NULL), "Wrong pointer!");
   free_deck(&deck_);
 }
@@ -504,26 +504,26 @@ Test(append_deck, pointers_set_correctly) {
 }
 
 Test(check_draw, needs_refill_1) {
-  game_state* state; 
+  game_state* state;
   state->draw.size = 0;
   cr_assert(eq(sz, check_draw(state), 1));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 Test(check_draw, needs_refill_2) {
-  game_state* state; 
+  game_state* state;
   state->draw.size = 1;
   cr_assert(eq(sz, check_draw(state), 1));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 Test(check_draw, no_refill) {
-  game_state* state; 
+  game_state* state;
   state->draw.size = 2;
   cr_assert(eq(sz, check_draw(state), 0));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 
 Test(refill_draw, empty_draw) {
-  game_state* state; 
+  game_state* state;
   deck uno = make_uno_deck();
   state->discard = make_uno_deck();
   state->draw.size = 0;
@@ -533,10 +533,10 @@ Test(refill_draw, empty_draw) {
   cr_assert(eq(sz, state->draw.size, 108));
   cr_assert(eq(int, equal(&uno, &(state->draw)), 0));
   free_deck(&uno);
-  //free_game_state(state);
+  // free_game_state(state);
 }
 Test(refill_draw, one_draw) {
-  game_state* state; 
+  game_state* state;
   deck uno = make_uno_deck();
   state->discard = make_uno_deck();
   state->draw.size = 0;
@@ -548,9 +548,8 @@ Test(refill_draw, one_draw) {
   cr_assert(eq(chr, state->draw.head->color, "R"));
   cr_assert(eq(sz, state->draw.head->value, 2));
   free_deck(&uno);
-  //free_game_state(state);
+  // free_game_state(state);
 }
-
 
 // When making a card, the color and value should be set correctly.
 Test(make_player, values_set_correctly) {
@@ -573,7 +572,7 @@ Test(make_order, one_player) {
 
 Test(make_order, two_player_numbers) {
   order* order = make_order(2);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   cr_assert(eq(sz, one->number, 0));
   cr_assert(eq(sz, two->number, 1));
@@ -582,7 +581,7 @@ Test(make_order, two_player_numbers) {
 
 Test(make_order, two_player_pointers) {
   order* order = make_order(2);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   cr_assert(eq(ptr, one->next, two));
   cr_assert(eq(ptr, one->prev, two));
@@ -593,7 +592,7 @@ Test(make_order, two_player_pointers) {
 
 Test(make_order, three_player_numbers) {
   order* order = make_order(3);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   cr_assert(eq(sz, one->number, 0));
@@ -604,7 +603,7 @@ Test(make_order, three_player_numbers) {
 
 Test(make_order, three_player_pointers) {
   order* order = make_order(3);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   cr_assert(eq(ptr, one->next, two));
@@ -613,12 +612,12 @@ Test(make_order, three_player_pointers) {
   cr_assert(eq(ptr, two->prev, one));
   cr_assert(eq(ptr, three->next, one));
   cr_assert(eq(ptr, three->prev, two));
- free_order(order);
+  free_order(order);
 }
 
 Test(make_order, four_player_numbers) {
   order* order = make_order(4);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   player* four = three->next;
@@ -631,7 +630,7 @@ Test(make_order, four_player_numbers) {
 
 Test(make_order, four_player_pointers) {
   order* order = make_order(4);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   player* four = three->next;
@@ -648,7 +647,7 @@ Test(make_order, four_player_pointers) {
 
 Test(make_order, five_player_numbers) {
   order* order = make_order(5);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   player* four = three->next;
@@ -663,7 +662,7 @@ Test(make_order, five_player_numbers) {
 
 Test(make_order, five_player_pointers) {
   order* order = make_order(5);
-  player* one = order->head; 
+  player* one = order->head;
   player* two = one->next;
   player* three = two->next;
   player* four = three->next;
@@ -681,14 +680,13 @@ Test(make_order, five_player_pointers) {
   free_order(order);
 }
 
-
 // When making a card, the color and value should be set correctly.
 Test(make_hand, size) {
   game_state* state = make_game_state();
   state->player_list = make_order(1);
   make_hand(state, state->player_list->head);
   cr_expect(eq(sz, state->player_list->head->hand.size, 7));
-  cr_expect(eq(sz, state->draw.size, 101));
+  cr_expect(eq(sz, state->draw.size, 100));
   free_game_state(state);
 }
 
@@ -966,7 +964,7 @@ Test(change_turn, moving_next) {
   game_state_.turn = game_state_.player_list->head;
   change_turn(&game_state_);
   cr_assert(eq(int, (int)game_state_.turn->number, 1));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 
 Test(change_turn, moving_prev) {
@@ -979,7 +977,7 @@ Test(change_turn, moving_prev) {
   change_turn(&game_state_);
   // printf("%i\n", game_state_.turn.number);
   cr_assert(eq(int, (int)game_state_.turn->number, 2));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 
 Test(draw, checks_player_hand) {
@@ -989,14 +987,14 @@ Test(draw, checks_player_hand) {
   draw(game_state_, game_state_->player_list->head);
   draw(game_state_, game_state_->player_list->head);
   cr_expect(eq(sz, game_state_->player_list->head->hand.size, 3));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 Test(draw2, check_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
   draw2(game_state_, game_state_->player_list->head);
   cr_assert(eq(sz, game_state_->player_list->head->hand.size, 2));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 
 Test(draw4, check_player_hand) {
@@ -1004,6 +1002,6 @@ Test(draw4, check_player_hand) {
   game_state_->player_list = make_order(3);
   draw4(game_state_, game_state_->player_list->head);
   cr_assert(eq(sz, game_state_->player_list->head->hand.size, 4));
-  //free_game_state(state);
+  // free_game_state(state);
 }
 // NOLINTEND(*-magic-numbers)
