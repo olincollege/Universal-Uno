@@ -363,7 +363,7 @@ void free_game_state(game_state* state){
   free_deck(&(state->discard));
   free_deck(&(state->main));
   free_deck(&(state->draw));
-  free_order(&(state->player_list));
+  free_order((state->player_list));
   free(state);
 
 }
