@@ -1,7 +1,7 @@
 #include <arpa/inet.h>  // INADDR_LOOPBACK, inet_ntop
 #include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>      // fprintf
+#include <stdio.h>  // fprintf
 
 #include "client.h"
 #include "unistd.h"
@@ -13,9 +13,9 @@ const socklen_t MAX_IP_ADDR_LEN = 16;
 int main(void) {
   game_view* game_v = malloc(sizeof(game_view));
   // Space for 200 characters + '\0'
-  game_v->hand = malloc(200); // NOLINT(*-magic-numbers)
+  game_v->hand = malloc(200);  // NOLINT(*-magic-numbers)
   // Space for 10 characters + '\0'
-  game_v->top_card = malloc(10); // NOLINT(*-magic-numbers)
+  game_v->top_card = malloc(10);  // NOLINT(*-magic-numbers)
 
   // Open a TCP socket to connect to the server.
   int socket_descriptor = open_tcp_socket();
@@ -31,29 +31,33 @@ int main(void) {
       inet_ntop(AF_INET, &server_addr.sin_addr, addr_string, MAX_IP_ADDR_LEN),
       PORT);
 
-  //Adding a non block flag to file descriptor
-  //int flags = fcntl(socket_descriptor, F_GETFL, 0);
-  //fcntl(socket_descriptor, F_SETFL, flags | O_NONBLOCK);
-  //EAGAIN or the other block one
-  //man2 read
-  //errno
+  // Adding a non block flag to file descriptor
+  // int flags = fcntl(socket_descriptor, F_GETFL, 0);
+  // fcntl(socket_descriptor, F_SETFL, flags | O_NONBLOCK);
+  // EAGAIN or the other block one
+  // man2 read
+  // errno
 
   // Use a file pointer to make it easier to deal with text lines.
   FILE* socket_file = get_socket_file(socket_descriptor);
   // Echo until either the client or the server closes its stream.
   int socket_file_status = 0;
   int socket_file_status2 = 0;
-   while (socket_file_status != -1 && socket_file_status2 != -1) {
+  while (socket_file_status != -1 && socket_file_status2 != -1) {
     printf("entered while loop\n");
-    socket_file_status2 = receive_game(socket_file, game_v);
     socket_file_status = send_input(socket_file);
-    
+    socket_file_status2 = receive_game(socket_file, game_v);
   }
 
   // If we didn't hit the end of file for either stdin or the response from the
   // server, then something went wrong.
   // don't hit end of file
   if (!feof(stdin) && !feof(socket_file)) {
+    printf("before");
+    fputs("\0", socket_file);
+    printf("middle");
+    close_tcp_socket(socket_descriptor);
+    printf("After");
     error_and_exit("Error reading or writing line:");
   }
 
@@ -61,4 +65,3 @@ int main(void) {
   close_tcp_socket(socket_descriptor);
   return 0;
 }
-
