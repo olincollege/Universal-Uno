@@ -6,20 +6,21 @@
 
 // NOLINTBEGIN(*-magic-numbers)
 
-// When making a card, the color and value should be set correctly.
+// When making a card, the color should be set correctly.
 Test(make_card, color_set_correctly) {
   card* card_ = make_card('R', 1);
   cr_expect(eq(chr, card_->color, 'R'), "Wrong color! Expected %c, got %c", 'R',
             card_->color);
   free_card(card_);
 }
-
+// When making a card, the value should be set correctly.
 Test(make_card, value_set_correctly) {
   card* card_ = make_card('R', 1);
   cr_expect(eq(sz, card_->value, 1), "Wrong value! Expected %zu, got %zu", 1,
             card_->value);
   free_card(card_);
 }
+// When making a card, the color and value should be set correctly.
 Test(make_card, values_set_correctly) {
   card* card_ = make_card('W', 14);
   cr_expect(eq(sz, card_->value, 14), "Wrong value! Expected %zu, got %zu", 14,
@@ -54,7 +55,7 @@ Test(append_card, append_empty) {
   free_deck(&deck_);
 }
 
-// Appending to a deck should increase the length by two.
+// Appending to a deck twice should increase the length by two.
 Test(append_card, append_two_elements) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'R', 1);
