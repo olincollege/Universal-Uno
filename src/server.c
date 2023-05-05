@@ -128,6 +128,7 @@ void play_game(game_state* state) {
   while (1) {
     char buf[1000];
     ssize_t val = read(state->turn->sock_num, buf, 1000);
+    printf("%s------------------------------------------\n", buf);
     if(val < 0) {
       printf("error reading\n");
       exit;
