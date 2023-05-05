@@ -51,7 +51,7 @@ int receive_game(FILE* socket_file, game_view* game_v){
     return -1;
   }
   printf("deserializing\n");
- 
+
   deserialize(recv_line, game_v);
   free(recv_line);
   return 0;

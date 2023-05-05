@@ -69,10 +69,12 @@ int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
   if (recv_line[0] == 48){
     char *eptr;
+    
+    char *recv_line2 = strdup(recv_line);
 
-    char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
+    //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
 
-    char *token = strtok(recv_line1, "/");                       
+    char *token = strtok(recv_line2, "/");                       
     game_v-> message = strtol(token, &eptr, 10);
     token = strtok(NULL, "/");                           
     game_v-> player_id = strtol(token, &eptr, 10);
@@ -136,8 +138,8 @@ int main(void){
     game_view *game_v = malloc(sizeof(game_view));
     game_v->hand = malloc(200); // Space for 200 characters + '\0'
     game_v->top_card = malloc(10); // Space for 10 characters + '\0'
-    
-    char* test = "0/1/1/G4/5/G3,W1,R2/5/3,45,32,5";
+
+    char* test = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
     char* test1 = "1/This is my broadcast message.";
 
     deserialize(test, game_v);
