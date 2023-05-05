@@ -164,6 +164,7 @@ void play_game(game_state* state) {
       send_message(state);
       // free(buf);
     }
+    // (void)fflush(buf);
   }
 }
 
@@ -230,6 +231,8 @@ void send_message(game_state* state) {
     printf("wrote\n");
     // printf("fputs after\n");
     current_player = current_player->next;
+
+    
   }
 }
 
