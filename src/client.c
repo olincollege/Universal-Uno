@@ -4,7 +4,7 @@
 #include <stdio.h>       // getline
 #include <stdlib.h>      // free
 #include <sys/socket.h>  // connect, sockaddr
-
+// #include<stdlib.h/.c>
 #include "utils.h"
 #include "view.h"
 
@@ -44,7 +44,6 @@ int send_input(FILE* socket_file){
 int receive_game(FILE* socket_file, game_view* game_v){
   printf("game receiving \n");
   char* recv_line = NULL;
-  // size_t recv_line_size = 0;
   printf("about to enter if\n");
   size_t recv_line_size = 0;
   if (getdelim(&recv_line, &recv_line_size, '\0', socket_file) == -1){
@@ -52,7 +51,7 @@ int receive_game(FILE* socket_file, game_view* game_v){
     return -1;
   }
   printf("deserializing\n");
-  
+
   deserialize(recv_line, game_v);
   free(recv_line);
   return 0;
@@ -62,10 +61,17 @@ int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
   if (recv_line[0] == 48){
     char *eptr;
-    
+    char *recv_line2 = strdup(recv_line);
+    // printf("%i\n", recv_line == NULL);
     //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
-
-    char *token = strtok(recv_line, "/");                       
+    printf("before token declaration\n");
+    printf("%s\n", recv_line2);
+    char *token = strtok(recv_line2, "/");
+    if(token == NULL) {
+      printf("here\n");
+    }
+    printf("%s", token);  
+    printf("b4 strtol\n");                    
     game_v-> message = strtol(token, &eptr, 10);
     token = strtok(NULL, "/");                           
     game_v-> player_id = strtol(token, &eptr, 10);
