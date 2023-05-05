@@ -59,11 +59,10 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
+  //check if the first value is 0. It's in ascii
   if (recv_line[0] == 48){
     char *eptr;
     char *recv_line2 = strdup(recv_line);
-    // printf("%i\n", recv_line == NULL);
-    //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
     printf("before token declaration\n");
     printf("%s\n", recv_line2);
     char *token = strtok(recv_line2, "/");
@@ -86,6 +85,7 @@ int deserialize(char* recv_line, game_view* game_v){
     token = strtok(NULL, "/");
     game_v-> number_players = strtol(token, &eptr, 10);
     token = strtok(NULL, "/");
+    //only split if that player exists
     if (game_v->number_players >= 1) {
         game_v-> player_0 = strtol(token, &eptr, 10);
         token = strtok(NULL, "/");
@@ -105,11 +105,10 @@ int deserialize(char* recv_line, game_view* game_v){
         game_v-> player_4 = strtol(token, &eptr, 10);
         token = strtok(NULL, "/");
     }
-    print_game(game_v);
+    print_game(game_v); //print game state
 
-  } else if (recv_line[0] == 49){
+  } else if (recv_line[0] == 49){ //check if the first value is 1. It's in ascii
     //[1][print until end of line]
-    //puts("Broadcast:");
     printf("Broadcast: %s\n",recv_line);
   } else {
     puts("Error doesn't follow format");

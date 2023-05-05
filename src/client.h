@@ -48,7 +48,10 @@ int send_input(FILE* socket_file);
 int receive_game(FILE* socket_file, game_view* game_v);
 
 /**
- * Do later
+ * Reads in a string, splits it into the view struct, and calls print
+ * 
+ * If the first value is 0 then it is a game state. If the first value is 1 then
+ * it is a broadcast message.
  * 
  * @param recv_line
  * @param game_v
