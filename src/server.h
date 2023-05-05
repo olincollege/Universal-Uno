@@ -76,6 +76,15 @@ void listen_for_connections(uno_server* server);
 int accept_client(uno_server* server, game_state* game_state);
 
 /**
+ * Recieves input from client and updates the state of the game.
+ *
+ * @param game_state the current state of the game.
+ * @param socket_descriptor the socket descriptor of the client who's turn it
+ * is.
+ */
+void uno(game_state game_state, int socket_descriptor);
+
+/**
  * Waits until the appropriate amount of people join the server before starting.
  * @param game_state the current state of the game.
  * @param server The server to start listening on.
@@ -85,24 +94,29 @@ int accept_client(uno_server* server, game_state* game_state);
 void start_game(game_state* state);
 
 /**
- * This function actually plays the game of UNO. It should receive a string input from the player
- * signifying the card the player played or if they draw card. Then, if the card is valid, should play it.
- * Otherwise it should draw a card. If the move isn't valid, just send the game state back to the player,
- * signifying that the move didn't go through. After playing a move, send the updated game state to all players
- * with the top card and turns updated.
- * 
- * @param state: a game_state structure representing the current game state
+ * Once the game is started and communication begins to happen, play game will
+ * listen for inputs. Once it finds that input, it checks what the input is and
+ * does the appropiate things.
+ *
+ * If the input is a u then the game will broadcast to the players that someone
+ * called uno. If the input is draw, then the game will add a card to the
+ * players hand from the draw pile. If the input isn't either of those, it plays
+ * the card the player sent.
+ *
+ * @param state the current state of the game.
  */
-void play_game(game_state* state);
+void play_game(game_state* state, uno_server* server);
 
 /**
- * Sends a message from the server to each client. This is used to update each
- * player on the current game state after a move. The function looks through the game
- * state and turns each part of the game state into a string representation separated
- * by /
- * 
- * @param state: a game_state structure thar represents the current game state
+ * After looking at the state of the game, send message will create a message
+ * and send it to the client.
+ *
+ * The contents of the message will be a 0 or a 1 depending on whether or not it
+ * is a broadcast or a game update, followed by the players id, followed by the
+ * current players id, followed by the top card, followed by the players hand,
+ * followed by the number of players, followed by the player handsizes in order
+ * of player from player 0 to player 1.
+ *
+ * @param state the state of the game
  */
-void send_message(game_state* state);
-void get_hand_size(player* player, FILE* file);
-
+void send_message(game_state* state, int type, char* buf);

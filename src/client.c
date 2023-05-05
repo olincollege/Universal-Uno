@@ -25,7 +25,7 @@ FILE* get_socket_file(int client_socket) {
   return socket_file;
 }
 
-int send_input(FILE* socket_file){
+int send_input(FILE* socket_file) {
   char* send_line = NULL;
   size_t send_line_size = 500; // NOLINT(*-magic-numbers)
   //put into send line
@@ -34,24 +34,24 @@ int send_input(FILE* socket_file){
     printf("in here :0 \n");
     return -1;
   }
-  //put send line into socket file
-  printf("putting line in socket file\n");
+  // put send line into socket file
+  printf("putting %s in socket file\n", send_line);
   if (fputs(send_line, socket_file) == EOF) {
     free(send_line);
     error_and_exit("Couldn't send card");
   }
-  free(send_line);
+  printf("message sent\n");
+  free(send_line);  // now its in socket file
   return 0;
 }
 
-
-int receive_game(FILE* socket_file, game_view* game_v){
+int receive_game(FILE* socket_file, game_view* game_v) {
   printf("game receiving \n");
   char* recv_line = NULL;
   printf("about to enter if\n");
   size_t recv_line_size = 0;
-  //put the line from the file into recv_line
-  if (getdelim(&recv_line, &recv_line_size, '\0', socket_file) == -1){
+
+  if (getdelim(&recv_line, &recv_line_size, '\0', socket_file) == -1) {
     printf("in if\n");
     return -1;
   }
@@ -61,8 +61,9 @@ int receive_game(FILE* socket_file, game_view* game_v){
   return 0;
 }
 
-int deserialize(char* recv_line, game_view* game_v){
-  //checks if the first value represents the game state, 48 is the ascii value
+
+int deserialize(char* recv_line, game_view* game_v) {
+  printf("%s\n", recv_line);
    if (recv_line[0] == forty_eight) { 
     //parses the string on the "/"
     char delimeter[2] = "/";

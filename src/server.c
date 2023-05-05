@@ -5,8 +5,9 @@
 #endif
 #define _GNU_SOURCE
 
+#include "server.h"
 
-
+#include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,8 +15,6 @@
 #include <unistd.h>
 
 #include "model.h"
-
-#include "server.h"
 #include "utils.h"
 
 uno_server* make_uno_server(struct sockaddr_in ip_addr, int max_backlog) {
@@ -43,30 +42,32 @@ void listen_for_connections(uno_server* server) {
 int accept_client(uno_server* server, game_state* game_state) {
   struct sockaddr client_addr;
   unsigned int address_size = sizeof(server->addr);
-  int connected_d =
-      accept(server->listener, &client_addr, &address_size);
+  int connected_d = accept(server->listener, &client_addr, &address_size);
 
   if (connected_d < 0) {
     error_and_exit("Connection to server failed");
   }
 
   if (game_state->current_players == 0) {
+    // If the player who joined is the first player, it initializes the game
+    // state
     game_state->number_players = 2;
     game_state->player_list = make_order(game_state->number_players);
     game_state->player_list->head->sock_num = connected_d;
     printf("Player %zu connected!\n", game_state->player_list->head->number);
     game_state->current_players++;
   } else {
-    
     player* current = game_state->player_list->head;
-    
+
     for (size_t i = 0; i < game_state->number_players; i++) {
+      // Adds the player to the player list
       if (current->sock_num != -1) {
         printf("print socket num for player %zu: %i\n", current->number,
                current->sock_num);
         current = current->next;
       } else {
-        printf("Player %zu connecting with socket number %d\n", current->number, connected_d);
+        printf("Player %zu connecting with socket number %d\n", current->number,
+               connected_d);
         current->sock_num = connected_d;
 
         game_state->current_players = game_state->current_players + 1;
@@ -80,19 +81,20 @@ int accept_client(uno_server* server, game_state* game_state) {
   if (pid == -1) {
     error_and_exit("forking problem");
   } else if (pid == 0) {
-    // Maybe get input from the first player how many people to expect.
     while (game_state->current_players != game_state->number_players) {
+      // Waits for the right number of players to join.
       printf("Not enough players yet!\n");
       break;
     }
 
     if (game_state->current_players == game_state->number_players) {
       if (game_state->start != 1) {
-            game_state->start = 1;
-            game_state->turn = game_state->player_list->head;
-            start_game(game_state);
-          }
-          play_game(game_state);
+        // Starts the game once the proper number of students have joined.
+        game_state->start = 1;
+        game_state->turn = game_state->player_list->head;
+        start_game(game_state);
+      }
+      play_game(game_state, server);
 
       return -1;
     }
@@ -107,11 +109,12 @@ void start_game(game_state* state) {
   printf("in start game\n");
   player* current = state->player_list->head;
   for (size_t i = 0; i < state->number_players; i++) {
+    // Initializes the hands for each player
     make_hand(state, current);
-    
+
     card* card_ = current->hand.head;
     printf("Player %zu hand\n", current->number);
-    while(card_ != NULL){
+    while (card_ != NULL) {
       printf("Color: %c ", card_->color);
       printf("Number: %zu\n", card_->value);
       card_ = card_->next;
@@ -121,7 +124,7 @@ void start_game(game_state* state) {
   }
   state->start = 1;
   printf("Sending message\n");
-  send_message(state);
+  send_message(state, 0, NULL);
 }
 void play_game(game_state* state) {
   printf("game starting\n");
@@ -136,9 +139,10 @@ void play_game(game_state* state) {
 
     if(val < 0) {
       printf("error reading\n");
-      return;
-    } 
-    if(val == 0) {
+      errnum = errno;
+      printf("Error: %s\n", strerror(errnum));
+      break;
+    } else if (val == 0) {
       printf("player disconnected\n");
       return;
     }
@@ -146,7 +150,7 @@ void play_game(game_state* state) {
     printf("read! %s", buf);
     if (buf[0] == 'u') {
       if (check_uno(state) == 1) {
-        send_message(state);
+        send_message(state, 1, buf);
       }
     } else if (strstr(buf, "draw") != NULL) {
       printf("Card requested\n");
@@ -157,123 +161,111 @@ void play_game(game_state* state) {
       change_turn(state);
 
       printf("\n");
-      send_message(state);
+      send_message(state, 0, NULL);
     } else {
       printf("playing card\n");
       char card_str[FIVE];
       process_input(buf, card_str);
       play_uno(state, card_str);
       change_turn(state);
-      send_message(state);
+      send_message(state, 0, NULL);
       // free(buf);
     }
     // (void)fflush(buf);
   }
 }
 
-void send_message(game_state* state) {
+void send_message(game_state* state, int type, char* buf) {
   printf("at top of send message\n");
-  // if error 1:
-  // broadcast message.
-  // else
-  player* current_player = state->player_list->head;
-
-  for (size_t i = 0; i < state->number_players; i++) {
-    char sendlin[BUF_SIZE];
-    sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
-            state->turn->number);
-    // FILE* input_file = fdopen(current_player->sock_num, "r+");
-
-    char* main_card[100];
-    printf("setting main card\n");
-    if (state->main.head == NULL) {
-      puts("TEST");
+  if (type == 1) {
+    // If it is a broadcast message, it constructs and send it to everyone
+    if (buf[0] == 'u') {
+      if (state->turn->hand.size == 1) {
+        player* current = state->player_list->head;
+        char sendline[1000];
+        sprintf(sendline, "Player %zu has called uno!");
+        write(current->sock_num, sendline, sizeof(sendline));
+        current = current->next;
+        while (current != state->turn) {
+          char sendlinee[1000];
+          sprintf(sendline, "Player %zu has called uno!");
+          write(current->sock_num, sendline, sizeof(sendline));
+          current = current->next;
+        }
+      } else {
+        player* current = state->player_list->head;
+        char sendline2[1000];
+        sprintf(sendline2, "A Player has called uno before another!");
+        write(current->sock_num, sendline2, sizeof(sendline2));
+        current = current->next;
+        while (current != state->turn) {
+          char sendlinee2[1000];
+          sprintf(sendlinee2, "A Player has called uno before another!");
+          write(current->sock_num, sendlinee2, sizeof(sendlinee2));
+          current = current->next;
+        }
+      }
     }
-    printf("color %c, val: %d\n", state->main.head->color,
-           (int)state->main.head->value);
-    sprintf(main_card, " %c%zu/", state->main.head->color,
-            state->main.head->value);
-    printf("%s", main_card);
-    strcat(sendlin, main_card);
-    char* num_cards[8];
-    sprintf(num_cards, "%d/", state->turn->hand.size);
-    strcat(sendlin, num_cards);
-    printf("about to enter while loop\n");
-    card* current_card = current_player->hand.head;
-    while (current_card != NULL) {
-      // printf("in loop 1\n");
-      char* card[7];
-      sprintf(card, " %c%zu,", current_card->color, current_card->value);
-      strcat(sendlin, card);
-      current_card = current_card->next;
-    }
-    char* num_players[FIVE];
-    sprintf(num_players, "/%d/", state->number_players);
-    strcat(sendlin, num_players);
-    player* temp = state->player_list->head;
-    char* hand_size[7];
-    sprintf(hand_size, "%zu/", temp->hand.size);
-    strcat(sendlin, hand_size);
-    temp = temp->next;
-    while (temp != state->player_list->head) {
-      // printf("in loop2\n");
-      char* hand_sizee[7];
-      sprintf(hand_sizee, "%zu/", temp->hand.size);
-      strcat(sendlin, hand_sizee);
-      temp = temp->next;
-    }
-    // strcpy(sendlin, "hello");
-    strcat(sendlin, "\0");
-    // printf("fputs before\n");
-    printf("about to send input\n");
-    printf("%s\n", sendlin);
-    // fputs(sendlin, input_file);
-    if(write(current_player->sock_num, sendlin, BUF_SIZE) < 0) {
-      error_and_exit("Didn't write successfully\n");
-    }
-    printf("wrote\n");
-    // printf("fputs after\n");
-    current_player = current_player->next;
-
-    
-  }
-}
-
-void get_hand_size(player* player, FILE* file) {
-  if (player->hand.size < 10) {
-    putw(0, file);
-    putw(player->hand.size, file);
   } else {
-    putw(player->hand.size, file);
-  }
-}
-void send_message_check(game_state game_state) {
-  player* current_player = game_state.player_list->head;
-  FILE* input_file;
+    // If it is not a broadcast then it simply collects the player info and
+    // transmits it
+    player* current_player = state->player_list->head;
 
-  for (size_t i = 0; i < game_state.number_players; i++) {
-    putw(0, input_file);
-    putw(current_player->number, input_file);
-    putw(game_state.turn->number, input_file);
+    for (size_t i = 0; i < state->number_players; i++) {
+      char sendlin[1000];
+      sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
+              state->turn->number);
+      // FILE* input_file = fdopen(current_player->sock_num, "r+");
 
-    get_hand_size(current_player, input_file);
-    card* current_card = current_player->hand.head;
-    while (current_card->next != NULL) {
-      fputs(&current_card->color,
-            input_file);  // note is invalid, color is character not string
-      putw(current_card->value, input_file);
-    }
-    // putw(game_state.number_players, input_file);
-    player* temp = game_state.player_list->head;
-    while (temp->next != game_state.player_list->head) {
-      get_hand_size(temp, input_file);
+      char* main_card[100];
+      printf("setting main cardsdfsdf\n");
+      if (state->main.head == NULL) {
+        puts("TEST");
+      }
+      printf("color %c, val: %d\n", state->main.head->color,
+             (int)state->main.head->value);
+      sprintf(main_card, " %c%zu/", state->main.head->color,
+              state->main.head->value);
+      printf("%s", main_card);
+      printf("FJFHDJ\n");
+      strcat(sendlin, main_card);
+      char* num_cards[8];
+      sprintf(num_cards, "%d/", state->number_players);
+      strcat(sendlin, num_cards);
+      printf("about to enter while loop\n");
+      card* current_card = current_player->hand.head;
+      while (current_card != NULL) {
+        // printf("in loop 1\n");
+        char* card[7];
+        sprintf(card, " %c%zu,", current_card->color, current_card->value);
+        strcat(sendlin, card);
+        current_card = current_card->next;
+      }
+      char* num_players[5];
+      sprintf(num_players, "/%d/", state->number_players);
+      strcat(sendlin, num_players);
+      player* temp = state->player_list->head;
+      char* hand_size[7];
+      sprintf(hand_size, "%zu/", temp->hand.size);
+      strcat(sendlin, hand_size);
       temp = temp->next;
+      while (temp != state->player_list->head) {
+        // printf("in loop2\n");
+        char* hand_sizee[7];
+        sprintf(hand_sizee, "%zu/", temp->hand.size);
+        strcat(sendlin, hand_sizee);
+        temp = temp->next;
+      }
+      // strcpy(sendlin, "hello");
+      strcat(sendlin, "\0");
+      // printf("fputs before\n");
+      printf("about to send input\n");
+      printf("%s\n", sendlin);
+      // fputs(sendlin, input_file);
+      write(current_player->sock_num, sendlin, 1000);
+      printf("wrote\n");
+      // printf("fputs after\n");
+      current_player = current_player->next;
     }
   }
-  char* recv_line = NULL;
-  size_t recv_line_size = 0;
-  if (getline(&recv_line, &recv_line_size, input_file) == -1) {
-    // return -1;
-  }
-  puts(recv_line);
 }
