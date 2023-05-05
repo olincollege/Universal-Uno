@@ -130,6 +130,7 @@ void play_game(game_state* state) {
   while (1) {
     printf("at top of while\n");
     // FILE* sock_file = get_socket_file(state->turn->sock_num);
+
     FILE* input_file = fdopen(state->turn->sock_num, "r+");
     printf("in file\n");
     char* buf = NULL;
@@ -173,6 +174,7 @@ void play_game(game_state* state) {
       continue;
       // free(buf);
     }
+    // (void)fflush(buf);
   }
 }
 void broadcast_message(game_state* state, const char* buf) {
