@@ -1,6 +1,6 @@
 #include <arpa/inet.h>  // sockaddr_in
 
-#include "server.h"  // echo_server, related functions
+#include "server.h"  // uno_server, related functions
 #include "utils.h"    // socket_address, PORT
 
 int main(void) {
@@ -12,7 +12,6 @@ int main(void) {
   while (accept_status != -1) {
     accept_status = accept_client(server, state);
   }
-  // printf("here\n");
   free_uno_server(server);
   return 0;
 }
