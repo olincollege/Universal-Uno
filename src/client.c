@@ -3,6 +3,7 @@
 #include <netinet/in.h>  // sockaddr_in
 #include <stdio.h>       // getline
 #include <stdlib.h>      // free
+#include <string.h>
 #include <sys/socket.h>  // connect, sockaddr
 // #include<stdlib.h/.c>
 #include "utils.h"
@@ -61,13 +62,14 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
-  /*
-  if (recv_line[0] == 48) {
+
+   if (recv_line[0] == 48) {
     char delimeter[2] = "/";
     char* eptr;
     char* str = strdup(recv_line);
     char* token;
     token = strtok(str, delimeter);
+
     game_v->message = strtol(token, &eptr, 10);
     token = strtok(NULL, delimeter);
     game_v->player_id = strtol(token, &eptr, 10);
@@ -105,12 +107,10 @@ int deserialize(char* recv_line, game_view* game_v){
     print_game(game_v);
 
   } else if (recv_line[0] == 49) {
-    //[1][print until end of line]
-    // puts("Broadcast:");
     printf("Broadcast: %s\n", recv_line);
   } else {
     puts("Error doesn't follow format");
   }
-  */
+
   return 0;
 }
