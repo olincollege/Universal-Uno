@@ -400,14 +400,15 @@ int is_valid(char* card_, game_state* state) {
   card* curr_card = make_card(card_[0], (size_t)num);
   int is_in_hand = in_hand(curr_card, &(state->turn->hand));
   // make sure card is valid uno card
-  if (num > WILD) {
-    return 0;
-  }
-  if (card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' &&
-      card_[0] != 'G') {
-    return 0;
-  }
+  
   if (is_in_hand == UNO) {
+    if (num > WILD) {
+      return 0;
+    }
+    if (card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' &&
+        card_[0] != 'G') {
+      return 0;
+    } 
     if (curr_card->value == DRAW_4) {
       return 1;
     }
