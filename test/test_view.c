@@ -5,6 +5,7 @@
 
 #include "../src/view.h"
 
+// NOLINTBEGIN(*-magic-numbers)
 // Check that a two player game prints correctly.
 Test(print_game, two_playergame, .init = cr_redirect_stdout) {
   game_view *game_v = malloc(sizeof(game_view));
@@ -91,3 +92,4 @@ Test(print_game, five_playergame_diff_turn, .init = cr_redirect_stdout) {
   "Hand:[ R1]\n"
   "Wait for the other players to play.\n");
 }
+// NOLINTEND(*-magic-numbers)
