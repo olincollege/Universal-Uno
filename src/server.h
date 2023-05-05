@@ -6,7 +6,7 @@
 #include "model.h"
 #include "controller.h"
 
-enum { BACKLOG_SIZE = 10 };
+enum { BACKLOG_SIZE = 5 };
 
 // Group the data needed for a server to run.
 typedef struct {
