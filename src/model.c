@@ -10,12 +10,10 @@ card* make_card(char col, size_t val) {
 
 void free_card(card* card_) { free(card_); }
 
-deck* make_deck(void) {
-  deck* new_deck = malloc(sizeof(deck));
-  new_deck->head = NULL;
-  new_deck->size = 0;
-  return new_deck;
-}
+// deck make_deck(void) {
+//   deck new_deck= {.head = NULL, .size = 0 };
+//   return new_deck;
+// }
 
 void free_deck(deck* deck_) {
   card* current = deck_->head;
@@ -25,7 +23,7 @@ void free_deck(deck* deck_) {
     free_card(current);
     current = next;
   }
-  free(deck_);
+  //free(deck_);
 }
 
 void append_card(deck* deck_, char col, size_t val) {
@@ -42,25 +40,25 @@ void append_card(deck* deck_, char col, size_t val) {
   deck_->size++;
 }
 
-deck* make_uno_deck(void) {
-  deck* UNO_deck = make_deck();
+deck make_uno_deck(void) {
+  deck UNO_deck = {.head = NULL, .size = 0};
   // zero colors
-  append_card(UNO_deck, 'R', 0);
-  append_card(UNO_deck, 'B', 0);
-  append_card(UNO_deck, 'Y', 0);
-  append_card(UNO_deck, 'G', 0);
+  append_card(&UNO_deck, 'R', 0);
+  append_card(&UNO_deck, 'B', 0);
+  append_card(&UNO_deck, 'Y', 0);
+  append_card(&UNO_deck, 'G', 0);
   for (size_t i = 0; i < 2; i++) {
     for (size_t j = 1; j < DRAW_4; j++) {
-      append_card(UNO_deck, 'R', j);
-      append_card(UNO_deck, 'G', j);
-      append_card(UNO_deck, 'B', j);
-      append_card(UNO_deck, 'Y', j);
+      append_card(&UNO_deck, 'R', j);
+      append_card(&UNO_deck, 'G', j);
+      append_card(&UNO_deck, 'B', j);
+      append_card(&UNO_deck, 'Y', j);
     }
   }
   // Wild Cards
   for (size_t i = 0; i < 4; i++) {
-    append_card(UNO_deck, 'W', DRAW_4);
-    append_card(UNO_deck, 'W', WILD);
+    append_card(&UNO_deck, 'W', DRAW_4);
+    append_card(&UNO_deck, 'W', WILD);
   }
   return UNO_deck;
 }
@@ -166,7 +164,7 @@ void append_deck(deck* deck_old, deck* deck_new) {
 }
 
 int check_draw(game_state* state) {
-  if (state->draw.size > 1) {
+  if (state->draw.size <= 1) {
     return 1;
   }
   return 0;
@@ -190,8 +188,8 @@ void place_card(game_state* state, char col, size_t val) {
 
 player* make_player(size_t number) {
   player* player_ = malloc(sizeof(player));
-  deck* player_hand = make_deck();
-  player_->hand = *player_hand;
+  player_->hand.size = 0; 
+  player_->hand.head = NULL; 
   player_->next = NULL;
   player_->prev = NULL;
   player_->sock_num = -1;
@@ -199,7 +197,7 @@ player* make_player(size_t number) {
   return player_;
 }
 void free_player(player* player_) {
-  free_deck(&player_->hand);
+  free_deck(&(player_->hand));
   free(player_);
 }
 
@@ -229,14 +227,30 @@ order* make_order(size_t num_players) {
 }
 
 void free_order(order* order_) {
-  player* current = order_->head;
-  player* next = NULL;
-  while (current != NULL) {
-    next = current->next;
-    free_player(current);
-    current = next;
+  if (order_->head == NULL)
+  {
+    free(order_);
   }
-  free(order_);
+  else if(order_->head->next == order_->head){
+     free_player(order_->head);
+     free(order_);
+  }
+  else{
+    player* current = order_->head->next;
+    player* next = NULL;
+    while (current->next != order_->head) {
+      next = current->next;
+      //printf("%zu\n", current->number);
+      free_player(current);
+      current = next;
+    }
+    //printf("%zu\n", current->number);
+    free_player(current);
+    //printf("%zu\n", order_->head->number);
+    free_player(order_->head);
+    free(order_);
+    //printf("______\n", current->number);
+  }
 }
 
 void make_hand(game_state* state, player* player) {
@@ -252,11 +266,11 @@ int check_uno(game_state* state) {
 }
 
 void switch_direction(game_state* state) {
-  if (state->player_list.direction == 0) {
-    state->player_list.direction = 1;
+  if (state->player_list->direction == 0) {
+    state->player_list->direction = 1;
 
   } else {
-    state->player_list.direction = 0;
+    state->player_list->direction = 0;
   }
 }
 
@@ -281,7 +295,7 @@ void draw4(game_state* state, player* player) {
 }
 
 void next_player(game_state* state) {
-  if (state->player_list.direction == 1) {
+  if (state->player_list->direction == 1) {
     state->turn = state->turn->prev;
   } else {
     state->turn = state->turn->next;
@@ -328,23 +342,28 @@ void play_uno(game_state* state, char* input) {
 
 game_state* make_game_state(void) {
   game_state* state = malloc(sizeof(game_state));
-  state->discard = *make_deck();
-  state->draw = *make_uno_deck();
+  state->discard.head = NULL;
+  state->discard.size = 0; 
+  state->draw = make_uno_deck();
   shuffle(&(state->draw));
-  card* card_ = state->draw.head;
-  // for(int i = 0; i < 108; i++) {
-  //   printf("Color: %c ", card_->color);
-  //   printf("Number: %i\n", card_->value);
-  //   card_ = card_->next;
-  // }
   state->end = 0;
-  state->main = *make_deck();
+  state->main.head = NULL;
+  state->main.size = 0; 
   state->number_players = 0;
   state->start = 0;
   state->turn = NULL;
   state->current_players = 0;
-  // state->player_list = NULL;
+  state->player_list = NULL; 
   return state;
+}
+
+void free_game_state(game_state* state){
+  free_deck(&(state->discard));
+  free_deck(&(state->main));
+  free_deck(&(state->draw));
+  free_order(&(state->player_list));
+  free(state);
+
 }
 
 int check_win(game_state* state) {
@@ -402,7 +421,7 @@ int is_valid(char* card_, game_state* state) {
 
 void change_turn(game_state* state) {
   // printf("%i\n", state->turn.number);
-  if (state->player_list.direction == 0) {
+  if (state->player_list->direction == 0) {
     // 0 is next instead of prev
     state->turn = (state->turn->next);
   } else {

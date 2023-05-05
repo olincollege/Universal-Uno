@@ -82,7 +82,7 @@ typedef struct {
   player* turn;
   deck draw;
   deck discard;
-  order player_list;
+  order* player_list;
   size_t end;
 
 } game_state;
@@ -127,7 +127,7 @@ void free_card(card* card_);
  *
  * @return A pointer to the newly created deck.
  */
-deck* make_deck(void);
+deck make_deck(void);
 
 /**
  * Free a decks's memory.
@@ -166,7 +166,7 @@ void append_card(deck* deck_, char col, size_t val);
  * @return A pointer to the newly created UNO deck.
  */
 
-deck* make_uno_deck(void);
+deck make_uno_deck(void);
 
 /**
  * Move a card from the original deck to the end of a different deck
