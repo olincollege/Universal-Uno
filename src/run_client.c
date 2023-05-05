@@ -11,7 +11,6 @@ int main(void) {
   game_view* game_v = malloc(sizeof(game_view));
   game_v->hand = malloc(200); // Space for 200 characters + '\0'
   game_v->top_card = malloc(10); // Space for 10 characters + '\0'
-  game_v->hand_sizes = malloc(50); // Space for 50 characters + '\0'
 
   // Open a TCP socket to connect to the server.
   int socket_descriptor = open_tcp_socket();
