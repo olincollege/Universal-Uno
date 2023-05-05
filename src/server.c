@@ -41,6 +41,7 @@ void listen_for_connections(uno_server* server) {
 }
 
 int accept_client(uno_server* server, game_state* game_state) {
+  printf("at top of accept client\n");
   struct sockaddr client_addr;
   unsigned int address_size = sizeof(server->addr);
   int connected_d =
@@ -122,10 +123,12 @@ void start_game(game_state* state) {
   printf("Sending message\n");
   send_message(state);
 }
-
 void play_game(game_state* state) {
   printf("game starting\n");
+  
   while (1) {
+    printf("at top of while\n");
+    // FILE* sock_file = get_socket_file(state->turn->sock_num);
     char buf[1000];
     ssize_t val = read(state->turn->sock_num, buf, 1000);
     if(val < 0) {
@@ -136,7 +139,7 @@ void play_game(game_state* state) {
       exit;
     }
 
-    printf("%s", buf);
+    printf("read! %s", buf);
     if (buf[0] == 'u') {
       if (check_uno(state) == 1) {
         send_message(state);
@@ -226,7 +229,7 @@ void send_message(game_state* state) {
     // FILE* input_file = fdopen(current_player->sock_num, "r+");
 
     char* main_card[100];
-    printf("setting main cardsdfsdf\n");
+    printf("setting main card\n");
     if (state->main.head == NULL) {
       puts("TEST");
     }
@@ -235,10 +238,9 @@ void send_message(game_state* state) {
     sprintf(main_card, " %c%zu/", state->main.head->color,
             state->main.head->value);
     printf("%s", main_card);
-    printf("FJFHDJ\n");
     strcat(sendlin, main_card);
     char* num_cards[8];
-    sprintf(num_cards, "%d/", state->number_players);
+    sprintf(num_cards, "%d/", state->turn->hand.size);
     strcat(sendlin, num_cards);
     printf("about to enter while loop\n");
     card* current_card = current_player->hand.head;
@@ -270,7 +272,9 @@ void send_message(game_state* state) {
     printf("about to send input\n");
     printf("%s\n", sendlin);
     // fputs(sendlin, input_file);
-    write(current_player->sock_num, sendlin, 1000);
+    if(write(current_player->sock_num, sendlin, 1000) < 0) {
+      error_and_exit("Didn't write successfully\n");
+    }
     printf("wrote\n");
     // printf("fputs after\n");
     current_player = current_player->next;
@@ -288,6 +292,7 @@ void get_hand_size(player* player, FILE* file) {
 void send_message_check(game_state game_state) {
   player* current_player = game_state.player_list->head;
   FILE* input_file;
+
   for (size_t i = 0; i < game_state.number_players; i++) {
     putw(0, input_file);
     putw(current_player->number, input_file);
