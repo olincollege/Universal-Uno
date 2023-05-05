@@ -23,14 +23,14 @@ void print_game(game_view* game_v) {
     printf("Press 'u' to call Uno!\n");
     if (game_v->number_players >= 1) {
         if (0 == game_v->turn){
-            printf("Player 1: %d cards <-- Current turn\n ", game_v-> player_0);
+            printf("Player 1: %d cards <-- Current turn\n", game_v-> player_0);
         } else{
             printf("Player 1: %d cards\n", game_v-> player_0);
         }
     }
     if (game_v->number_players >= 2) {
         if (1 == game_v->turn){
-            printf("Player 2: %d cards <-- Current turn\n ", game_v-> player_1);
+            printf("Player 2: %d cards <-- Current turn\n", game_v-> player_1);
         } else{
             printf("Player 2: %d cards\n", game_v-> player_1);
         }
@@ -66,7 +66,7 @@ void print_game(game_view* game_v) {
 
 
 int deserialize(char* recv_line, game_view* game_v){
-  printf("%s\n",recv_line);
+  //printf("%s\n",recv_line);
   if (recv_line[0] == 48){
     char *eptr;
     
@@ -139,7 +139,8 @@ int main(void){
     game_v->hand = malloc(200); // Space for 200 characters + '\0'
     game_v->top_card = malloc(10); // Space for 10 characters + '\0'
 
-    char* test = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
+    char* test3 = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
+    char* test = "0/0/0/G0/2/ R1/2/1/1";
     char* test1 = "1/This is my broadcast message.";
 
     deserialize(test, game_v);
