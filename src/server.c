@@ -134,6 +134,7 @@ void play_game(game_state* state) {
   printf("game starting\n");
   while (1) {
     char* buf = recieve_input(state->turn->sock_num);
+    printf("%s", buf);
     if (buf[0] == 'u') {
       if (check_uno(state) == 1) {
         send_message(*state, 1);
@@ -219,15 +220,20 @@ void send_message(game_state game_state, int type) {
     char* sendlin[1000];
     sprintf(sendlin, "%d/%d/%d/", type, current_player->number,
             game_state.turn->number);
-    FILE* input_file = fdopen(current_player->sock_num, "r+");
+    FILE* input_file = fdopen(current_player->sock_num, "r");
 
-    char* main[7];
-    printf("setting main card\n");
-    printf("hiiii\n");
-    sprintf(main, " %c%zu/", game_state.main.head->color,
+    char* main_card[100];
+    printf("setting main cardsdfsdf\n");
+    if (game_state.main.head == NULL) {
+      puts("TEST");
+    }
+    printf("color %c, val: %d\n", game_state.main.head->color,
+           (int)game_state.main.head->value);
+    sprintf(main_card, " %c%zu/", game_state.main.head->color,
             game_state.main.head->value);
-    printf("FJFHDJ");
-    strcat(sendlin, main);
+    printf("%s", main_card);
+    printf("FJFHDJ\n");
+    strcat(sendlin, main_card);
     char* num_cards[8];
     sprintf(num_cards, "%zu/", game_state.number_players);
     strcat(sendlin, num_cards);
@@ -263,7 +269,6 @@ void send_message(game_state game_state, int type) {
     // fputs(sendlin, input_file);
     write(current_player->sock_num, sendlin, 1000);
     // printf("fputs after\n");
-    free(sendlin);
     current_player = current_player->next;
   }
 }
