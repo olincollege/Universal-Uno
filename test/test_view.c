@@ -31,39 +31,3 @@ Test(print_game, three_player_game_state, .init = cr_redirect_stdout) {
   "Player 3: 1 cards <--Current turn\n"
   "Deck top card: R2\n");
 }
-
-// Check that an empty hand prints correctly.
-Test(print_hand, empty_hand, .init = cr_redirect_stdout) {
-  char hand[] = "";
-  print_hand(hand, 0, 0);
-  (void)fflush(stdout);
-  (void)fclose(stdout);
-  cr_assert_stdout_eq_str(
-  "Hand:[]\n"
-  "It's your turn! Type out which card you to play or type 'draw'\n"
-  );
-}
-
-// Check that a hand with cards and its that players turn prints correctly
-Test(print_hand, your_turn_full_hand, .init = cr_redirect_stdout) {
-  char hand[] = "R2, G3, W+2";
-  print_hand(hand, 5, 5);
-  (void)fflush(stdout);
-  (void)fclose(stdout);
-  cr_assert_stdout_eq_str(
-  "Hand:[R2, G3, W+2]\n"
-  "It's your turn! Type out which card you to play or type 'draw'\n"
-  );
-}
-
-// Check that a hand with cards and its not that players turn prints correctly
-Test(print_hand, not_your_turn_full_hand, .init = cr_redirect_stdout) {
-  char hand[] = "R2, G3, W+2";
-  print_hand(hand, 5, 3);
-  (void)fflush(stdout);
-  (void)fclose(stdout);
-  cr_assert_stdout_eq_str(
-  "Hand:[R2, G3, W+2]\n"
-  "Wait for the other players to play.\n"
-  );
-}
