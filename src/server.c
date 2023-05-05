@@ -229,7 +229,7 @@ void send_message(game_state* state, int type, const char* buf) {
 
     for (size_t i = 0; i < state->number_players; i++) {
       char sendlin[1000];  // NOLINT(*-magic-numbers)
-      sprintf(sendlin, "%zu/%zu/%zu/", 0, current_player->number,
+      sprintf(sendlin, "%d/%zu/%zu/", 0, current_player->number,
               state->turn->number); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       // FILE* input_file = fdopen(current_player->sock_num, "r+");
 
@@ -239,7 +239,7 @@ void send_message(game_state* state, int type, const char* buf) {
         puts("TEST");
       }
       printf("color %c, val: %zu\n", state->main.head->color,
-             (int)state->main.head->value);
+             state->main.head->value);
       sprintf(
           main_card, " %c%zu/", state->main.head->color,
           state->main.head
