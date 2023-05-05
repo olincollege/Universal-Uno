@@ -61,7 +61,7 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
-
+  /*
   if (recv_line[0] == 48) {
     char delimeter[2] = "/";
     char* eptr;
@@ -111,5 +111,6 @@ int deserialize(char* recv_line, game_view* game_v){
   } else {
     puts("Error doesn't follow format");
   }
+  */
   return 0;
 }

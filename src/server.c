@@ -147,6 +147,7 @@ void play_game(game_state* state) {
         refill_draw(state);
       }
       draw_card(state);
+      change_turn(state);
 
       printf("\n");
       send_message(state);
