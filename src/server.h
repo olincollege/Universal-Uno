@@ -3,10 +3,12 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#include "model.h"
 #include "controller.h"
+#include "model.h"
 
-enum { BACKLOG_SIZE = 5 };
+enum { BACKLOG_SIZE = 5, 
+       BUF_SIZE = 1000,
+       FIVE = 5};
 
 // Group the data needed for a server to run.
 typedef struct {
@@ -73,7 +75,6 @@ void listen_for_connections(uno_server* server);
  */
 int accept_client(uno_server* server, game_state* game_state);
 
-
 /**
  * Recieves input from client and updates the state of the game.
  *
@@ -91,12 +92,31 @@ void uno(game_state game_state, int socket_descriptor);
  * is.
  */
 void start_game(game_state* state);
-void play_game(game_state* state);
-void send_message(game_state* state);
-void get_hand_size(player* player, FILE* file);
-void send_hand(game_state game_state);
 
-void send_game(game_state game_state);
+/**
+ * Once the game is started and communication begins to happen, play game will
+ * listen for inputs. Once it finds that input, it checks what the input is and
+ * does the appropiate things.
+ *
+ * If the input is a u then the game will broadcast to the players that someone
+ * called uno. If the input is draw, then the game will add a card to the
+ * players hand from the draw pile. If the input isn't either of those, it plays
+ * the card the player sent.
+ *
+ * @param state the current state of the game.
+ */
+void play_game(game_state* state, uno_server* server);
 
-void send_initial(game_state game_state);
-
+/**
+ * After looking at the state of the game, send message will create a message
+ * and send it to the client.
+ *
+ * The contents of the message will be a 0 or a 1 depending on whether or not it
+ * is a broadcast or a game update, followed by the players id, followed by the
+ * current players id, followed by the top card, followed by the players hand,
+ * followed by the number of players, followed by the player handsizes in order
+ * of player from player 0 to player 1.
+ *
+ * @param state the state of the game
+ */
+void send_message(game_state* state, int type, char* buf);

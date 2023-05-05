@@ -1,13 +1,18 @@
 #pragma once
 
+#include "view.h"
+
 #include <netinet/in.h>  // sockaddr_in
 #include <stdio.h>       // FILE
-#include "view.h"
+
 
 
 enum{
     /**Magic number error*/
-    five = 5
+    five = 5,
+    forty_eight = 48,
+    forty_nine = 49,
+    ten = 10
 };
 
 /**
@@ -41,12 +46,17 @@ FILE* get_socket_file(int client_socket);
 /**
  * Sends an input from a client to server in file.
  * 
+ * It reads from stdin and puts that line into the socket file.
+ * 
  * @param socket_file a socket file for a given client.
 */
 int send_input(FILE* socket_file);
 
 /**
  * Receives a file with the game state to decode.
+ * 
+ * Reads from the socket file and passes it to the deserialization function.
+ * The deserialization function will print a view.
  * 
  * @param socket_file a socket file for a given client.
  * @param game_v is the game state view struct
