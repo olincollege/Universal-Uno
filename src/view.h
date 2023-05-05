@@ -8,7 +8,7 @@ typedef struct {
     int message;
     int player_id;
     int turn;
-    char *top_card;
+    char* top_card;
     int cards_in_hand;
     char *hand;
     int number_players;

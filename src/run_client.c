@@ -38,6 +38,7 @@ int main(void) {
 
   // If we didn't hit the end of file for either stdin or the response from the
   // server, then something went wrong.
+  // don't hit end of file
   if (!feof(stdin) && !feof(socket_file)) {
     error_and_exit("Error reading or writing line:");
   }

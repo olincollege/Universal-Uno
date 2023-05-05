@@ -23,7 +23,7 @@ void free_deck(deck* deck_) {
     free_card(current);
     current = next;
   }
-  //free(deck_);
+  // free(deck_);
 }
 
 void append_card(deck* deck_, char col, size_t val) {
@@ -116,14 +116,15 @@ card* get_card_index(deck* deck_, size_t index) {
 }
 
 void shuffle(deck* deck_) {
-  srand((unsigned int)time(0)); // NOLINT(cert-msc32-c,cert-msc51-cpp)
+  srand((unsigned int)time(0));  // NOLINT(cert-msc32-c,cert-msc51-cpp)
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
-  for (size_t i = 0; i < 2*(deck_->size); i++) {
+  for (size_t i = 0; i < 2 * (deck_->size); i++) {
     size_t index =
-        ((size_t) rand() %
-          (deck_->size - UNO));  // NOLINT
+        ((size_t)rand() %
+         (deck_->size -
+          UNO));  // NOLINT(cert-msc30-c, cert-msc50-cpp,concurrency-mt-unsafe)
     // printf("%zu\n", index);
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
@@ -199,8 +200,8 @@ void place_card(game_state* state, char col, size_t val) {
 
 player* make_player(size_t number) {
   player* player_ = malloc(sizeof(player));
-  player_->hand.size = 0; 
-  player_->hand.head = NULL; 
+  player_->hand.size = 0;
+  player_->hand.head = NULL;
   player_->next = NULL;
   player_->prev = NULL;
   player_->sock_num = -1;
@@ -238,29 +239,26 @@ order* make_order(size_t num_players) {
 }
 
 void free_order(order* order_) {
-  if (order_->head == NULL)
-  {
+  if (order_->head == NULL) {
     free(order_);
-  }
-  else if(order_->head->next == order_->head){
-     free_player(order_->head);
-     free(order_);
-  }
-  else{
+  } else if (order_->head->next == order_->head) {
+    free_player(order_->head);
+    free(order_);
+  } else {
     player* current = order_->head->next;
     player* next = NULL;
     while (current->next != order_->head) {
       next = current->next;
-      //printf("%zu\n", current->number);
+      // printf("%zu\n", current->number);
       free_player(current);
       current = next;
     }
-    //printf("%zu\n", current->number);
+    // printf("%zu\n", current->number);
     free_player(current);
-    //printf("%zu\n", order_->head->number);
+    // printf("%zu\n", order_->head->number);
     free_player(order_->head);
     free(order_);
-    //printf("______\n", current->number);
+    // printf("______\n", current->number);
   }
 }
 
@@ -285,9 +283,7 @@ void switch_direction(game_state* state) {
   }
 }
 
-void skip(game_state* state) {
-  state->turn = state->turn->next->next;
-}
+void skip(game_state* state) { state->turn = state->turn->next->next; }
 
 void draw(game_state* state, player* player) {
   move_card(state->draw.head, &(state->draw), &player->hand);
@@ -321,60 +317,59 @@ void play_uno(game_state* state, char* input) {
   int num = atoi(&number);
   char col = input[0];
 
-  if(is_valid(input, state) == 1) {
+  if (is_valid(input, state) == 1) {
     switch (switch_num) {
-    case '1':
-      switch_direction(state);
-      place_card(state, col, num);
-      break;
-    case '0':
-      skip(state);
-      place_card(state, col, num);
-      break; 
-    case '2':
-      draw2(state, state->turn->next);
-      place_card(state, col, num);
-      break;
-    case '3':
-      draw4(state, state->turn->next);
-      place_card(state, col, num);
-      break;
+      case '1':
+        switch_direction(state);
+        place_card(state, col, num);
+        break;
+      case '0':
+        skip(state);
+        place_card(state, col, num);
+        break;
+      case '2':
+        draw2(state, state->turn->next);
+        place_card(state, col, num);
+        break;
+      case '3':
+        draw4(state, state->turn->next);
+        place_card(state, col, num);
+        break;
 
-    default:
-      place_card(state, col, num);
-      // next_player(state);
-      break;
+      default:
+        place_card(state, col, num);
+        // next_player(state);
+        break;
     }
   }
 
-  
-  // return 0; 
+  // return 0;
 }
 
 game_state* make_game_state(void) {
   game_state* state = malloc(sizeof(game_state));
   state->discard.head = NULL;
-  state->discard.size = 0; 
+  state->discard.size = 0;
   state->draw = make_uno_deck();
   shuffle(&(state->draw));
   state->end = 0;
   state->main.head = NULL;
-  state->main.size = 0; 
+  state->main.size = 0;
+  move_card(state->draw.head, &state->draw, &state->main);
   state->number_players = 0;
   state->start = 0;
   state->turn = NULL;
   state->current_players = 0;
-  state->player_list = NULL; 
+  state->player_list = NULL;
   return state;
 }
 
-void free_game_state(game_state* state){
+void free_game_state(game_state* state) {
   free_deck(&(state->discard));
   free_deck(&(state->main));
   free_deck(&(state->draw));
   free_order((state->player_list));
   free(state);
-
 }
 
 int check_win(game_state* state) {
@@ -399,35 +394,35 @@ int in_hand(card* played_card, deck* hand) {
 }
 
 int is_valid(char* card_, game_state* state) {
-    // turn string into card object
-    char* num_str = &card_[UNO];  
-    int num = atoi(num_str);
-    card* curr_card = make_card(card_[0], (size_t) num);
-    int is_in_hand = in_hand(curr_card, &(state->turn->hand));
-    // make sure card is valid uno card
-    if(num > WILD) {
-      return 0;
+  // turn string into card object
+  char* num_str = &card_[UNO];
+  int num = atoi(num_str);
+  card* curr_card = make_card(card_[0], (size_t)num);
+  int is_in_hand = in_hand(curr_card, &(state->turn->hand));
+  // make sure card is valid uno card
+  if (num > WILD) {
+    return 0;
+  }
+  if (card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' &&
+      card_[0] != 'G') {
+    return 0;
+  }
+  if (is_in_hand == UNO) {
+    if (curr_card->value == DRAW_4) {
+      return 1;
     }
-    if(card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' && card_[0] != 'G') {
-      return 0;
+    if (curr_card->value == WILD) {
+      return 1;
     }
-    if(is_in_hand == UNO) {
-      if(curr_card->value == DRAW_4) {
-        return 1;
-      }
-      if(curr_card->value == WILD) {
-        return 1;
-      }
-      if(curr_card->color == state->main.head->color) {
-        return 1;
-      } 
-      
-      if(curr_card->value == state->main.head->value){
-          return 1;
-      }
-      
+    if (curr_card->color == state->main.head->color) {
+      return 1;
     }
-    return 0; 
+
+    if (curr_card->value == state->main.head->value) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 void change_turn(game_state* state) {
