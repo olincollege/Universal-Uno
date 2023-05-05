@@ -28,5 +28,3 @@ target_link_libraries(server PRIVATE util model controller)
 add_executable(run_server run_server.c)
 target_link_libraries(run_server PRIVATE server util model)
 
-# add_executable(run_controller run_controller.c)
-# target_link_libraries(run_controller PRIVATE controller model)

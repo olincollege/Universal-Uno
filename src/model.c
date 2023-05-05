@@ -119,16 +119,12 @@ card* get_card_index(deck* deck_, size_t index) {
 }
 
 void shuffle(deck* deck_) {
-  srand((unsigned int)time(0));  // NOLINT(cert-msc32-c,cert-msc51-cpp)
+ 
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
   for (size_t i = 0; i < 2 * (deck_->size); i++) {
-    size_t index =
-        ((size_t)rand() %
-         (deck_->size -
-          UNO));  // NOLINT(cert-msc30-c, cert-msc50-cpp,concurrency-mt-unsafe)
-    // printf("%zu\n", index);
+    size_t index = ((size_t)rand() % (deck_->size - UNO));   // NOLINT(cert-msc30-c,cert-msc50-cpp,concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
   }
@@ -317,10 +313,13 @@ void next_player(game_state* state) {
 
 void play_uno(game_state* state, char* input) {
   char number[2];
-  strncpy(number, &input[1], 2);
+  strncpy(number, &input[1], 2); //NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
   char switch_num = input[2];
   // strcat(number, switch_num);
-  int num = atoi(&number);
+  //int num = atoi(&number);
+  char* eptr = NULL;
+  int num = (int) strtol((number), &eptr, REVERSE); 
+
   char col = input[0];
 
   if (is_valid(input, state) == 1) {
@@ -402,34 +401,43 @@ int in_hand(card* played_card, deck* hand) {
 int is_valid(char* card_, game_state* state) {
   // turn string into card object
   char* num_str = &card_[UNO];
-  int num = atoi(num_str);
-  card* curr_card = make_card(card_[0], (size_t)num);
+  //int num = atoi(num_str);
+  char* eptr = NULL;
+  int num = (int) strtol((num_str), &eptr, REVERSE); 
+  card* curr_card = make_card(card_[0], (size_t)num); //NOLINT(clang-analyzer-unix.Malloc)
   int is_in_hand = in_hand(curr_card, &(state->turn->hand));
   // make sure card is valid uno card
-  
   if (is_in_hand == UNO) {
     if (num > WILD) {
+      free_card(curr_card);
       return 0;
     }
     if (card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' &&
         card_[0] != 'G') {
+          free_card(curr_card);
       return 0;
     } 
     if (curr_card->value == DRAW_4) {
+      free_card(curr_card);
       return 1;
     }
     if (curr_card->value == WILD) {
+      free_card(curr_card);
       return 1;
     }
     if (curr_card->color == state->main.head->color) {
+      free_card(curr_card);
       return 1;
     }
 
     if (curr_card->value == state->main.head->value) {
+      free_card(curr_card);
       return 1;
     }
   }
+  free_card(curr_card);
   return 0;
+  
 }
 
 void change_turn(game_state* state) {
