@@ -341,6 +341,7 @@ game_state* make_game_state(void) {
   // }
   state->end = 0;
   state->main = *make_deck();
+  move_card(state->draw.head, &state->draw, &state->main);
   state->number_players = 0;
   state->start = 0;
   state->turn = NULL;

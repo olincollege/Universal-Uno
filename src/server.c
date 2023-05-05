@@ -40,14 +40,14 @@ void listen_for_connections(uno_server* server) {
 
 int accept_client(uno_server* server, game_state* game_state) {
   printf("at top of accept_client\n");
-  struct sockaddr_storage client_addr;
-  unsigned int address_size = sizeof(client_addr);
-  int connected_d =
-      accept(server->listener, (struct sockaddr*)&client_addr, &address_size);
-  // printf("connect_d: %i\n", connected_d);
-  if (connected_d == -1) {
+  struct sockaddr client_addr;
+  unsigned int address_size = sizeof(server->addr);
+  int connected_d = accept4(server->listener, &client_addr, &address_size, SOCK_CLOEXEC);
+
+  if (connected_d < 0) {
     error_and_exit("Connection to server failed");
   }
+
   if (game_state->current_players == 0) {
     printf("Player 0 connecting...\n");
     game_state->number_players = 2;
@@ -60,9 +60,7 @@ int accept_client(uno_server* server, game_state* game_state) {
     // Deck to NULL and sock_num to NULL
 
     player* current = game_state->player_list.head;
-    // while(current->next->sock_num != -1) {
-    //   current = current->next;
-    // }
+    
     for (int i = 0; i < game_state->number_players; i++) {
       if (current->sock_num != -1) {
         printf("print socket num for player %zu: %i\n", current->number, current->sock_num);
@@ -74,7 +72,6 @@ int accept_client(uno_server* server, game_state* game_state) {
       
         game_state->current_players = game_state->current_players + 1;
         printf("Player %zu connected! \n", current->number);
-        // current = current->next;
         break;
       }
       
@@ -179,6 +176,7 @@ void play_game(game_state* state) {
         process_input(buf, card_str);
         play_uno(state, card_str);
         change_turn(state);
+        send_message(*state);
     }
   
     
@@ -235,6 +233,7 @@ void play_game(game_state* state) {
 // }
 
 void send_message(game_state game_state) {
+  printf("at top of send message\n");
   // if error 1:
   // broadcast message.
   // else
@@ -247,11 +246,13 @@ void send_message(game_state game_state) {
     FILE* input_file = fdopen(current_player->sock_num, "r+");
     card* current_card = current_player->hand.head;
     char* main[7];
-    sprintf(main, " %c%d/", current_card->color, current_card->value);
+    printf("setting main card\n");
+    sprintf(main, " %c%d/", game_state.main.head->color, game_state.main.head->value);
     strcat(sendlin, main);
     char* num_cards[8];
     sprintf(num_cards, "%d/", game_state.number_players);
     strcat(sendlin, num_cards);
+    printf("about to enter while loop\n");
     while (current_card != NULL) {
       // printf("in loop 1\n");
       char* card[7];
@@ -266,7 +267,7 @@ void send_message(game_state game_state) {
     while (temp->next != game_state.player_list.head) {
       // printf("in loop2\n");
       char* hand_size[7];
-      sprintf(hand_size, "%d,", temp->hand.size);
+      sprintf(hand_size, "%d/", temp->hand.size);
       strcat(sendlin, hand_size);
       temp = temp->next;
     }
