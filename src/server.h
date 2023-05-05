@@ -128,4 +128,4 @@ void send_message(game_state* state, int type, const char* buf);
  * @param state the state of the game.
  * @param buf the input string genereated by the client.
  */
-void broadcast_message(game_state* state, const char* buf)
+void broadcast_message(game_state* state, const char* buf);
