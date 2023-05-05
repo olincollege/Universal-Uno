@@ -45,8 +45,9 @@ int main(void) {
   int socket_file_status2 = 0;
    while (socket_file_status != -1 && socket_file_status2 != -1) {
     printf("entered while loop\n");
-    socket_file_status = send_input(socket_file);
     socket_file_status2 = receive_game(socket_file, game_v);
+    socket_file_status = send_input(socket_file);
+    
   }
 
   // If we didn't hit the end of file for either stdin or the response from the
