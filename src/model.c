@@ -16,15 +16,18 @@ void free_card(card* card_) { free(card_); }
 // }
 
 void free_deck(deck* deck_) {
-  card* current = deck_->head;
-  card* next = NULL;
-  while (current != NULL) {
-    next = current->next;
-    free_card(current);
-    current = next;
+  if(deck_ == NULL){
+    return;
+  }
+    card* current = deck_->head;
+    card* next = NULL;
+    while (current != NULL) {
+      next = current->next;
+      free_card(current);
+      current = next;
+    }
   }
   // free(deck_);
-}
 
 void append_card(deck* deck_, char col, size_t val) {
   card* new = make_card(col, val);
@@ -239,6 +242,9 @@ order* make_order(size_t num_players) {
 }
 
 void free_order(order* order_) {
+  if(order_ == NULL){
+    return;
+  }
   if (order_->head == NULL) {
     free(order_);
   } else if (order_->head->next == order_->head) {

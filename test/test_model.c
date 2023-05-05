@@ -504,51 +504,49 @@ Test(append_deck, pointers_set_correctly) {
 }
 
 Test(check_draw, needs_refill_1) {
-  game_state* state;
-  state->draw.size = 0;
-  cr_assert(eq(sz, check_draw(state), 1));
-  // free_game_state(state);
+  game_state* state = make_game_state();
+  append_deck(&state->draw, &state->discard);
+  cr_assert(eq(int, check_draw(state), 1));
+  free_game_state(state);
 }
 Test(check_draw, needs_refill_2) {
-  game_state* state;
-  state->draw.size = 1;
-  cr_assert(eq(sz, check_draw(state), 1));
-  // free_game_state(state);
+  game_state* state = make_game_state();
+  append_deck(&state->draw, &state->discard);
+  move_card(state->discard.head,&state->discard,&state->draw );
+  cr_assert(eq(sz, state->draw.size, 1));
+  cr_assert(eq(int, check_draw(state), 1));
+  free_game_state(state);
 }
 Test(check_draw, no_refill) {
-  game_state* state;
-  state->draw.size = 2;
-  cr_assert(eq(sz, check_draw(state), 0));
-  // free_game_state(state);
+  game_state* state = make_game_state();
+  cr_assert(eq(int, check_draw(state), 0));
+  free_game_state(state);
 }
 
 Test(refill_draw, empty_draw) {
-  game_state* state;
+  game_state* state = make_game_state();
   deck uno = make_uno_deck();
-  state->discard = make_uno_deck();
-  state->draw.size = 0;
-  state->draw.head = NULL;
+  append_deck(&state->draw, &state->discard);
+  cr_assert(eq(sz, state->draw.size, 0));
+  cr_assert(eq(sz, state->discard.size, 107));
   refill_draw(state);
   cr_assert(eq(sz, state->discard.size, 0));
-  cr_assert(eq(sz, state->draw.size, 108));
+  cr_assert(eq(sz, state->draw.size, 107));
   cr_assert(eq(int, equal(&uno, &(state->draw)), 0));
   free_deck(&uno);
-  // free_game_state(state);
+  free_game_state(state);
 }
 Test(refill_draw, one_draw) {
-  game_state* state;
+  game_state* state = make_game_state();
   deck uno = make_uno_deck();
-  state->discard = make_uno_deck();
-  state->draw.size = 0;
-  state->draw.head = NULL;
-  append_card(&(state->draw), "R", 2);
+  append_deck(&state->draw, &state->discard);
+  move_card(state->discard.head, &state->discard, &state->draw);
+  cr_assert(eq(sz, state->draw.size, 1));
   refill_draw(state);
   cr_assert(eq(sz, state->discard.size, 0));
-  cr_assert(eq(sz, state->draw.size, 109));
-  cr_assert(eq(chr, state->draw.head->color, "R"));
-  cr_assert(eq(sz, state->draw.head->value, 2));
+  cr_assert(eq(sz, state->draw.size, 107));
   free_deck(&uno);
-  // free_game_state(state);
+  free_game_state(state);
 }
 
 // When making a card, the color and value should be set correctly.
@@ -959,25 +957,25 @@ Test(is_valid, in_hand_no_match) {
 Test(change_turn, moving_next) {
   // check that if the direction is zero, then the new player after changing
   // directions is the next player
-  game_state game_state_;
-  game_state_.player_list = make_order(3);
-  game_state_.turn = game_state_.player_list->head;
-  change_turn(&game_state_);
-  cr_assert(eq(int, (int)game_state_.turn->number, 1));
-  // free_game_state(state);
+  game_state* game_state_ = make_game_state();
+  game_state_->player_list = make_order(3);
+  game_state_->turn = game_state_->player_list->head;
+  change_turn(game_state_);
+  cr_assert(eq(sz, game_state_->turn->number, 1));
+  free_game_state(game_state_);
 }
 
 Test(change_turn, moving_prev) {
   // check that if the direction is zero, then the new player after changing
   // directions is the previous player
-  game_state game_state_;
-  game_state_.player_list = make_order(3);
-  game_state_.player_list->direction = 1;
-  game_state_.turn = game_state_.player_list->head;
-  change_turn(&game_state_);
+  game_state* game_state_ = make_game_state();
+  game_state_->player_list = make_order(3);
+  game_state_->player_list->direction = 1;
+  game_state_->turn = game_state_->player_list->head;
+  change_turn(game_state_);
   // printf("%i\n", game_state_.turn.number);
-  cr_assert(eq(int, (int)game_state_.turn->number, 2));
-  // free_game_state(state);
+  cr_assert(eq(sz, game_state_->turn->number, 2));
+  free_game_state(game_state_);
 }
 
 Test(draw, checks_player_hand) {
@@ -987,14 +985,14 @@ Test(draw, checks_player_hand) {
   draw(game_state_, game_state_->player_list->head);
   draw(game_state_, game_state_->player_list->head);
   cr_expect(eq(sz, game_state_->player_list->head->hand.size, 3));
-  // free_game_state(state);
+  free_game_state(game_state_);
 }
 Test(draw2, check_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
   draw2(game_state_, game_state_->player_list->head);
   cr_assert(eq(sz, game_state_->player_list->head->hand.size, 2));
-  // free_game_state(state);
+  free_game_state(game_state_);
 }
 
 Test(draw4, check_player_hand) {
@@ -1002,6 +1000,6 @@ Test(draw4, check_player_hand) {
   game_state_->player_list = make_order(3);
   draw4(game_state_, game_state_->player_list->head);
   cr_assert(eq(sz, game_state_->player_list->head->hand.size, 4));
-  // free_game_state(state);
+  free_game_state(game_state_);
 }
 // NOLINTEND(*-magic-numbers)
