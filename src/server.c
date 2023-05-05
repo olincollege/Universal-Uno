@@ -133,7 +133,7 @@ void play_game(game_state* state) {
   printf("game starting\n");
   char buf[1000];
   while(1) {
-    ssize_t val = read((int) state->turn->sock_num, buf, 1000);
+    ssize_t val = read((int) state->turn->sock_num, buf, 1000); // try diff read/recieve func
     printf("%s\n", buf);
     if(val < 0) {
       printf("Failed to read from Player %i\n", (int) state->turn->number);

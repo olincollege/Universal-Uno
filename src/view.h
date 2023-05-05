@@ -24,7 +24,7 @@ typedef struct {
  * @param player_turn an int corresponding to which players turn it is
  */
 void print_game(char top_card[], int hand_sizes[], size_t players, int player_turn);
-
+// void print_game(game_view* game_v);
 /**
  * Print a text representation of the uno hand and if it's the players turn.
  *
