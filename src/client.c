@@ -31,6 +31,7 @@ int send_input(FILE* socket_file) {
   //put into send line
   printf("about to get line\n");
   if (getline(&send_line, &send_line_size, stdin) == -1) {
+    printf("in here :0 \n");
     return -1;
   }
   // put send line into socket file

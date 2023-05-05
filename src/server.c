@@ -54,8 +54,7 @@ int accept_client(uno_server* server, game_state* game_state) {
     game_state->number_players = 2;
     game_state->player_list = make_order(game_state->number_players);
     game_state->player_list->head->sock_num = connected_d;
-    printf("Player %zu connecting with socket number %d\n",
-           game_state->player_list->head->number, connected_d);
+    printf("Player %zu connected!\n", game_state->player_list->head->number);
     game_state->current_players++;
   } else {
     player* current = game_state->player_list->head;
@@ -77,8 +76,7 @@ int accept_client(uno_server* server, game_state* game_state) {
       }
     }
   }
-  // printf("forking\n");
-  // printf("num players: %zu \n", game_state->current_players);
+
   pid_t pid = fork();
   if (pid == -1) {
     error_and_exit("forking problem");
@@ -104,6 +102,8 @@ int accept_client(uno_server* server, game_state* game_state) {
   printf("\n");
   return 0;
 }
+  
+
 
 void start_game(game_state* state) {
   printf("in start game\n");
@@ -126,16 +126,16 @@ void start_game(game_state* state) {
   printf("Sending message\n");
   send_message(state, 0, NULL);
 }
-
-void play_game(game_state* state, uno_server* server) {
+void play_game(game_state* state) {
   printf("game starting\n");
+  
   while (1) {
-    // Reads from the client then checks if it errors
-    int errnum;
+    printf("at top of while\n");
+    // FILE* sock_file = get_socket_file(state->turn->sock_num);
     char buf[1000];
-    ssize_t val = read(state->turn->sock_num, buf, sizeof(buf));
-    printf("%s\n", buf);
-    if (val < 0) {
+    ssize_t val = read(state->turn->sock_num, buf, 1000);
+    // fflush()
+    if(val < 0) {
       printf("error reading\n");
       errnum = errno;
       printf("Error: %s\n", strerror(errnum));
@@ -145,8 +145,7 @@ void play_game(game_state* state, uno_server* server) {
       exit;
     }
 
-    printf("%s", buf);
-    // Checks what the input is and responds accordingly
+    printf("read! %s", buf);
     if (buf[0] == 'u') {
       if (check_uno(state) == 1) {
         send_message(state, 1, buf);
