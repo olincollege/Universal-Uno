@@ -40,7 +40,7 @@ int send_input(FILE* socket_file){
     free(send_line);
     error_and_exit("Couldn't send card");
   }
-  free(send_line); //now its in socket file
+  free(send_line);
   return 0;
 }
 
@@ -50,12 +50,12 @@ int receive_game(FILE* socket_file, game_view* game_v){
   char* recv_line = NULL;
   printf("about to enter if\n");
   size_t recv_line_size = 0;
+  //put the line from the file into recv_line
   if (getdelim(&recv_line, &recv_line_size, '\0', socket_file) == -1){
     printf("in if\n");
     return -1;
   }
-  printf("deserializing\n");
-
+  //deserialize the input from the server
   deserialize(recv_line, game_v);
   free(recv_line);
   return 0;
@@ -63,14 +63,16 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
-
+  //checks if the first value represents the game state, 48 is the ascii value
    if (recv_line[0] == forty_eight) { 
+    //parses the string on the "/"
     char delimeter[2] = "/";
     char* eptr = NULL;
     char* str = strdup(recv_line);
     char* token = NULL;
-    token = strtok(str, delimeter); //NOLINT(concurrency-mt-unsafe)
 
+    //after splitting up string put into the correct struct value
+    token = strtok(str, delimeter); //NOLINT(concurrency-mt-unsafe)
     game_v->message = (int) strtol(token, &eptr, ten);
     token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
     game_v->player_id = (int) strtol(token, &eptr, ten);
@@ -85,6 +87,8 @@ int deserialize(char* recv_line, game_view* game_v){
     token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
     game_v->number_players = (int) strtol(token, &eptr, ten);
     token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+    
+    //checks how many players are in the game before putting them in the struct
     if (game_v->number_players >= 1) {
       game_v->player_0 = (int) strtol(token, &eptr, ten);
       token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
@@ -105,6 +109,7 @@ int deserialize(char* recv_line, game_view* game_v){
       game_v->player_4 = (int) strtol(token, &eptr, ten);
       token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
     }
+    //call print game from view.c
     print_game(game_v);
     free(str);
     free(token);
@@ -114,6 +119,5 @@ int deserialize(char* recv_line, game_view* game_v){
   } else {
     puts("Error doesn't follow format");
   }
-
   return 0;
 }
