@@ -62,7 +62,6 @@ int receive_game(FILE* socket_file, game_view* game_v){
 }
 
 int deserialize(char* recv_line, game_view* game_v){
-  printf("%s\n",recv_line);
   //checks if the first value represents the game state, 48 is the ascii value
    if (recv_line[0] == forty_eight) { 
     //parses the string on the "/"
