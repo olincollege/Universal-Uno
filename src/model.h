@@ -444,6 +444,13 @@ void next_player(game_state* game_state);
  * @return An empty game state.
  */
 game_state* make_game_state(void);
+
+/**
+ * Makes an empty instance of a game state.
+ *
+ * @return An empty game state.
+ */
+void free_game_state(game_state* state);
 /**
  * Check if the current player has uno
  *
