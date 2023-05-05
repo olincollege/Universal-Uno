@@ -4,8 +4,6 @@
 
 #include "view.h"
 
-
-
 void print_game(game_view* game_v) {
     printf("Key: B = Blue, R = Red, Y = Yellow, G = Green, W1 = Wild, 2 = Draw two, W4 = Wild draw four, r = reverse, S = skip\n");
     printf("Press 'u' to call Uno!\n");
@@ -37,7 +35,7 @@ void print_game(game_view* game_v) {
         } else{
             printf("Player 4: %d cards\n", game_v-> player_3);
         }
-    }if (game_v->number_players >= 5) {
+    }if (game_v->number_players >= 5) { //NOLINT(*-magic-numbers)
         if (2 == game_v->turn){
             printf("Player 5: %d cards <-- Current turn\n", game_v-> player_4);
         } else{

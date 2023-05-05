@@ -1,13 +1,18 @@
 #pragma once
 
+#include "view.h"
+
 #include <netinet/in.h>  // sockaddr_in
 #include <stdio.h>       // FILE
-#include "view.h"
+
 
 
 enum{
     /**Magic number error*/
-    five = 5
+    five = 5,
+    forty_eight = 48,
+    forty_nine = 49,
+    ten = 10
 };
 
 /**
