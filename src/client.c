@@ -26,12 +26,14 @@ FILE* get_socket_file(int client_socket) {
 
 int send_input(FILE* socket_file){
   char* send_line = NULL;
-  size_t send_line_size = 0;
+  size_t send_line_size = 1000;
   //put into send line
+  printf("about to get line\n");
   if (getline(&send_line, &send_line_size, stdin) == -1) {
     return -1;
   }
   //put send line into socket file
+  printf("putting line in socket file\n");
   if (fputs(send_line, socket_file) == EOF) {
     free(send_line);
     error_and_exit("Couldn't send card");
@@ -59,60 +61,61 @@ int receive_game(FILE* socket_file, game_view* game_v){
 
 int deserialize(char* recv_line, game_view* game_v){
   printf("%s\n",recv_line);
-  if (recv_line[0] == 48){
-    char *eptr;
-    char *recv_line2 = strdup(recv_line);
-    // printf("%i\n", recv_line == NULL);
-    //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
-    printf("before token declaration\n");
-    printf("%s\n", recv_line2);
-    char *token = strtok(recv_line2, "/");
-    if(token == NULL) {
-      printf("here\n");
-    }
-    printf("%s", token);  
-    printf("b4 strtol\n");                    
-    game_v-> message = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");                           
-    game_v-> player_id = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");  
-    game_v-> turn = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    strcpy(game_v->top_card, token);
-    token = strtok(NULL, "/");
-    game_v-> cards_in_hand = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    strcpy(game_v->hand, token);
-    token = strtok(NULL, "/");
-    game_v-> number_players = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
-    if (game_v->number_players >= 1) {
-        game_v-> player_0 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }
-    if (game_v->number_players >= 2) {
-        game_v-> player_1 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }
-    if (game_v->number_players >= 3) {
-        game_v-> player_2 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }
-    if (game_v->number_players >= 4) {
-        game_v-> player_3 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }if (game_v->number_players >= 5) {
-        game_v-> player_4 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }
-    print_game(game_v);
+  // if (recv_line[0] == 48){
+  //   char *eptr;
+  //   char *recv_line2 = strdup(recv_line);
+  //   // printf("%i\n", recv_line == NULL);
+  //   //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
+  //   printf("before token declaration\n");
+  //   printf("%s\n", recv_line2);
+  //   char token = strtok(recv_line2, "/");
+  //   if(token == NULL) {
+  //     printf("here\n");
+  //   }
+  //   printf("%c\n", token);  
+  //   printf("b4 strtol\n");                    
+  //   game_v-> message = strtol(&token, &eptr, 10);
+  //   token = strtok(NULL, "/");                           
+  //   game_v-> player_id = strtol(&token, &eptr, 10);
+  //   token = strtok(NULL, "/");  
+  //   game_v-> turn = strtol(&token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   printf("%s\n", game_v->top_card);
+  //   strcpy(game_v->top_card, token);
+  //   token = strtok(NULL, "/");
+  //   game_v-> cards_in_hand = strtol(&token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   strcpy(game_v->hand, token);
+  //   token = strtok(NULL, "/");
+  //   game_v-> number_players = strtol(&token, &eptr, 10);
+  //   token = strtok(NULL, "/");
+  //   if (game_v->number_players >= 1) {
+  //       game_v-> player_0 = strtol(&token, &eptr, 10);
+  //       token = strtok(NULL, "/");
+  //   }
+  //   if (game_v->number_players >= 2) {
+  //       game_v-> player_1 = strtol(&token, &eptr, 10);
+  //       token = strtok(NULL, "/");
+  //   }
+  //   if (game_v->number_players >= 3) {
+  //       game_v-> player_2 = strtol(&token, &eptr, 10);
+  //       token = strtok(NULL, "/");
+  //   }
+  //   if (game_v->number_players >= 4) {
+  //       game_v-> player_3 = strtol(&token, &eptr, 10);
+  //       token = strtok(NULL, "/");
+  //   }if (game_v->number_players >= 5) {
+  //       game_v-> player_4 = strtol(&token, &eptr, 10);
+  //       token = strtok(NULL, "/");
+  //   }
+  //   print_game(game_v);
 
-  } else if (recv_line[0] == 49){
-    //[1][print until end of line]
-    //puts("Broadcast:");
-    printf("Broadcast: %s\n",recv_line);
-  } else {
-    puts("Error doesn't follow format");
-  }
+  // } else if (recv_line[0] == 49){
+  //   //[1][print until end of line]
+  //   //puts("Broadcast:");
+  //   printf("Broadcast: %s\n",recv_line);
+  // } else {
+  //   puts("Error doesn't follow format");
+  // }
   return 0;
 }
