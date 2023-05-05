@@ -41,7 +41,6 @@ void listen_for_connections(uno_server* server) {
 }
 
 int accept_client(uno_server* server, game_state* game_state) {
-  printf("at top of accept client\n");
   struct sockaddr client_addr;
   unsigned int address_size = sizeof(server->addr);
   int connected_d =
@@ -55,7 +54,7 @@ int accept_client(uno_server* server, game_state* game_state) {
     game_state->number_players = 2;
     game_state->player_list = make_order(game_state->number_players);
     game_state->player_list->head->sock_num = connected_d;
-    printf("Player %zu connecting with socket number %d\n", game_state->player_list->head->number, connected_d);
+    printf("Player %zu connected!\n", game_state->player_list->head->number);
     game_state->current_players++;
   } else {
     
@@ -76,8 +75,7 @@ int accept_client(uno_server* server, game_state* game_state) {
       }
     }
   }
-  // printf("forking\n");
-  // printf("num players: %zu \n", game_state->current_players);
+
   pid_t pid = fork();
   if (pid == -1) {
     error_and_exit("forking problem");
@@ -102,6 +100,8 @@ int accept_client(uno_server* server, game_state* game_state) {
   printf("\n");
   return 0;
 }
+  
+
 
 void start_game(game_state* state) {
   printf("in start game\n");
@@ -131,6 +131,7 @@ void play_game(game_state* state) {
     // FILE* sock_file = get_socket_file(state->turn->sock_num);
     char buf[1000];
     ssize_t val = read(state->turn->sock_num, buf, 1000);
+    // fflush()
     if(val < 0) {
       printf("error reading\n");
       exit;
@@ -165,55 +166,6 @@ void play_game(game_state* state) {
     }
   }
 }
-// void send_hand(game_state game_state) {
-//   char* hands[1000];
-//   player* current_player = game_state.player_list->head;
-//   for (size_t i = 0; i < game_state.number_players; i++) {
-//     FILE* input_file = fdopen(current_player->sock_num, "r+");
-//     card* current_card = current_player->hand.head;
-//     strcat(hands, "{");
-//     for (size_t i = 0; i < current_player->hand.size; i++) {
-//       char* color = current_card->color;
-//       char* card[10];
-//       sprintf(card, "[%s%d],", color, current_card->value);
-//       strcat(hands, card);
-//     }
-//     strcat(hands, "}");
-//     fputs(hands, input_file);
-//   }
-// }
-
-// void send_game(game_state game_state) {
-//   player* current_player = game_state.player_list->head;
-//   char* data[1000];
-//   char* size[50];
-//   for (size_t i = 0; i < game_state.number_players; i++) {
-//     char* size_value[5];
-//     sprintf(size_value, "%d,", current_player->hand.size);
-//     strcat(size, size_value);
-//     current_player = current_player->next;
-//   }
-//   char* top[5];
-//   sprintf(top, "%s%i", game_state.main.head->color,
-//           game_state.main.head->color);
-//   sprintf(data, "Sizes:%s Top:%s Turn:%i", size, top, game_state.turn);
-//   for (size_t i = 0; i < game_state.number_players; i++) {
-//     FILE* input_file = fdopen(current_player->sock_num, "r+");
-//     fputs(data, input_file);
-//     current_player = current_player->next;
-//   }
-// }
-
-// void send_initial(game_state game_state) {
-//   player* current_player = game_state.player_list->head;
-//   for (size_t i = 0; i < game_state.number_players; i++) {
-//     FILE* input_file = fdopen(current_player->sock_num, "r+");
-//     char* id[5];
-//     sprintf(id, "%i", current_player->number);
-//     fputs(id, input_file);
-//     current_player = current_player->next;
-//   }
-// }
 
 void send_message(game_state* state) {
   printf("at top of send message\n");
