@@ -8,7 +8,7 @@
 enum{
     /**Magic number error*/
     five = 5
-}
+};
 
 /**
  * Attempt to connect to a server on a given socket.
