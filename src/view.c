@@ -4,17 +4,17 @@
 
 #include "view.h"
 
-void print_game(char top_card[], int hand_sizes[], size_t players, int player_turn) {
+void print_game(game_view* game_v) {
     printf("Key: B = Blue, R = Red, Y = Yellow, G = Green, WW = Wild, 2 = Draw two, W4 = Wild draw four, r = reverse, S = skip\n");
     printf("Press 'u' to call Uno!\n");
-    for (int i = 0; i < (int) players; ++i){
-        if (i+1 == player_turn){
-            printf("Player %d: %d cards <--Current turn\n", i+1, hand_sizes[i]);
+    for (int i = 0; i < (int) game_v->number_players; ++i){
+        if (i+1 == game_v->player_id){
+            printf("Player %d: %s cards <--Current turn\n", i+1, game_v-> hand_sizes);
         } else {
-            printf("Player %d: %d cards\n", i+1, hand_sizes[i]);
+            printf("Player %d: %s cards\n", i+1, game_v-> hand_sizes);
         }
     }
-    printf("Deck top card: %s\n", top_card);
+    printf("Deck top card: %s\n", game_v->top_card);
 }
 
 void print_hand(char hand[], int player_turn, int player_id){
