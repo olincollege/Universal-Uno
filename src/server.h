@@ -3,8 +3,8 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#include "model.h"
 #include "controller.h"
+#include "model.h"
 
 enum { BACKLOG_SIZE = 5 };
 
