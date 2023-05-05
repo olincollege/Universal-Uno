@@ -129,17 +129,18 @@ void play_game(game_state* state) {
   while (1) {
     printf("at top of while\n");
     // FILE* sock_file = get_socket_file(state->turn->sock_num);
-    char buf[1000];
-    ssize_t val = read(state->turn->sock_num, buf, 1000);
+    char buf[BUF_SIZE];
+    ssize_t val = read(state->turn->sock_num, buf, BUF_SIZE);
 
     // fflush()
 
     if(val < 0) {
       printf("error reading\n");
-      exit;
-    } else if(val == 0) {
+      return;
+    } 
+    if(val == 0) {
       printf("player disconnected\n");
-      exit;
+      return;
     }
 
     printf("read! %s", buf);
@@ -159,7 +160,7 @@ void play_game(game_state* state) {
       send_message(state);
     } else {
       printf("playing card\n");
-      char card_str[5];
+      char card_str[FIVE];
       process_input(buf, card_str);
       play_uno(state, card_str);
       change_turn(state);
@@ -178,7 +179,7 @@ void send_message(game_state* state) {
   player* current_player = state->player_list->head;
 
   for (size_t i = 0; i < state->number_players; i++) {
-    char sendlin[1000];
+    char sendlin[BUF_SIZE];
     sprintf(sendlin, "%d/%d/%d/", 0, current_player->number,
             state->turn->number);
     // FILE* input_file = fdopen(current_player->sock_num, "r+");
@@ -206,7 +207,7 @@ void send_message(game_state* state) {
       strcat(sendlin, card);
       current_card = current_card->next;
     }
-    char* num_players[5];
+    char* num_players[FIVE];
     sprintf(num_players, "/%d/", state->number_players);
     strcat(sendlin, num_players);
     player* temp = state->player_list->head;
@@ -227,7 +228,7 @@ void send_message(game_state* state) {
     printf("about to send input\n");
     printf("%s\n", sendlin);
     // fputs(sendlin, input_file);
-    if(write(current_player->sock_num, sendlin, 1000) < 0) {
+    if(write(current_player->sock_num, sendlin, BUF_SIZE) < 0) {
       error_and_exit("Didn't write successfully\n");
     }
     printf("wrote\n");

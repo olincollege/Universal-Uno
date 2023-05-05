@@ -6,7 +6,9 @@
 #include "controller.h"
 #include "model.h"
 
-enum { BACKLOG_SIZE = 5 };
+enum { BACKLOG_SIZE = 5, 
+       BUF_SIZE = 1000,
+       FIVE = 5};
 
 // Group the data needed for a server to run.
 typedef struct {
@@ -73,16 +75,6 @@ void listen_for_connections(uno_server* server);
  */
 int accept_client(uno_server* server, game_state* game_state);
 
-
-/**
- * Recieves input from client and updates the state of the game.
- *
- * @param game_state the current state of the game.
- * @param socket_descriptor the socket descriptor of the client who's turn it
- * is.
- */
-void uno(game_state game_state, int socket_descriptor);
-
 /**
  * Waits until the appropriate amount of people join the server before starting.
  * @param game_state the current state of the game.
@@ -91,12 +83,26 @@ void uno(game_state game_state, int socket_descriptor);
  * is.
  */
 void start_game(game_state* state);
+
+/**
+ * This function actually plays the game of UNO. It should receive a string input from the player
+ * signifying the card the player played or if they draw card. Then, if the card is valid, should play it.
+ * Otherwise it should draw a card. If the move isn't valid, just send the game state back to the player,
+ * signifying that the move didn't go through. After playing a move, send the updated game state to all players
+ * with the top card and turns updated.
+ * 
+ * @param state: a game_state structure representing the current game state
+ */
 void play_game(game_state* state);
+
+/**
+ * Sends a message from the server to each client. This is used to update each
+ * player on the current game state after a move. The function looks through the game
+ * state and turns each part of the game state into a string representation separated
+ * by /
+ * 
+ * @param state: a game_state structure thar represents the current game state
+ */
 void send_message(game_state* state);
 void get_hand_size(player* player, FILE* file);
-void send_hand(game_state game_state);
-
-void send_game(game_state game_state);
-
-void send_initial(game_state game_state);
 
