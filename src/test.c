@@ -66,47 +66,48 @@ void print_game(game_view* game_v) {
 
 
 int deserialize(char* recv_line, game_view* game_v){
-  //printf("%s\n",recv_line);
-  if (recv_line[0] == 48){
-    char *eptr;
-    
-    char *recv_line2 = strdup(recv_line);
-
-    //char recv_line1[] = "0/1/1/G4/5/ G3, W1, R2/5/3/45/32/5/3";
-
-    char *token = strtok(recv_line2, "/");                       
-    game_v-> message = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");                           
-    game_v-> player_id = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");  
-    game_v-> turn = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
+  printf("%s\n",recv_line);
+  if (recv_line[0] == 48) {
+    char delimeter[2] = "/";
+    char* eptr;
+    char* str = strdup(recv_line);
+    printf("Does strdup work %s\n",str);
+    char* token;
+    token = strtok(str, delimeter);
+    printf("seg fault here");
+    game_v->message = strtol(token, &eptr, 10);
+    token = strtok(NULL, delimeter);
+    game_v->player_id = strtol(token, &eptr, 10);
+    token = strtok(NULL, delimeter);
+    game_v->turn = strtol(token, &eptr, 10);
+    token = strtok(NULL, delimeter);
     strcpy(game_v->top_card, token);
-    token = strtok(NULL, "/");
-    game_v-> cards_in_hand = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
+    token = strtok(NULL, delimeter);
+    game_v->cards_in_hand = strtol(token, &eptr, 10);
+    token = strtok(NULL, delimeter);
     strcpy(game_v->hand, token);
-    token = strtok(NULL, "/");
-    game_v-> number_players = strtol(token, &eptr, 10);
-    token = strtok(NULL, "/");
+    token = strtok(NULL, delimeter);
+    game_v->number_players = strtol(token, &eptr, 10);
+    token = strtok(NULL, delimeter);
     if (game_v->number_players >= 1) {
-        game_v-> player_0 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
+      game_v->player_0 = strtol(token, &eptr, 10);
+      token = strtok(NULL, delimeter);
     }
     if (game_v->number_players >= 2) {
-        game_v-> player_1 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
+      game_v->player_1 = strtol(token, &eptr, 10);
+      token = strtok(NULL, delimeter);
     }
     if (game_v->number_players >= 3) {
-        game_v-> player_2 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
+      game_v->player_2 = strtol(token, &eptr, 10);
+      token = strtok(NULL, delimeter);
     }
     if (game_v->number_players >= 4) {
-        game_v-> player_3 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
-    }if (game_v->number_players >= 5) {
-        game_v-> player_4 = strtol(token, &eptr, 10);
-        token = strtok(NULL, "/");
+      game_v->player_3 = strtol(token, &eptr, 10);
+      token = strtok(NULL, delimeter);
+    }
+    if (game_v->number_players >= 5) {
+      game_v->player_4 = strtol(token, &eptr, 10);
+      token = strtok(NULL, delimeter);
     }
     print_game(game_v);
 
