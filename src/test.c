@@ -11,7 +11,6 @@ typedef struct {
     int cards_in_hand;
     char *hand;
     int number_players;
-    char *hand_sizes;
     int player_0;
     int player_1;
     int player_2;
@@ -107,10 +106,6 @@ int deserialize(char* recv_line, game_view* game_v){
         game_v-> player_4 = strtol(token, &eptr, 10);
         token = strtok(NULL, "/");
     }
-
-
-    puts("Struct updated.");
-    
     print_game(game_v);
 
    /*
@@ -141,8 +136,7 @@ int main(void){
     game_view *game_v = malloc(sizeof(game_view));
     game_v->hand = malloc(200); // Space for 200 characters + '\0'
     game_v->top_card = malloc(10); // Space for 10 characters + '\0'
-    game_v->hand_sizes = malloc(50); // Space for 50 characters + '\0'
-
+    
     char* test = "0/1/1/G4/5/G3,W1,R2/5/3,45,32,5";
     char* test1 = "1/This is my broadcast message.";
 
