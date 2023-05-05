@@ -2,7 +2,7 @@
 
 card* make_card(char col, size_t val) {
   card* new_card = malloc(sizeof(card));
-  strncpy(&new_card->color, &col, sizeof(col));
+  strncpy(&new_card->color, &col, sizeof(col)); //NOLINT
   new_card->value = val;
   new_card->next = NULL;
   return new_card;
@@ -73,18 +73,24 @@ void move_card(card* card_, deck* old_deck, deck* new_deck) {
     old_deck->head = prev->next;
     old_deck->size = old_deck->size - 1;
   } else {
-    card* current = prev->next;
-    while (current != NULL) {
-      // Cut out card
-      if (prev->next == card_) {
-        prev->next = current->next;
-        old_deck->size = old_deck->size - 1;
+    if (prev != NULL) {
+      card* current = prev->next;
+      while (current != NULL) {
+        // Cut out card
+        if (prev->next == card_) {
+          prev->next = current->next;
+          old_deck->size = old_deck->size - 1;
+        }
+        prev = current;
+        current = current->next;
       }
-      prev = current;
-      current = current->next;
     }
+    
   }
-  card_->next = NULL;
+  if(card_ != NULL) {
+    card_->next = NULL;
+  }
+  
   if (new_deck->head == NULL) {
     new_deck->head = card_;
   } else {
@@ -103,7 +109,10 @@ card* get_card_index(deck* deck_, size_t index) {
   }
   card* current = deck_->head;
   for (size_t i = 0; i < index; i++) {
-    current = current->next;
+    if(current != NULL) {
+      current = current->next;
+    } 
+    
   }
   return current;
 }
@@ -116,7 +125,7 @@ void shuffle(deck* deck_) {
   for (size_t i = 0; i < 2*(deck_->size); i++) {
     size_t index =
         ((size_t) rand() %
-          (deck_->size - UNO));  // NOLINT(cert-msc30-c, cert-msc50-cpp,concurrency-mt-unsafe)
+          (deck_->size - UNO));  // NOLINT
     // printf("%zu\n", index);
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
@@ -307,7 +316,7 @@ void play_uno(game_state* state, char* input) {
     case '0':
       skip(state);
       place_card(state, col, num);
-      break;
+      break; 
     case '2':
       draw2(state, state->turn->next);
       place_card(state, col, num);

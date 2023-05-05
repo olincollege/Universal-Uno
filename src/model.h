@@ -3,11 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // Define useful constants needed in the program.
 enum {
   /** Number of cards for UNO.*/
-  UNO = 1,
+  UNO = 1, 
   /** Maximum numbers of players*/
   MAX_PLAYERS = 5,
   /** Number of cards in a UNO deck*/
