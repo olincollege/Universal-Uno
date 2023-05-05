@@ -131,7 +131,9 @@ void play_game(game_state* state) {
     // FILE* sock_file = get_socket_file(state->turn->sock_num);
     char buf[1000];
     ssize_t val = read(state->turn->sock_num, buf, 1000);
+
     // fflush()
+
     if(val < 0) {
       printf("error reading\n");
       exit;
