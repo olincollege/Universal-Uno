@@ -6,15 +6,6 @@
 #define _GNU_SOURCE  // NOLINT(*bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
 #include "server.h"
-
-#include <errno.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "model.h"
 #include "utils.h"
 
 uno_server* make_uno_server(struct sockaddr_in ip_addr, int max_backlog) {

@@ -1,7 +1,6 @@
 #pragma once
 #include "model.h"
 
-
 // Define useful constants needed in the program.
 
 
