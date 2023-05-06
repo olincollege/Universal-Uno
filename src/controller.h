@@ -1,6 +1,6 @@
 #pragma once
 #include "model.h"
-
+#include <unistd.h>
 // Define useful constants needed in the program.
 
 
