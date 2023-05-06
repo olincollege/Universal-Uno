@@ -1,4 +1,4 @@
-# Universal Uno ReadMe:
+# Universal Uno Read Me:
 
 ## Description:
 The README describes in sufficient detail the packages needed to compile and run the project.
@@ -40,26 +40,26 @@ To play the game, download all the files from our Universal_UNO repository. You 
 
 This code only relies on C standard libraries, which means that you won't need to worry about importing any additional libraries.
 
-Instructions:
-The README describes in sufficient detail the packages needed to compile and run the project.
-
+## Instructions:
 To get started, please ensure that you are using a Unix environment to follow the instructions below.
 Once you have downloaded the files from the repository, navigate to the Universal_UNO directory. From there, you can create a build directory and compile the program by running the following commands in your terminal:
+```
 $ mkdir build
 $ cd build
 $ cmake ..
 $ make clean
 $ make
-
+```
 Then run the following command to start the server:
+```
 $ ./src/run_server
-
+```
 Each joining  player should follow the same commands as above but run 
+```
 $ ./src/run_client. 
+```
 Once the total number of clients connects, the game will start!
 
 Have fun playing the game!
-
-
-Notes:
+## Notes:
 Currently, our code does not actually run! You can connect 2 clients to the server, and they can receive their hands, however, when you try to send input to the server from the client more than twice, the code segment faults. 
