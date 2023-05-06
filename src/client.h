@@ -1,7 +1,7 @@
 #pragma once
 
 #include "view.h"
-
+#include <netinet/in.h>  // sockaddr_in
 enum{
     /**Magic number error*/
     five = 5,
