@@ -91,7 +91,6 @@ Test(move_card, deck_size) {
   append_card(&deck_1, 'B', 1);
   append_card(&deck_1, 'Y', 2);
   append_card(&deck_1, 'G', 3);
-
   deck deck_2 = {.head = NULL, .size = 0};
   append_card(&deck_2, 'R', 7);
   append_card(&deck_2, 'R', 8);
@@ -133,7 +132,7 @@ Test(move_card, card_null) {
   free_deck(&deck_1);
   free_deck(&deck_2);
 }
-// Tests that if the card is in the middle of the deck it properly moves.
+// Tests that if the card in the middle of the deck properly moves.
 Test(move_card, card_middle) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'B', 1);
@@ -157,7 +156,6 @@ Test(move_card, empty_deck) {
   append_card(&deck_1, 'B', 7);
   append_card(&deck_1, 'Y', 7);
   append_card(&deck_1, 'G', 7);
-
   deck deck_2 = {.head = NULL, .size = 0};
   move_card(deck_1.head, &deck_1, &deck_2);
   cr_assert(eq(sz, deck_1.size, 2));
@@ -167,8 +165,8 @@ Test(move_card, empty_deck) {
   free_deck(&deck_1);
   free_deck(&deck_2);
 }
-// // Tests that if the first deck is one and the second deck is empty it moves
-// // correctly.
+// Tests that if the first deck is one and the second deck is empty it moves
+// correctly.
 Test(move_card, empty_second) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'B', 7);
@@ -181,18 +179,21 @@ Test(move_card, empty_second) {
   free_deck(&deck_2);
 }
 
+// Test the make uno deck is the correct size.
 Test(make_uno_deck, check_size) {
   deck uno = make_uno_deck();
   cr_assert(eq(sz, uno.size, 108));
   free_deck(&uno);
 }
 
+// Test the make uno deck head is the correct color.
 Test(make_uno_deck, check_color) {
   deck uno = make_uno_deck();
   cr_expect(eq(chr, uno.head->color, 'R'));
   free_deck(&uno);
 }
 
+// Test the number of each cards color is correct.
 Test(make_uno_deck, check_ratio) {
   deck uno = make_uno_deck();
   size_t red = 0;
@@ -291,8 +292,8 @@ Test(equal, deck_copy) {
   free_deck(&rhs);
 }
 
-// Two decks with the same values but different colors should not be  in the
-// same order should be equal.
+// Two decks with the same values but different colors in the
+// same order should not be equal.
 Test(equal, deck_color) {
   deck lhs = {.head = NULL, .size = 0};
   append_card(&lhs, 'R', 1);
@@ -328,7 +329,7 @@ Test(shuffle, check_empty) {
   free_deck(&deck_2);
 }
 
-// A list of 1 card shuffled should be the same.
+// A deck of 1 card shuffled should be the same.
 Test(shuffle, check_one_card) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'B', 7);
@@ -372,7 +373,7 @@ Test(shuffle, check_deck) {
   free_deck(&deck_2);
 }
 
-// Test that if when card moves, deck size properly updates
+// Test if the first index returns the correct card.
 Test(get_card_index, index_zero) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -383,7 +384,7 @@ Test(get_card_index, index_zero) {
   free_deck(&deck_);
 }
 
-// Test that if when card moves, deck size properly updates
+// Test if a middle index returns the correct card.
 Test(get_card_index, index_one) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -393,7 +394,7 @@ Test(get_card_index, index_one) {
   cr_expect(eq(ptr, get, deck_.head->next), "Wrong pointer!");
   free_deck(&deck_);
 }
-
+// Test if the last card index returns the correct card.
 Test(get_card_index, index_two) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -403,7 +404,7 @@ Test(get_card_index, index_two) {
   cr_expect(eq(ptr, get, deck_.head->next->next), "Wrong pointer!");
   free_deck(&deck_);
 }
-
+// Test if a out of bounds index returns NULL.
 Test(get_card_index, index_too_big) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -414,6 +415,7 @@ Test(get_card_index, index_too_big) {
   free_deck(&deck_);
 }
 
+//Test if a the function can find the first card.
 Test(find_card, head) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -424,6 +426,7 @@ Test(find_card, head) {
   free_deck(&deck_);
 }
 
+//Test if the function can find a middle card.
 Test(find_card, middle) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -434,6 +437,7 @@ Test(find_card, middle) {
   free_deck(&deck_);
 }
 
+//Test if the function can find the last card.
 Test(find_card, end) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -444,6 +448,7 @@ Test(find_card, end) {
   free_deck(&deck_);
 }
 
+//Test if the function returns NULL to a card not in the deck.
 Test(find_card, not_found) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -454,7 +459,7 @@ Test(find_card, not_found) {
   free_deck(&deck_);
 }
 
-// A small list shuffled should not be the same as the deck before.
+// Test that the sizes update correctly after appending. 
 Test(append_deck, two_decks) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'B', 7);
@@ -477,6 +482,7 @@ Test(append_deck, two_decks) {
   free_deck(&deck_2);
 }
 
+// Test that appending to an empty deck updates correctly. 
 Test(append_deck, empty_deck) {
   deck deck_1 = {.head = NULL, .size = 0};
   deck deck_2 = {.head = NULL, .size = 0};
@@ -488,6 +494,8 @@ Test(append_deck, empty_deck) {
   free_deck(&deck_1);
   free_deck(&deck_2);
 }
+
+// Test that appending to an deck with one card updates correctly. 
 Test(append_deck, pointers_set_correctly) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'G', 7);
@@ -503,12 +511,15 @@ Test(append_deck, pointers_set_correctly) {
   free_deck(&deck_2);
 }
 
+// Check that an empty draw pile, returns 1;
 Test(check_draw, needs_refill_1) {
   game_state* state = make_game_state();
   append_deck(&state->draw, &state->discard);
   cr_assert(eq(int, check_draw(state), 1));
   free_game_state(state);
 }
+
+// Check that a draw pile of 1, returns 1;
 Test(check_draw, needs_refill_2) {
   game_state* state = make_game_state();
   append_deck(&state->draw, &state->discard);
@@ -517,12 +528,15 @@ Test(check_draw, needs_refill_2) {
   cr_assert(eq(int, check_draw(state), 1));
   free_game_state(state);
 }
+
+// Check that a full draw pile, returns 0;
 Test(check_draw, no_refill) {
   game_state* state = make_game_state();
   cr_assert(eq(int, check_draw(state), 0));
   free_game_state(state);
 }
 
+// Check that refilling an empty draw pile updates correctly.
 Test(refill_draw, empty_draw) {
   game_state* state = make_game_state();
   deck uno = make_uno_deck();
@@ -536,6 +550,8 @@ Test(refill_draw, empty_draw) {
   free_deck(&uno);
   free_game_state(state);
 }
+
+// Check that refilling a draw pile of 1 updates correctly. 
 Test(refill_draw, one_draw) {
   game_state* state = make_game_state();
   deck uno = make_uno_deck();
@@ -549,7 +565,7 @@ Test(refill_draw, one_draw) {
   free_game_state(state);
 }
 
-// When making a card, the color and value should be set correctly.
+// When making a player, values should be set correctly.
 Test(make_player, values_set_correctly) {
   player* player_ = make_player(0);
   cr_expect(eq(ptr, player_->next, NULL), "Wrong pointer!");
@@ -559,8 +575,7 @@ Test(make_player, values_set_correctly) {
   free_player(player_);
 }
 
-// Making a new deck should create an empty deck, so the head should be the null
-// pointer.
+// Test that pointer and value are set correctly with order of 1. 
 Test(make_order, one_player) {
   order* order = make_order(1);
   cr_assert(eq(ptr, order->head->next, order->head));
@@ -568,6 +583,7 @@ Test(make_order, one_player) {
   free_order(order);
 }
 
+// Test that values are set correctly with order of 2. 
 Test(make_order, two_player_numbers) {
   order* order = make_order(2);
   player* one = order->head;
@@ -577,6 +593,7 @@ Test(make_order, two_player_numbers) {
   free_order(order);
 }
 
+// Test that pointers are set correctly with order of 2. 
 Test(make_order, two_player_pointers) {
   order* order = make_order(2);
   player* one = order->head;
@@ -588,6 +605,7 @@ Test(make_order, two_player_pointers) {
   free_order(order);
 }
 
+// Test that values are set correctly with order of 3. 
 Test(make_order, three_player_numbers) {
   order* order = make_order(3);
   player* one = order->head;
@@ -599,6 +617,7 @@ Test(make_order, three_player_numbers) {
   free_order(order);
 }
 
+// Test that pointers are set correctly with order of 3. 
 Test(make_order, three_player_pointers) {
   order* order = make_order(3);
   player* one = order->head;
@@ -613,6 +632,7 @@ Test(make_order, three_player_pointers) {
   free_order(order);
 }
 
+// Test that values are set correctly with order of 4. 
 Test(make_order, four_player_numbers) {
   order* order = make_order(4);
   player* one = order->head;
@@ -626,6 +646,7 @@ Test(make_order, four_player_numbers) {
   free_order(order);
 }
 
+// Test that pointers are set correctly with order of 4. 
 Test(make_order, four_player_pointers) {
   order* order = make_order(4);
   player* one = order->head;
@@ -643,6 +664,7 @@ Test(make_order, four_player_pointers) {
   free_order(order);
 }
 
+// Test that values are set correctly with order of 5. 
 Test(make_order, five_player_numbers) {
   order* order = make_order(5);
   player* one = order->head;
@@ -658,6 +680,7 @@ Test(make_order, five_player_numbers) {
   free_order(order);
 }
 
+// Test that pointers are set correctly with order of 5. 
 Test(make_order, five_player_pointers) {
   order* order = make_order(5);
   player* one = order->head;
@@ -678,7 +701,7 @@ Test(make_order, five_player_pointers) {
   free_order(order);
 }
 
-// When making a card, the color and value should be set correctly.
+// When making a player's hand, the state should update correctly. 
 Test(make_hand, size) {
   game_state* state = make_game_state();
   state->player_list = make_order(1);
@@ -688,6 +711,7 @@ Test(make_hand, size) {
   free_game_state(state);
 }
 
+// Test that switch direction, updates the state correctly.
 Test(switch_direction, check_direction) {
   game_state* state = make_game_state();
   state->player_list = make_order(1);
@@ -698,6 +722,7 @@ Test(switch_direction, check_direction) {
   free_game_state(state);
 }
 
+// Test that skip, updates the turn correctly.
 Test(skip, check_turn) {
   game_state* state = make_game_state();
   state->player_list = make_order(3);
@@ -707,8 +732,8 @@ Test(skip, check_turn) {
   free_game_state(state);
 }
 
+// Check that a card that's the first card in the hand returns 1.
 Test(in_hand, fir_in_hand) {
-  // check that a card that's the first card in the hand returns 1
   card* played_card = make_card('B', 4);
   deck hand = {.head = NULL, .size = 0};
   hand.head = played_card;
@@ -716,8 +741,8 @@ Test(in_hand, fir_in_hand) {
   free_deck(&hand);
 }
 
+// Check that a card that's not the first card in the hand returns 1.
 Test(in_hand, sec_in_hand) {
-  // check that a card that's not the first card in the hand returns 1
   card* played_card = make_card('B', 4);
   deck hand = {.head = NULL, .size = 0};
   hand.head = make_card('Y', 5);
@@ -727,9 +752,9 @@ Test(in_hand, sec_in_hand) {
   free_deck(&hand);
 }
 
+// Check that a card that's the same color as one of the cards in the hand,
+// but the wrong value returns 0.
 Test(in_hand, right_col_wrong_val) {
-  // check that a card that's the same color as one of the cards in the hand,
-  // but the wrong value returns 0
   card* played_card = make_card('B', 4);
   deck hand = {.head = NULL, .size = 0};
   hand.head = make_card('B', 8);
@@ -738,9 +763,9 @@ Test(in_hand, right_col_wrong_val) {
   free_deck(&hand);
 }
 
+// Check that a card that's the same value as one of the cards in the hand but
+// the wrong color returns 0.
 Test(in_hand, wrong_col_wrong_val) {
-  // check that a card that's the same value as one of the cards in the hand but
-  // the wrong color returns 0
   card* played_card = make_card('B', 4);
   deck hand = {.head = NULL, .size = 0};
   hand.head = make_card('R', 4);
@@ -749,8 +774,8 @@ Test(in_hand, wrong_col_wrong_val) {
   free_deck(&hand);
 }
 
+// Check that a card that's not in the hand returns 0.
 Test(in_hand, all_wrong) {
-  // check that a card that's not in the hand returns 0
   card* played_card = make_card('B', 4);
   deck hand = {.head = NULL, .size = 0};
   hand.head = make_card('R', 2);
@@ -759,8 +784,8 @@ Test(in_hand, all_wrong) {
   free_deck(&hand);
 }
 
+// Check that a card that is not in the hand returns 0.
 Test(is_valid, not_in_hand) {
-  // check that a card that is not in the hand returns 0
   char card_str[5];
   strcpy(card_str, "B4");
   deck hand_ = {.head = NULL, .size = 0};
@@ -775,9 +800,9 @@ Test(is_valid, not_in_hand) {
   free_deck(&hand_);
 }
 
+// Check that a non special card that's the right color and in the hand
+// returns 1.
 Test(is_valid, in_hand_right_color) {
-  // check that a non special card that's the right color and in the hand
-  // returns 1
   char card_str[5];
   strcpy(card_str, "B4");
   deck hand_ = {.head = NULL, .size = 0};
@@ -792,8 +817,8 @@ Test(is_valid, in_hand_right_color) {
   free_deck(&hand_);
 }
 
+// Check that a reverse card that's the right color and in the hand returns 1.
 Test(is_valid, right_col_rev) {
-  // check that a reverse card that's the right color and in the hand returns 1
   char card_str[5];
   strcpy(card_str, "B10");
   deck hand_ = {.head = NULL, .size = 0};
@@ -808,8 +833,8 @@ Test(is_valid, right_col_rev) {
   free_deck(&hand_);
 }
 
+// Check that a skip card that's the right color and in the hand returns 1.
 Test(is_valid, right_col_skip) {
-  // check that a skip card that's the right color and in the hand returns 1
   char card_str[5];
   strcpy(card_str, "B11");
   deck hand_ = {.head = NULL, .size = 0};
@@ -824,8 +849,8 @@ Test(is_valid, right_col_skip) {
   free_deck(&hand_);
 }
 
+// Check that a draw 2 card that's the right color and in the hand returns 1.
 Test(is_valid, right_col_draw) {
-  // check that a draw 2 card that's the right color and in the hand returns 1
   char card_str[5];
   strcpy(card_str, "B12");
   deck hand_ = {.head = NULL, .size = 0};
@@ -840,9 +865,9 @@ Test(is_valid, right_col_draw) {
   free_deck(&hand_);
 }
 
+// check that a nonspecial card with the same value as the top card
+// but a different color returns 1.
 Test(is_valid, right_val_wrong_col) {
-  // check that a nonspecial card with the same value as the top card but a diff
-  // color returns 1
   char card_str[5];
   strcpy(card_str, "B3");
   deck hand_ = {.head = NULL, .size = 0};
@@ -857,8 +882,9 @@ Test(is_valid, right_val_wrong_col) {
   free_deck(&hand_);
 }
 
+
+// Check that a rev card on top of a rev card returns 1.
 Test(is_valid, right_val_rev) {
-  // check that a rev card on top of a rev card returns 1
   char card_str[5];
   strcpy(card_str, "B10");
   deck hand_ = {.head = NULL, .size = 0};
@@ -873,8 +899,8 @@ Test(is_valid, right_val_rev) {
   free_deck(&hand_);
 }
 
+// Check that a skip card on top of a skip card returns 1.
 Test(is_valid, right_val_skip) {
-  // check that a skip card on top of a skip card returns 1
   char card_str[5];
   strcpy(card_str, "B11");
   deck hand_ = {.head = NULL, .size = 0};
@@ -889,8 +915,8 @@ Test(is_valid, right_val_skip) {
   free_deck(&hand_);
 }
 
+// Check that a draw 2 card on top of another draw 2 card returns 1.
 Test(is_valid, right_val_draw) {
-  // check that a draw 2 card on top of another draw 2 card returns 1
   char card_str[5];
   strcpy(card_str, "B12");
   deck hand_ = {.head = NULL, .size = 0};
@@ -905,8 +931,8 @@ Test(is_valid, right_val_draw) {
   free_deck(&hand_);
 }
 
+// Check that a draw four card returns 1.
 Test(is_valid, draw_four) {
-  // check that a draw four card returns 1
   char card_str[5];
   strcpy(card_str, "B13");
   deck hand_ = {.head = NULL, .size = 0};
@@ -921,8 +947,8 @@ Test(is_valid, draw_four) {
   free_deck(&hand_);
 }
 
+// Check that a wildcard returns 1.
 Test(is_valid, wildcard) {
-  // check that a wildcard returns 1
   char card_str[5];
   strcpy(card_str, "B14");
   deck hand_ = {.head = NULL, .size = 0};
@@ -937,9 +963,9 @@ Test(is_valid, wildcard) {
   free_deck(&hand_);
 }
 
+// Check that a card that's in a player's hand but isn't the same color or
+// value as the top card returns 0.
 Test(is_valid, in_hand_no_match) {
-  // check that a card that's in a player's hand but isn't the same color or
-  // value as the top card returns 0
   char card_str[5];
   strcpy(card_str, "B8");
   deck hand_ = {.head = NULL, .size = 0};
@@ -954,9 +980,9 @@ Test(is_valid, in_hand_no_match) {
   free_deck(&hand_);
 }
 
+// Check that if the direction is zero, then the new player after changing
+// directions is the next player.
 Test(change_turn, moving_next) {
-  // check that if the direction is zero, then the new player after changing
-  // directions is the next player
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
   game_state_->turn = game_state_->player_list->head;
@@ -965,19 +991,19 @@ Test(change_turn, moving_next) {
   free_game_state(game_state_);
 }
 
+// Check that if the direction is zero, then the new player after changing
+// directions is the previous player.
 Test(change_turn, moving_prev) {
-  // check that if the direction is zero, then the new player after changing
-  // directions is the previous player
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
   game_state_->player_list->direction = 1;
   game_state_->turn = game_state_->player_list->head;
   change_turn(game_state_);
-  // printf("%i\n", game_state_.turn.number);
   cr_assert(eq(sz, game_state_->turn->number, 2));
   free_game_state(game_state_);
 }
 
+// Check that draw updates player's hand correctly. 
 Test(draw, checks_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(1);
@@ -987,6 +1013,8 @@ Test(draw, checks_player_hand) {
   cr_expect(eq(sz, game_state_->player_list->head->hand.size, 3));
   free_game_state(game_state_);
 }
+
+// Check that draw2 updates player's hand correctly.
 Test(draw2, check_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
@@ -995,6 +1023,7 @@ Test(draw2, check_player_hand) {
   free_game_state(game_state_);
 }
 
+// Check that draw4 updates player's hand correctly.
 Test(draw4, check_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(3);
