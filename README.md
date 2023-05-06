@@ -8,8 +8,6 @@ Universal_UNO is a C implementation of a multiplayer UNO. After setting up the s
 ## How to play: 
 The game follows normal uno rules (https://www.unorules.com/). The player must type out what card they want to play to receive the terminal view. 
 
-## How the program works:
-
 ## Dependencies:
 To play the game, download all the files from our Universal_UNO repository. You should have the following files:
 - .gitignore
