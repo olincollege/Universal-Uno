@@ -1,7 +1,5 @@
 #pragma once
 #include "model.h"
-#include <netinet/in.h>
-#include <unistd.h>
 
 // Define useful constants needed in the program.
 

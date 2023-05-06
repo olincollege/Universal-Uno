@@ -1,6 +1,6 @@
 #include "client.h"
 
-#include <netinet/in.h>  // sockaddr_in
+
 #include <stdio.h>       // getline
 #include <stdlib.h>      // free
 #include <string.h>
