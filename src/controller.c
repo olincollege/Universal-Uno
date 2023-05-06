@@ -1,4 +1,9 @@
 #include "controller.h"
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 void process_input(char* buf, char* processed_input) {
   if(buf[1] == 'r') {
     processed_input[0] = buf[0];
