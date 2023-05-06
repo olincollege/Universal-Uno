@@ -1,7 +1,7 @@
 #ifdef __STDC_ALLOC_LIB__
 #define __STDC_WANT_LIB_EXT2__ 1
 #else
-#define _POSIX_C_SOURCE 200809L
+#define _POSIX_C_SOURCE 200809L //NOLINT
 #endif  // NOLINT(*bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 #define _GNU_SOURCE  // NOLINT(*bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
@@ -182,34 +182,24 @@ void broadcast_message(game_state* state, const char* buf) {
     if (state->turn->hand.size == 1) {
       player* current = state->player_list->head;
       char sendline[1000];  // NOLINT(*-magic-numbers)
-      sprintf(
-          sendline, "Player %zu has called uno!",
-          state->turn
-              ->number);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      (void)sprintf(sendline, "Player %zu has called uno!", state->turn->number);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       write(current->sock_num, sendline, sizeof(sendline));
       current = current->next;
       while (current != state->turn) {
         char sendlinee[1000];  // NOLINT(*-magic-numbers)
-        sprintf(
-            sendlinee, "Player %zu has called uno!",
-            state->turn
-                ->number);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+        (void)sprintf(sendlinee, "Player %zu has called uno!",state->turn->number);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
         write(current->sock_num, sendlinee, sizeof(sendlinee));
         current = current->next;
       }
     } else {
       player* current = state->player_list->head;
       char sendline2[1000];  // NOLINT(*-magic-numbers)
-      sprintf(
-          sendline2,
-          "A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      (void)sprintf(sendline2,"A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       write(current->sock_num, sendline2, sizeof(sendline2));
       current = current->next;
       while (current != state->turn) {
         char sendlinee2[1000];  // NOLINT(*-magic-numbers)
-        sprintf(
-            sendlinee2,
-            "A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+        (void)sprintf(sendlinee2, "A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
         write(current->sock_num, sendlinee2, sizeof(sendlinee2));
         current = current->next;
       }
@@ -229,8 +219,7 @@ void send_message(game_state* state, int type, const char* buf) {
 
     for (size_t i = 0; i < state->number_players; i++) {
       char sendlin[1000];  // NOLINT(*-magic-numbers)
-      sprintf(sendlin, "%zu/%zu/%zu/", 0, current_player->number,
-              state->turn->number); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      (void)sprintf(sendlin, "%i/%zu/%zu/", 0, current_player->number, state->turn->number); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       // FILE* input_file = fdopen(current_player->sock_num, "r+");
 
       char main_card[100];  // NOLINT(*-magic-numbers)
@@ -238,42 +227,38 @@ void send_message(game_state* state, int type, const char* buf) {
       if (state->main.head == NULL) {
         puts("TEST");
       }
-      printf("color %c, val: %zu\n", state->main.head->color,
-             (int)state->main.head->value);
-      sprintf(
-          main_card, " %c%zu/", state->main.head->color,
-          state->main.head
-              ->value);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      // printf("color %c, val: %i\n", state->main.head->color,
+      //        (int)state->main.head->value);
+      if(state->main.head != NULL) {
+        (void)sprintf(main_card, " %c%zu/", state->main.head->color,state->main.head->value);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      }
       printf("%s", main_card);
       printf("FJFHDJ\n");
       strcat(sendlin, main_card);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
       char num_cards[8];  // NOLINT(*-magic-numbers)
-      sprintf(
-          num_cards, "%zu/",
-          state
-              ->number_players);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+      (void)sprintf(num_cards, "%zu/",state->number_players);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       strcat(sendlin, num_cards);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
       printf("about to enter while loop\n");
       card* current_card = current_player->hand.head;
       while (current_card != NULL) {
         // printf("in loop 1\n");
         char card[7];  // NOLINT(*-magic-numbers)
-        sprintf(card, " %c%zu,", current_card->color, current_card->value);
+        (void)sprintf(card, " %c%zu,", current_card->color, current_card->value); //NOLINT
         strcat(sendlin, card);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
         current_card = current_card->next;
       }
       char num_players[5];  // NOLINT(*-magic-numbers)
-      sprintf(num_players, "/%zu/", state->number_players);
+      (void)sprintf(num_players, "/%zu/", state->number_players); //NOLINT
       strcat(sendlin, num_players);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
       player* temp = state->player_list->head;
       char hand_size[7];  // NOLINT(*-magic-numbers)
-      sprintf(hand_size, "%zu/", temp->hand.size);
+      sprintf(hand_size, "%zu/", temp->hand.size); //NOLINT
       strcat(sendlin, hand_size);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
       temp = temp->next;
       while (temp != state->player_list->head) {
         // printf("in loop2\n");
         char hand_sizee[7];  // NOLINT(*-magic-numbers)
-        sprintf(hand_sizee, "%zu/", temp->hand.size); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+        (void)sprintf(hand_sizee, "%zu/", temp->hand.size); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
         strcat(sendlin, hand_sizee);//NOLINT(clang-analyzer-security.insecureAPI.strcpy)
         temp = temp->next;
       }

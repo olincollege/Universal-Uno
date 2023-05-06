@@ -54,7 +54,7 @@ int main(void) {
   // don't hit end of file
   if (!feof(stdin) && !feof(socket_file)) {
     printf("before");
-    fputs("\0", socket_file);
+    (void)fputs("\0", socket_file);
     printf("middle");
     close_tcp_socket(socket_descriptor);
     printf("After");
