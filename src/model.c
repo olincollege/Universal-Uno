@@ -10,11 +10,6 @@ card* make_card(char col, size_t val) {
 
 void free_card(card* card_) { free(card_); }
 
-// deck make_deck(void) {
-//   deck new_deck= {.head = NULL, .size = 0 };
-//   return new_deck;
-// }
-
 void free_deck(deck* deck_) {
   if(deck_ == NULL){
     return;
@@ -27,7 +22,6 @@ void free_deck(deck* deck_) {
       current = next;
     }
   }
-  // free(deck_);
 
 void append_card(deck* deck_, char col, size_t val) {
   card* new = make_card(col, val);
@@ -251,16 +245,12 @@ void free_order(order* order_) {
     player* next = NULL;
     while (current->next != order_->head) {
       next = current->next;
-      // printf("%zu\n", current->number);
       free_player(current);
       current = next;
     }
-    // printf("%zu\n", current->number);
     free_player(current);
-    // printf("%zu\n", order_->head->number);
     free_player(order_->head);
     free(order_);
-    // printf("______\n", current->number);
   }
 }
 
@@ -315,8 +305,6 @@ void play_uno(game_state* state, char* input) {
   char number[2];
   strncpy(number, &input[1], 2); //NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
   char switch_num = input[2];
-  // strcat(number, switch_num);
-  //int num = atoi(&number);
   char* eptr = NULL;
   int num = (int) strtol((number), &eptr, REVERSE); 
 
@@ -343,7 +331,6 @@ void play_uno(game_state* state, char* input) {
 
       default:
         place_card(state, col, num);
-        // next_player(state);
         break;
     }
   }
@@ -401,7 +388,6 @@ int in_hand(card* played_card, deck* hand) {
 int is_valid(char* card_, game_state* state) {
   // turn string into card object
   char* num_str = &card_[UNO];
-  //int num = atoi(num_str);
   char* eptr = NULL;
   int num = (int) strtol((num_str), &eptr, REVERSE); 
   card* curr_card = make_card(card_[0], (size_t)num); //NOLINT(clang-analyzer-unix.Malloc)
