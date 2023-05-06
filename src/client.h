@@ -1,13 +1,14 @@
 #pragma once
 
-#include "view.h"
 #include <netinet/in.h>  // sockaddr_in
-enum{
-    /**Magic number error*/
-    five = 5,
-    forty_eight = 48,
-    forty_nine = 49,
-    ten = 10
+
+#include "view.h"
+enum {
+  /**Magic number error*/
+  five = 5,
+  forty_eight = 48,
+  forty_nine = 49,
+  ten = 10
 };
 
 /**
@@ -37,38 +38,37 @@ void try_connect(int client_socket, struct sockaddr_in server_addr);
  */
 FILE* get_socket_file(int client_socket);
 
-
 /**
  * Sends an input from a client to server in file.
- * 
+ *
  * It reads from stdin and puts that line into the socket file.
- * 
+ *
  * @param socket_file A socket file for a given client.
- * @return A int that represents the success of the function. 
-*/
+ * @return A int that represents the success of the function.
+ */
 int send_input(FILE* socket_file);
 
 /**
  * Receives a file with the game state to decode.
- * 
+ *
  * Reads from the socket file and passes it to the deserialization function.
  * The deserialization function will print a view.
- * 
+ *
  * @param socket_file A socket file for a given client.
- * @param game_v The game state view struct. 
- * @return A int that represents the success of the function. 
-*/
+ * @param game_v The game state view struct.
+ * @return A int that represents the success of the function.
+ */
 int receive_game(FILE* socket_file, game_view* game_v);
 
 /**
  * Reads in a string, splits it into the view struct, and calls print.
- * 
+ *
  * If the first value is 0 then it is a game state. If the first value is 1 then
- * it broadcasts message. [0 or 1]/[player_id]/[turn]/[top card]/[# of cards in 
+ * it broadcasts message. [0 or 1]/[player_id]/[turn]/[top card]/[# of cards in
  * hand]/[hand]/[#of players]/[handsize] is the format of a game state.
- * 
+ *
  * @param recv_line A string received from the server.
  * @param game_v The game state view struct
- * @return A int that represents the success of the function. 
-*/
+ * @return A int that represents the success of the function.
+ */
 int deserialize(char* recv_line, game_view* game_v);

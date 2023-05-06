@@ -360,7 +360,7 @@ void free_order(order* order_);
  *
  * @param game_state A instance of the struct game_state which holds the state
  * of the game.
- * @param player A player to add the hand to. 
+ * @param player A player to add the hand to.
  */
 void make_hand(game_state* game_state, player* player);
 
@@ -445,7 +445,7 @@ void play_uno(game_state* game_state, char* input);
 game_state* make_game_state(void);
 
 /**
- * Free the game state. 
+ * Free the game state.
  *
  * @param state A pointer to the current game state to be free.
  */

@@ -114,8 +114,9 @@ void play_game(game_state* state);
  * followed by the number of players, followed by the player handsizes in order
  * of player from player 0 to player 1.
  *
- * @param state The state of the game. 
- * @param type An integer that represents whether it is a broadcast or a game state message.
+ * @param state The state of the game.
+ * @param type An integer that represents whether it is a broadcast or a game
+ * state message.
  * @param buf A pointer to a char that represents the users input.
  */
 void send_message(game_state* state, int type, const char* buf);

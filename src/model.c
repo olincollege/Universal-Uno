@@ -2,7 +2,7 @@
 
 card* make_card(char col, size_t val) {
   card* new_card = malloc(sizeof(card));
-  strncpy(&new_card->color, &col, sizeof(col)); //NOLINT
+  strncpy(&new_card->color, &col, sizeof(col));  // NOLINT
   new_card->value = val;
   new_card->next = NULL;
   return new_card;
@@ -11,17 +11,17 @@ card* make_card(char col, size_t val) {
 void free_card(card* card_) { free(card_); }
 
 void free_deck(deck* deck_) {
-  if(deck_ == NULL){
+  if (deck_ == NULL) {
     return;
   }
-    card* current = deck_->head;
-    card* next = NULL;
-    while (current != NULL) {
-      next = current->next;
-      free_card(current);
-      current = next;
-    }
+  card* current = deck_->head;
+  card* next = NULL;
+  while (current != NULL) {
+    next = current->next;
+    free_card(current);
+    current = next;
   }
+}
 
 void append_card(deck* deck_, char col, size_t val) {
   card* new = make_card(col, val);
@@ -80,12 +80,11 @@ void move_card(card* card_, deck* old_deck, deck* new_deck) {
         current = current->next;
       }
     }
-    
   }
-  if(card_ != NULL) {
+  if (card_ != NULL) {
     card_->next = NULL;
   }
-  
+
   if (new_deck->head == NULL) {
     new_deck->head = card_;
   } else {
@@ -104,21 +103,20 @@ card* get_card_index(deck* deck_, size_t index) {
   }
   card* current = deck_->head;
   for (size_t i = 0; i < index; i++) {
-    if(current != NULL) {
+    if (current != NULL) {
       current = current->next;
-    } 
-    
+    }
   }
   return current;
 }
 
 void shuffle(deck* deck_) {
- 
   if (deck_->size == 1 || deck_->size == 0) {
     return;
   }
   for (size_t i = 0; i < 2 * (deck_->size); i++) {
-    size_t index = ((size_t)rand() % (deck_->size - UNO));   // NOLINT(cert-msc30-c,cert-msc50-cpp,concurrency-mt-unsafe)
+    size_t index =
+        ((size_t)rand() % (deck_->size - UNO));  // NOLINT(cert-msc30-c,cert-msc50-cpp,concurrency-mt-unsafe)
     card* swap = get_card_index(deck_, index);
     move_card(swap, deck_, deck_);
   }
@@ -232,7 +230,7 @@ order* make_order(size_t num_players) {
 }
 
 void free_order(order* order_) {
-  if(order_ == NULL){
+  if (order_ == NULL) {
     return;
   }
   if (order_->head == NULL) {
@@ -303,10 +301,10 @@ void next_player(game_state* state) {
 
 void play_uno(game_state* state, char* input) {
   char number[2];
-  strncpy(number, &input[1], 2); //NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+  strncpy(number, &input[1], 2);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
   char switch_num = input[2];
   char* eptr = NULL;
-  int num = (int) strtol((number), &eptr, REVERSE); 
+  int num = (int)strtol((number), &eptr, REVERSE);
 
   char col = input[0];
 
@@ -389,8 +387,9 @@ int is_valid(char* card_, game_state* state) {
   // turn string into card object
   char* num_str = &card_[UNO];
   char* eptr = NULL;
-  int num = (int) strtol((num_str), &eptr, REVERSE); 
-  card* curr_card = make_card(card_[0], (size_t)num); //NOLINT(clang-analyzer-unix.Malloc)
+  int num = (int)strtol((num_str), &eptr, REVERSE);
+  card* curr_card =
+      make_card(card_[0], (size_t)num);  // NOLINT(clang-analyzer-unix.Malloc)
   int is_in_hand = in_hand(curr_card, &(state->turn->hand));
   // make sure card is valid uno card
   if (is_in_hand == UNO) {
@@ -400,9 +399,9 @@ int is_valid(char* card_, game_state* state) {
     }
     if (card_[0] != 'B' && card_[0] != 'R' && card_[0] != 'Y' &&
         card_[0] != 'G') {
-          free_card(curr_card);
+      free_card(curr_card);
       return 0;
-    } 
+    }
     if (curr_card->value == DRAW_4) {
       free_card(curr_card);
       return 1;
@@ -423,7 +422,6 @@ int is_valid(char* card_, game_state* state) {
   }
   free_card(curr_card);
   return 0;
-  
 }
 
 void change_turn(game_state* state) {

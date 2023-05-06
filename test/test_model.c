@@ -415,7 +415,7 @@ Test(get_card_index, index_too_big) {
   free_deck(&deck_);
 }
 
-//Test if a the function can find the first card.
+// Test if a the function can find the first card.
 Test(find_card, head) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -426,7 +426,7 @@ Test(find_card, head) {
   free_deck(&deck_);
 }
 
-//Test if the function can find a middle card.
+// Test if the function can find a middle card.
 Test(find_card, middle) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -437,7 +437,7 @@ Test(find_card, middle) {
   free_deck(&deck_);
 }
 
-//Test if the function can find the last card.
+// Test if the function can find the last card.
 Test(find_card, end) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -448,7 +448,7 @@ Test(find_card, end) {
   free_deck(&deck_);
 }
 
-//Test if the function returns NULL to a card not in the deck.
+// Test if the function returns NULL to a card not in the deck.
 Test(find_card, not_found) {
   deck deck_ = {.head = NULL, .size = 0};
   append_card(&deck_, 'B', 1);
@@ -459,7 +459,7 @@ Test(find_card, not_found) {
   free_deck(&deck_);
 }
 
-// Test that the sizes update correctly after appending. 
+// Test that the sizes update correctly after appending.
 Test(append_deck, two_decks) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'B', 7);
@@ -482,7 +482,7 @@ Test(append_deck, two_decks) {
   free_deck(&deck_2);
 }
 
-// Test that appending to an empty deck updates correctly. 
+// Test that appending to an empty deck updates correctly.
 Test(append_deck, empty_deck) {
   deck deck_1 = {.head = NULL, .size = 0};
   deck deck_2 = {.head = NULL, .size = 0};
@@ -495,7 +495,7 @@ Test(append_deck, empty_deck) {
   free_deck(&deck_2);
 }
 
-// Test that appending to an deck with one card updates correctly. 
+// Test that appending to an deck with one card updates correctly.
 Test(append_deck, pointers_set_correctly) {
   deck deck_1 = {.head = NULL, .size = 0};
   append_card(&deck_1, 'G', 7);
@@ -523,7 +523,7 @@ Test(check_draw, needs_refill_1) {
 Test(check_draw, needs_refill_2) {
   game_state* state = make_game_state();
   append_deck(&state->draw, &state->discard);
-  move_card(state->discard.head,&state->discard,&state->draw );
+  move_card(state->discard.head, &state->discard, &state->draw);
   cr_assert(eq(sz, state->draw.size, 1));
   cr_assert(eq(int, check_draw(state), 1));
   free_game_state(state);
@@ -551,7 +551,7 @@ Test(refill_draw, empty_draw) {
   free_game_state(state);
 }
 
-// Check that refilling a draw pile of 1 updates correctly. 
+// Check that refilling a draw pile of 1 updates correctly.
 Test(refill_draw, one_draw) {
   game_state* state = make_game_state();
   deck uno = make_uno_deck();
@@ -575,7 +575,7 @@ Test(make_player, values_set_correctly) {
   free_player(player_);
 }
 
-// Test that pointer and value are set correctly with order of 1. 
+// Test that pointer and value are set correctly with order of 1.
 Test(make_order, one_player) {
   order* order = make_order(1);
   cr_assert(eq(ptr, order->head->next, order->head));
@@ -583,7 +583,7 @@ Test(make_order, one_player) {
   free_order(order);
 }
 
-// Test that values are set correctly with order of 2. 
+// Test that values are set correctly with order of 2.
 Test(make_order, two_player_numbers) {
   order* order = make_order(2);
   player* one = order->head;
@@ -593,7 +593,7 @@ Test(make_order, two_player_numbers) {
   free_order(order);
 }
 
-// Test that pointers are set correctly with order of 2. 
+// Test that pointers are set correctly with order of 2.
 Test(make_order, two_player_pointers) {
   order* order = make_order(2);
   player* one = order->head;
@@ -605,7 +605,7 @@ Test(make_order, two_player_pointers) {
   free_order(order);
 }
 
-// Test that values are set correctly with order of 3. 
+// Test that values are set correctly with order of 3.
 Test(make_order, three_player_numbers) {
   order* order = make_order(3);
   player* one = order->head;
@@ -617,7 +617,7 @@ Test(make_order, three_player_numbers) {
   free_order(order);
 }
 
-// Test that pointers are set correctly with order of 3. 
+// Test that pointers are set correctly with order of 3.
 Test(make_order, three_player_pointers) {
   order* order = make_order(3);
   player* one = order->head;
@@ -632,7 +632,7 @@ Test(make_order, three_player_pointers) {
   free_order(order);
 }
 
-// Test that values are set correctly with order of 4. 
+// Test that values are set correctly with order of 4.
 Test(make_order, four_player_numbers) {
   order* order = make_order(4);
   player* one = order->head;
@@ -646,7 +646,7 @@ Test(make_order, four_player_numbers) {
   free_order(order);
 }
 
-// Test that pointers are set correctly with order of 4. 
+// Test that pointers are set correctly with order of 4.
 Test(make_order, four_player_pointers) {
   order* order = make_order(4);
   player* one = order->head;
@@ -664,7 +664,7 @@ Test(make_order, four_player_pointers) {
   free_order(order);
 }
 
-// Test that values are set correctly with order of 5. 
+// Test that values are set correctly with order of 5.
 Test(make_order, five_player_numbers) {
   order* order = make_order(5);
   player* one = order->head;
@@ -680,7 +680,7 @@ Test(make_order, five_player_numbers) {
   free_order(order);
 }
 
-// Test that pointers are set correctly with order of 5. 
+// Test that pointers are set correctly with order of 5.
 Test(make_order, five_player_pointers) {
   order* order = make_order(5);
   player* one = order->head;
@@ -701,7 +701,7 @@ Test(make_order, five_player_pointers) {
   free_order(order);
 }
 
-// When making a player's hand, the state should update correctly. 
+// When making a player's hand, the state should update correctly.
 Test(make_hand, size) {
   game_state* state = make_game_state();
   state->player_list = make_order(1);
@@ -882,7 +882,6 @@ Test(is_valid, right_val_wrong_col) {
   free_deck(&hand_);
 }
 
-
 // Check that a rev card on top of a rev card returns 1.
 Test(is_valid, right_val_rev) {
   char card_str[5];
@@ -1003,7 +1002,7 @@ Test(change_turn, moving_prev) {
   free_game_state(game_state_);
 }
 
-// Check that draw updates player's hand correctly. 
+// Check that draw updates player's hand correctly.
 Test(draw, checks_player_hand) {
   game_state* game_state_ = make_game_state();
   game_state_->player_list = make_order(1);

@@ -1,7 +1,7 @@
 #include <arpa/inet.h>  // sockaddr_in
 
 #include "server.h"  // uno_server, related functions
-#include "utils.h"    // socket_address, PORT
+#include "utils.h"   // socket_address, PORT
 
 int main(void) {
   struct sockaddr_in server_addr = socket_address(INADDR_ANY, PORT);

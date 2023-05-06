@@ -15,7 +15,8 @@ void error_and_exit(const char* error_msg) {
 
 int open_tcp_socket(void) {
   int listener_d = socket(AF_INET, SOCK_STREAM, 0);
-  setsockopt(listener_d, SOL_SOCKET,(SO_REUSEPORT | SO_REUSEADDR | SO_DEBUG), (char*) &optind,sizeof(optind));
+  setsockopt(listener_d, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR | SO_DEBUG),
+             (char*)&optind, sizeof(optind));
   if (listener_d == -1) {
     error_and_exit("Opening Socket failed");
   }

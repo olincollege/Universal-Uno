@@ -1,8 +1,7 @@
 #include "client.h"
 
-
-#include <stdio.h>       // getline
-#include <stdlib.h>      // free
+#include <stdio.h>   // getline
+#include <stdlib.h>  // free
 #include <string.h>
 #include <sys/socket.h>  // connect, sockaddr
 
@@ -26,8 +25,8 @@ FILE* get_socket_file(int client_socket) {
 
 int send_input(FILE* socket_file) {
   char* send_line = NULL;
-  size_t send_line_size = 500; // NOLINT(*-magic-numbers)
-  //put into send line
+  size_t send_line_size = 500;  // NOLINT(*-magic-numbers)
+  // put into send line
   printf("about to get line\n");
   if (getline(&send_line, &send_line_size, stdin) == -1) {
     printf("in here :0 \n");
@@ -54,61 +53,60 @@ int receive_game(FILE* socket_file, game_view* game_v) {
     printf("in if\n");
     return -1;
   }
-  //deserialize the input from the server
+  // deserialize the input from the server
   deserialize(recv_line, game_v);
   free(recv_line);
   return 0;
 }
 
-
 int deserialize(char* recv_line, game_view* game_v) {
   printf("%s\n", recv_line);
-   if (recv_line[0] == forty_eight) { 
-    //parses the string on the "/"
+  if (recv_line[0] == forty_eight) {
+    // parses the string on the "/"
     char delimeter[2] = "/";
     char* eptr = NULL;
     char* str = strdup(recv_line);
     char* token = NULL;
 
-    //after splitting up string put into the correct struct value
-    token = strtok(str, delimeter); //NOLINT(concurrency-mt-unsafe)
-    game_v->message = (int) strtol(token, &eptr, ten);
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    game_v->player_id = (int) strtol(token, &eptr, ten);
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    game_v->turn = (int) strtol(token, &eptr, ten);
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    strcpy(game_v->top_card, token); //NOLINT(clang-analyzer-security.insecureAPI.strcpy)
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    game_v->cards_in_hand = (int) strtol(token, &eptr, ten);
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    strcpy(game_v->hand, token);  //NOLINT(clang-analyzer-security.insecureAPI.strcpy)
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    game_v->number_players = (int) strtol(token, &eptr, ten);
-    token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
-    
-    //checks how many players are in the game before putting them in the struct
+    // after splitting up string put into the correct struct value
+    token = strtok(str, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    game_v->message = (int)strtol(token, &eptr, ten);
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    game_v->player_id = (int)strtol(token, &eptr, ten);
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    game_v->turn = (int)strtol(token, &eptr, ten);
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    strcpy(game_v->top_card, token);  // NOLINT(clang-analyzer-security.insecureAPI.strcpy)
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    game_v->cards_in_hand = (int)strtol(token, &eptr, ten);
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    strcpy(game_v->hand, token);  // NOLINT(clang-analyzer-security.insecureAPI.strcpy)
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+    game_v->number_players = (int)strtol(token, &eptr, ten);
+    token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
+
+    // checks how many players are in the game before putting them in the struct
     if (game_v->number_players >= 1) {
-      game_v->player_0 = (int) strtol(token, &eptr, ten);
-      token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+      game_v->player_0 = (int)strtol(token, &eptr, ten);
+      token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
     }
     if (game_v->number_players >= 2) {
-      game_v->player_1 = (int) strtol(token, &eptr, ten);
-      token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+      game_v->player_1 = (int)strtol(token, &eptr, ten);
+      token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
     }
     if (game_v->number_players >= 3) {
-      game_v->player_2 = (int) strtol(token, &eptr, ten);
-      token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+      game_v->player_2 = (int)strtol(token, &eptr, ten);
+      token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
     }
     if (game_v->number_players >= 4) {
-      game_v->player_3 = (int) strtol(token, &eptr, ten);
-      token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+      game_v->player_3 = (int)strtol(token, &eptr, ten);
+      token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
     }
     if (game_v->number_players >= five) {
-      game_v->player_4 = (int) strtol(token, &eptr, ten);
-      token = strtok(NULL, delimeter);  //NOLINT(concurrency-mt-unsafe)
+      game_v->player_4 = (int)strtol(token, &eptr, ten);
+      token = strtok(NULL, delimeter);  // NOLINT(concurrency-mt-unsafe)
     }
-    //call print game from view.c
+    // call print game from view.c
     print_game(game_v);
     free(str);
     free(token);

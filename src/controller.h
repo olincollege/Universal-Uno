@@ -1,6 +1,7 @@
 #pragma once
-#include "model.h"
 #include <unistd.h>
+
+#include "model.h"
 // Define useful constants needed in the program.
 
 /**
@@ -13,9 +14,8 @@
  *  *12: draw2 card
  *  *13: draw4 wildcard
  *  *14: wildcard
- * 
+ *
  * @param buf: a char array with the input from the client
  * @param processed_input: a char array to store the processed input
  */
 void process_input(char* buf, char* processed_input);
-

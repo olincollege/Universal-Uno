@@ -161,7 +161,7 @@ void broadcast_message(game_state* state, const char* buf) {
       current = current->next;
       while (current != state->turn) {
         char sendlinee2[1000];  // NOLINT(*-magic-numbers)
-        (void)sprintf(sendlinee2,"A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+        (void)sprintf(sendlinee2, "A Player has called uno before another!");  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
         write(current->sock_num, sendlinee2, sizeof(sendlinee2));
         current = current->next;
       }
@@ -189,7 +189,7 @@ void send_message(game_state* state, int type, const char* buf) {
         (void)sprintf(main_card, " %c%zu/", state->main.head->color, state->main.head->value);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
       }
       printf("%s", main_card);
-      printf("FJFHDJ\n");
+      // printf("FJFHDJ\n");
       strcat(sendlin, main_card);  // NOLINT(clang-analyzer-security.insecureAPI.strcpy)
       char num_cards[8];  // NOLINT(*-magic-numbers)
       (void)sprintf(num_cards, "%zu/", state->number_players);  // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
