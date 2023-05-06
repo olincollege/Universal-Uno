@@ -2,11 +2,6 @@
 
 #include "view.h"
 
-#include <netinet/in.h>  // sockaddr_in
-#include <stdio.h>       // FILE
-
-
-
 enum{
     /**Magic number error*/
     five = 5,
@@ -48,7 +43,8 @@ FILE* get_socket_file(int client_socket);
  * 
  * It reads from stdin and puts that line into the socket file.
  * 
- * @param socket_file a socket file for a given client.
+ * @param socket_file A socket file for a given client.
+ * @return A int that represents the success of the function. 
 */
 int send_input(FILE* socket_file);
 
@@ -58,8 +54,9 @@ int send_input(FILE* socket_file);
  * Reads from the socket file and passes it to the deserialization function.
  * The deserialization function will print a view.
  * 
- * @param socket_file a socket file for a given client.
- * @param game_v is the game state view struct
+ * @param socket_file A socket file for a given client.
+ * @param game_v The game state view struct. 
+ * @return A int that represents the success of the function. 
 */
 int receive_game(FILE* socket_file, game_view* game_v);
 
@@ -70,7 +67,8 @@ int receive_game(FILE* socket_file, game_view* game_v);
  * it broadcasts message. [0 or 1]/[player_id]/[turn]/[top card]/[# of cards in 
  * hand]/[hand]/[#of players]/[handsize] is the format of a game state.
  * 
- * @param recv_line is a string received from the server
- * @param game_v is the game state view struct
+ * @param recv_line A string received from the server.
+ * @param game_v The game state view struct
+ * @return A int that represents the success of the function. 
 */
 int deserialize(char* recv_line, game_view* game_v);

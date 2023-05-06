@@ -5,9 +5,8 @@
 #include <stdlib.h>      // free
 #include <string.h>
 #include <sys/socket.h>  // connect, sockaddr
-// #include<stdlib.h/.c>
+
 #include "utils.h"
-#include "view.h"
 
 void try_connect(int client_socket, struct sockaddr_in server_addr) {
   int connected = connect(client_socket, (struct sockaddr*)&server_addr,
