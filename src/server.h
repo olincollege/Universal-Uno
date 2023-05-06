@@ -105,7 +105,7 @@ void start_game(game_state* state);
  *
  * @param state the current state of the game.
  */
-void play_game(game_state* state, uno_server* server);
+void play_game(game_state* state);
 
 /**
  * After looking at the state of the game, send message will create a message
@@ -119,4 +119,13 @@ void play_game(game_state* state, uno_server* server);
  *
  * @param state the state of the game
  */
-void send_message(game_state* state, int type, char* buf);
+void send_message(game_state* state, int type, const char* buf);
+
+/**
+ * If there is something that needs to be broadcasted, then it makes and sends
+ * the messages.
+ *
+ * @param state the state of the game.
+ * @param buf the input string genereated by the client.
+ */
+void broadcast_message(game_state* state, const char* buf);
