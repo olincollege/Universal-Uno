@@ -8,7 +8,7 @@
 // Define useful constants needed in the program.
 enum {
   /** Number of cards for UNO.*/
-  UNO = 1, 
+  UNO = 1,
   /** Maximum numbers of players*/
   MAX_PLAYERS = 5,
   /** Number of cards in a UNO deck*/
@@ -27,8 +27,6 @@ enum {
   SEVEN = 7,
   /** TWO*/
   TWO = 2,
-
-
 
 };
 
@@ -120,16 +118,6 @@ card* make_card(char color, size_t value);
  */
 void free_card(card* card_);
 
-/*
- * Create a new empty deck.
- *
- * Create a new deck that is empty (that is, it contains no cards and has a
- * size of zero). The memory for the new deck is allocated on the heap.
- *
- * @return A pointer to the newly created deck.
- */
-deck make_deck(void);
-
 /**
  * Free a decks's memory.
  *
@@ -166,7 +154,6 @@ void append_card(deck* deck_, char col, size_t val);
  *
  * @return A pointer to the newly created UNO deck.
  */
-
 deck make_uno_deck(void);
 
 /**
@@ -200,6 +187,7 @@ void move_card(card* card_, deck* old_deck, deck* new_deck);
  *
  * @param deck_ A pointer to the the deck the card is in.
  * @param index A size_t integer of the index of the card to get.
+ * @return A pointer to a card that exists at a certin index in a deck.
  */
 card* get_card_index(deck* deck_, size_t index);
 
@@ -224,8 +212,8 @@ void shuffle(deck* deck_);
  * compared. This function is a helper function for testing card and deck
  * functions.
  *
- * @param lhs A pointer to one of the decks to compare.
- * @param rhs A pointer to the other deck to compare.
+ * @param deck_1 A pointer to one of the decks to compare.
+ * @param deck_2 A pointer to the other deck to compare.
  * @return 1 if the decks are equal in value and 0 otherwise.
  */
 int equal(deck* deck_1, deck* deck_2);
@@ -365,8 +353,6 @@ order* make_order(size_t num_players);
  */
 void free_order(order* order_);
 
-void append_order(order* order_, player* player_);
-
 /**
  * A function that returns a players initial hand.
  *
@@ -379,13 +365,15 @@ void append_order(order* order_, player* player_);
 void make_hand(game_state* game_state, player* player);
 
 /**
- * Based on the game_state and a given input, this function alters the state of
- * the game
+ * Check if the current player has uno
  *
- * @param game_state a instance of the struct game_state which holds the state
- * of the game
+ * Give a pointer to the state of the game, check if the current player has 1
+ * card left.
+ *
+ * @param state A pointer to the current game state.
+ * @return 1 if the player has uno or 0 if the player does not have uno.
  */
-void play_uno(game_state* game_state, char* input);
+int check_uno(game_state* state);
 
 /**
  * In the event that a player puts down a reverse, this card reverses the order
@@ -440,6 +428,16 @@ void draw4(game_state* game_state, player* player);
 void next_player(game_state* game_state);
 
 /**
+ * Based on the game_state and a given input, this function alters the state of
+ * the game
+ *
+ * @param game_state a instance of the struct game_state which holds the state
+ * of the game
+ * @param input a pointer to a string representing the 
+ */
+void play_uno(game_state* game_state, char* input);
+
+/**
  * Makes an empty instance of a game state.
  *
  * @return An empty game state.
@@ -452,16 +450,6 @@ game_state* make_game_state(void);
  * @return An empty game state.
  */
 void free_game_state(game_state* state);
-/**
- * Check if the current player has uno
- *
- * Give a pointer to the state of the game, check if the current player has 1
- * card left.
- *
- * @param state A pointer to the current game state.
- * @return 1 if the player has uno or 0 if the player does not have uno.
- */
-int check_uno(game_state* state);
 
 /**
  * Check if the current player has won the game.
