@@ -10,7 +10,6 @@ The game follows normal uno rules (https://www.unorules.com/). The player must t
 
 ## How the program works:
 
-
 ## Dependencies:
 To play the game, download all the files from our Universal_UNO repository. You should have the following files:
 - .gitignore
