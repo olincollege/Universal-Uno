@@ -64,7 +64,6 @@ typedef struct player {
 
 // A order of the players represented by a circular doubly linked list including
 // the first player and direction of the current turns.
-//
 typedef struct {
   player* head;
   size_t direction;
@@ -187,7 +186,7 @@ void move_card(card* card_, deck* old_deck, deck* new_deck);
  *
  * @param deck_ A pointer to the the deck the card is in.
  * @param index A size_t integer of the index of the card to get.
- * @return A pointer to a card that exists at a certin index in a deck.
+ * @return A pointer to a card that exists at a certain index in a deck.
  */
 card* get_card_index(deck* deck_, size_t index);
 
@@ -227,8 +226,8 @@ int equal(deck* deck_1, deck* deck_2);
  * @param deck__ A pointer to the deck to append to.
  * @param color The color for the new card.
  * @param value The value for the new card.
- * @return a pointer to the card found or a NULL pointer if the card is not
- * found
+ * @return A pointer to the card found or a NULL pointer if the card is not
+ * found.
  */
 card* find_card(deck* deck_, char color, size_t value);
 
@@ -356,11 +355,12 @@ void free_order(order* order_);
 /**
  * A function that returns a players initial hand.
  *
- * In the beginnign of a game, this function will take 7 cards from the draw
+ * In the beginning of a game, this function will take 7 cards from the draw
  * deck and place them into the hand of the player.
  *
- * @param game_state a instance of the struct game_state which holds the state
- * of the game
+ * @param game_state A instance of the struct game_state which holds the state
+ * of the game.
+ * @param player A player to add the hand to. 
  */
 void make_hand(game_state* game_state, player* player);
 
@@ -393,29 +393,29 @@ void switch_direction(game_state* game_state);
 void skip(game_state* game_state);
 
 /**
- * Draws a card from the draw stack
+ * Draws a card from the draw stack.
  *
- * @param game_state a instance of the struct game_state which holds the state
- * of the game
- * @param player the player that needs to draw.
+ * @param game_state A instance of the struct game_state which holds the state
+ * of the game.
+ * @param player The player that needs to draw.
  */
 void draw(game_state* game_state, player* player);
 
 /**
- * Draws two card from the draw stack
+ * Draws two card from the draw stack.
  *
- * @param game_state a instance of the struct game_state which holds the state
+ * @param game_state A instance of the struct game_state which holds the state
  * of the game
- * @param player the player that needs to draw.
+ * @param player The player that needs to draw.
  */
 void draw2(game_state* game_state, player* player);
 
 /**
- * Draws four card from the draw stack
+ * Draws four card from the draw stack.
  *
- * @param game_state a instance of the struct game_state which holds the state
+ * @param game_state A instance of the struct game_state which holds the state
  * of the game
- * @param player the player that needs to draw.
+ * @param player The player that needs to draw.
  */
 void draw4(game_state* game_state, player* player);
 
@@ -423,17 +423,17 @@ void draw4(game_state* game_state, player* player);
  * Sets the next player.
  *
  * @param game_state a instance of the struct game_state which holds the state
- * of the game
+ * of the game.
  */
 void next_player(game_state* game_state);
 
 /**
  * Based on the game_state and a given input, this function alters the state of
- * the game
+ * the game.
  *
- * @param game_state a instance of the struct game_state which holds the state
- * of the game
- * @param input a pointer to a string representing the 
+ * @param game_state A instance of the struct game_state which holds the state
+ * of the game.
+ * @param input A pointer to a string representing the input.
  */
 void play_uno(game_state* game_state, char* input);
 
@@ -445,9 +445,9 @@ void play_uno(game_state* game_state, char* input);
 game_state* make_game_state(void);
 
 /**
- * Makes an empty instance of a game state.
+ * Free the game state. 
  *
- * @return An empty game state.
+ * @param state A pointer to the current game state to be free.
  */
 void free_game_state(game_state* state);
 
@@ -463,12 +463,11 @@ void free_game_state(game_state* state);
 int check_win(game_state* state);
 
 /**
- * Checks if a card is in a player's hand
+ * Checks if a card is in a player's hand.
  *
- * @param played_card: a card object representing the card played
- * @param hand: a deck object representing the player's hand
- *
- * @return int: returns 1 if the card is in the hand, returns 0 otherwise
+ * @param played_card A card object representing the card played.
+ * @param hand A deck object representing the player's hand.
+ * @return 1 if the card is in the hand, returns 0 otherwise.
  */
 int in_hand(card* played_card, deck* hand);
 /**
@@ -477,11 +476,9 @@ int in_hand(card* played_card, deck* hand);
  *   * It is the same number as the top card on the played deck, or
  *   * It is a wild card
  *
- * @param card[]: a string representation of the played card
- * @param state: the current game state
- *
- * @return int: returns 0 if the card is not valid. If it's valid, return 1
- *
+ * @param card A string representation of the played card.
+ * @param state The current game state.
+ * @return Returns 0 if the card is not valid. If it's valid, return 1
  */
 int is_valid(char* card, game_state* state);
 /**
@@ -489,6 +486,6 @@ int is_valid(char* card, game_state* state);
  * If the game direction is 0, move to the next player in the lineup
  * If the game direction is 1, move to the previous player in the lineup
  *
- * @param state: a pointer to a game_state object holding the current game state
+ * @param state A pointer to a game_state object holding the current game state.
  */
 void change_turn(game_state* state);

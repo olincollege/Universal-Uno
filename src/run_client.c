@@ -30,14 +30,6 @@ int main(void) {
       stderr, "Connected to server at %s, port %d\n",
       inet_ntop(AF_INET, &server_addr.sin_addr, addr_string, MAX_IP_ADDR_LEN),
       PORT);
-
-  // Adding a non block flag to file descriptor
-  // int flags = fcntl(socket_descriptor, F_GETFL, 0);
-  // fcntl(socket_descriptor, F_SETFL, flags | O_NONBLOCK);
-  // EAGAIN or the other block one
-  // man2 read
-  // errno
-
   // Use a file pointer to make it easier to deal with text lines.
   FILE* socket_file = get_socket_file(socket_descriptor);
   // Echo until either the client or the server closes its stream.
@@ -60,7 +52,6 @@ int main(void) {
     printf("After");
     error_and_exit("Error reading or writing line:");
   }
-
   // Clean up and exit.
   close_tcp_socket(socket_descriptor);
   return 0;

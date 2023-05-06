@@ -3,7 +3,8 @@
 #include<stdio.h>
 #include <stdlib.h>
 
-
+// The game view struct represented by the message, player id, turn, top card,
+// cards in players hand, number of players, and each players number of cards.
 typedef struct {
     int message;
     int player_id;
